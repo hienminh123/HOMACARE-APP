@@ -52,8 +52,8 @@
       homeAccounts.forEach(container => {
         const desktop = container.dataset.homeAccount === 'desktop';
         container.innerHTML = current
-          ? `<a class="${desktop ? 'btn small' : ''}" href="${destinations[current.role]}">${homeLabels[current.role]} <span data-icon="arrow"></span></a><button class="plain-link" data-home-logout>Đăng xuất</button>`
-          : `<a class="${desktop ? 'btn small' : ''}" href="auth.html?role=family" data-modal="role-modal">Đăng nhập / Đăng ký <span data-icon="arrow"></span></a>`;
+          ? `<a class="${desktop ? 'btn small' : ''}" href="${destinations[current.role]}" aria-label="${homeLabels[current.role]}"><span class="home-account-label">${homeLabels[current.role]}</span><span class="home-account-mobile-label">Tài khoản</span><span data-icon="arrow"></span></a><button class="plain-link" data-home-logout>Đăng xuất</button>`
+          : `<a class="${desktop ? 'btn small' : ''}" href="auth.html?role=family" data-modal="role-modal"><span class="home-account-label">Đăng nhập / Đăng ký</span><span data-icon="arrow"></span></a>`;
         window.HomaUI.icons(container);
       });
       entryLinks.forEach(({link, href}) => {

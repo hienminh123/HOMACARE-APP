@@ -44,7 +44,13 @@ home = home.replace('<a href="#staff">Chuyên viên</a></div><a class="btn small
 home = home.replace('</body>',roleDialog+'</body>');
 }
 home = home.replace('<a class="mobile-account-entry" href="auth.html?role=family" data-modal="role-modal">Đăng nhập / Đăng ký</a>', '<div class="mobile-account-entry" data-home-account="mobile"><a href="auth.html?role=family" data-modal="role-modal">Đăng nhập / Đăng ký</a></div>');
-home = home.replace('<a class="btn small" href="auth.html?role=family" data-modal="role-modal">Đăng nhập / Đăng ký <span data-icon="arrow"></span></a>', '<div class="home-account-actions" data-home-account="desktop"><a class="btn small" href="auth.html?role=family" data-modal="role-modal">Đăng nhập / Đăng ký <span data-icon="arrow"></span></a></div>');
+const homeAccountEntry = '<div class="home-account-actions" data-home-account="desktop"><a class="btn small" href="auth.html?role=family" data-modal="role-modal"><span class="home-account-label">Đăng nhập / Đăng ký</span><span data-icon="arrow"></span></a></div>';
+if (!home.includes('data-home-account="desktop"')) home = home.replace('<a class="btn small" href="auth.html?role=family" data-modal="role-modal">Đăng nhập / Đăng ký <span data-icon="arrow"></span></a>', homeAccountEntry);
+// The account entry stays visible in the mobile header; no hamburger is needed.
+home = home.replace(/<div class="mobile-account-entry" data-home-account="mobile">[\s\S]*?<\/div>/, '');
+home = home.replace(/<button class="mobile-menu-button"[^>]*><\/button>/, '');
+// Normalize the end of the header so rebuilding cannot nest account wrappers.
+home = home.replace(/<div class="home-account-actions" data-home-account="desktop">[\s\S]*?<\/nav>/, homeAccountEntry + '</nav>');
 fs.writeFileSync(path.join(root,'index.html'), home);
 const previous = fs.readFileSync(path.join(root,'preview.js'),'utf8');
 fs.writeFileSync(path.join(root,'preview.js'), previous.split(/\r?\n/).slice(0,2).join('\n') + '\n' + fs.readFileSync(path.join(__dirname,'ui-handlers.txt'),'utf8'));

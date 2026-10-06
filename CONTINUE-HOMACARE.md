@@ -47,7 +47,7 @@ Cập nhật 06/10/2026 (Asia/Saigon). Người dùng đã yêu cầu tiếp t�
 
 1. Người dùng đã báo Published. CUA xác nhận bản mới online, popup đủ3 vai trò, điều phối chỉ mật khẩu; family.html chuyển về auth khi chưa login.
 2. Sau deploy đã bỏ cụm bài đọc mẫu và thêm thông báo email address not authorized. Theo yêu cầu mới, điều phối hiện nhập email + mật khẩu, có quên mật khẩu, không còn email cố định. UI đã kiểm tra ở localhost; chưa deploy các thay đổi mới. backend/promote-coordinator.sql có target_email để chủ dự án cấp quyền cho từng người. Không cần đổi schema.
-3. Theo yêu cầu hướng dẫn up GitHub, đã git init -b main tại folder dự án, thêm .gitignore (bỏ node_modules, env và ảnh kiểm tra) và netlify.toml publish=preview. Chưa commit, chưa có remote và chưa upload. Hướng dẫn người dùng GitHub Desktop → Add local repository folder HOMACARE APP → commit → Publish repository private tên homacare. Chưa nối Netlify; sẽ nối existing demo-homacare khi có repo.
+3. Người dùng đã publish repository private https://github.com/hienminh123/HOMACARE-APP. Kiểm tra Git trên máy xác nhận main theo dõi origin/main, remote đúng repo trên. .gitignore bỏ node_modules, env và ảnh kiểm tra; netlify.toml publish=preview. Chưa có xác nhận đã nối Netlify với repository; cần nối existing demo-homacare để tự deploy sau push.
 3. Người dùng đã xác nhận đăng nhập Điều phối viên trên Netlify thành công. Không yêu cầu gửi password.
 4. Người dùng thử đăng ký Gia đình và Chuyên viên bằng email khác. Email confirmation đang bật; SMTP mặc định Supabase thường giới hạn đến địa chỉ team. Nếu không nhận email, cần Custom SMTP (không tự tắt xác nhận email).
 5. Kiểm tra luồng dữ liệu thật: gia đình thêm người thân/đặt ca → điều phối phân công → chuyên viên cập nhật/bắt đầu/nhật ký → gia đình cập nhật/xem/đánh giá.
@@ -70,7 +70,7 @@ Cập nhật 06/10/2026 (Asia/Saigon). Người dùng đã yêu cầu tiếp t�
 - Đã build lại HTML và kiểm tra JS syntax. tests/session-ui-server.cjs dùng SDK giả lập chỉ trên localhost4175 để kiểm tra mã UI thật. Gia đình và chuyên viên về home/quay lại/reload vẫn giữ phiên; explicit logout hoạt động; callback caregiver thiếu role mở caregiver; menu mobile390px không tràn.
 - Ảnh home-session-ready.jpg và home-session-mobile.jpg là UI với phiên kiểm thử giả lập, không phải dữ liệu người dùng thật; đã bỏ khỏi Git bằng .gitignore.
 - Đang chờ người dùng tải folder preview mới lên Netlify rồi báo Published. Sau đó cần thử với tài khoản thật luồng về trang chủ và một email xác nhận mới. Thư cũ vẫn có thể chứa localhost.
-- GitHub upload để sau khi sửa lỗi. Git local đã init main, chưa commit hoặc push, chưa có remote.
+- Dự án đã có commit đầu tiên và đã push lên GitHub private hienminh123/HOMACARE-APP. Những sửa đổi tiếp theo cần commit/push; không tự upload khi sửa file. Người dùng có thể dùng Claude Code tiếp tục trong đúng folder này, đọc checkpoint và kiểm tra Git trước khi làm.
 
 ## Công cụ
 
@@ -82,3 +82,14 @@ Cập nhật 06/10/2026 (Asia/Saigon). Người dùng đã yêu cầu tiếp t�
 - Fixture server4174 (session13279) đã dừng sau kiểm tra.
 - Node: C:/Program Files/nodejs/node.exe. tests có PGlite trong node_modules.
 - Không có active goal.
+
+## Chỉnh độ dễ đọc và header điện thoại — 06/10/2026
+
+- Người dùng yêu cầu tăng chữ/icon và thay nút ba gạch bằng Đăng nhập / Đăng ký trên điện thoại.
+- Đã tăng font trong styles.css/account.css và inline copy: nội dung chính 16px, chữ phụ 12–14px; icon điều khiển 24px, icon dịch vụ 30px; nút chính tối thiểu 44px.
+- Header trang chủ chỉ còn một data-home-account desktop, hiển thị cả trên điện thoại. Khách bấm Đăng nhập / Đăng ký mở popup ba vai trò. Đã đăng nhập thì mobile hiện Tài khoản, dẫn về đúng dashboard; Đăng xuất vẫn có trong dashboard và trên home desktop.
+- Xếp các thẻ tin/dịch vụ, thông tin lộ trình và thống kê thành một cột trên mobile để giữ cỡ chữ lớn; dashboard metric mobile cũng thành một cột.
+- backend/build-pages.cjs lưu header mới và chuẩn hóa wrapper, đã xác nhận chạy hai lần tạo kết quả giống nhau; không sinh wrapper tài khoản lồng nhau.
+- Kiểm tra browser: trang chủ 320/390px và desktop1280px không tràn ngang; popup ba vai trò mở đúng, icon28px và tên17px. Header tài khoản chuyên viên và dashboard390px được kiểm tra bằng session fixture, không dùng tài khoản/dữ liệu Supabase thật.
+- Ảnh mobile-readable-header.jpg là trang chủ thật chạy localhost, không có tài khoản giả. Đã thêm vào .gitignore.
+- JS syntax checks thành công. Không đổi backend/schema hay quyền truy cập. Chưa commit/push/deploy các thay đổi giao diện lần này.
