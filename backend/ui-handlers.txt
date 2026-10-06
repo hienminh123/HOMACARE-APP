@@ -1,0 +1,20 @@
+window.HomaUI = (() => {
+  let toastTimer, previousFocus, activeOverlay;
+  const toast = document.createElement('div'); toast.className = 'toast'; toast.setAttribute('role','status'); document.body.append(toast);
+  function notify(text) { toast.textContent=text; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>toast.classList.remove('show'),4000); }
+  function icons(root = document) { root.querySelectorAll('[data-icon]').forEach(el => el.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${iconPaths[el.dataset.icon] || iconPaths.heart}</svg>`); }
+  function open(id) { const modal=document.getElementById(id); if (!modal) return; previousFocus=document.activeElement; activeOverlay=modal; modal.classList.add('open'); document.body.classList.add('modal-open'); modal.querySelector('input:not([readonly]),select,button,a')?.focus(); }
+  function close() { activeOverlay?.classList.remove('open'); activeOverlay=null; document.body.classList.remove('modal-open'); previousFocus?.focus(); }
+  document.addEventListener('click', e => {
+    const trigger=e.target.closest('[data-modal]'); if (trigger) { e.preventDefault(); open(trigger.dataset.modal); }
+    if (e.target.closest('.close-modal') || e.target.classList.contains('modal-overlay')) close();
+    const menu=e.target.closest('.mobile-menu-button'); if(menu) { const nav=document.querySelector('.nav-links'); const expanded=nav.classList.toggle('open'); menu.setAttribute('aria-expanded',String(expanded)); }
+    if (e.target.closest('.nav-links a')) { document.querySelector('.nav-links')?.classList.remove('open'); document.querySelector('.mobile-menu-button')?.setAttribute('aria-expanded','false'); }
+  });
+  document.addEventListener('keydown', e => {
+    if (!activeOverlay) return;
+    if(e.key==='Escape') { e.preventDefault(); close(); }
+    if(e.key==='Tab') { const options=[...activeOverlay.querySelectorAll('a,button,input,select,textarea')].filter(el=>!el.disabled && el.offsetParent!==null); const first=options[0],last=options.at(-1); if(e.shiftKey && document.activeElement===first){e.preventDefault();last?.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus()} }
+  });
+  return { notify, icons, open, close };
+})();

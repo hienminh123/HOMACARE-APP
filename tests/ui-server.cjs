@@ -1,0 +1,21 @@
+// Local UI fixtures only. This server and its data never belong in the publish folder.
+const http=require('node:http'),fs=require('node:fs'),path=require('node:path');
+const root=path.resolve(__dirname,'../preview');
+const fixtures={family:{id:'f1',full_name:'Gia đình kiểm tra',role:'family'},caregiver:{id:'c1',full_name:'Chuyên viên kiểm tra',role:'caregiver'},coordinator:{id:'o1',full_name:'Điều phối kiểm tra',role:'coordinator'}};
+const person={id:'r1',family_id:'f1',full_name:'Người thân kiểm tra',relationship:'Mẹ',age:70,area:'Hà Nội',preferences:'Thích đọc sách.'};
+const tomorrow=new Date(Date.now()+86400000).toISOString().slice(0,10);
+const visits=[{id:'v1',family_id:'f1',relative_id:'r1',caregiver_id:null,care_date:tomorrow,status:'pending',care_note:'Lưu ý sinh hoạt.',tasks:[false,false,false,false],next_note:'',created_at:new Date().toISOString(),relative:person,family:fixtures.family,caregiver:null},{id:'v2',family_id:'f1',relative_id:'r1',caregiver_id:'c1',care_date:new Date().toISOString().slice(0,10),status:'assigned',care_note:'Đồng hành đọc sách.',tasks:[false,false,false,false],next_note:'',created_at:new Date().toISOString(),assigned_at:new Date().toISOString(),relative:person,family:fixtures.family,caregiver:fixtures.caregiver}];
+function fixture(role) {return `(() => {
+const current=${JSON.stringify(fixtures[role])};const data={profiles:[${JSON.stringify(fixtures.caregiver)}],relatives:[${JSON.stringify(person)}],visits:${JSON.stringify(visits)}};
+function builder(table) {let filters=[],insert;const q={select(){return q},order(){return q},eq(k,v){filters.push([k,v]);return q},insert(v){insert=v;return q},then(resolve,reject){if(insert)data[table].push({...insert,id:'new-'+Date.now()});let values=data[table];if(table==='visits'&&current.role==='caregiver')values=values.filter(v=>v.caregiver_id===current.id);return Promise.resolve({data:values.filter(v=>filters.every(([k,n])=>v[k]===n)),error:null}).then(resolve,reject)}};return q;}
+window.HomaAuth={configured:true,profile:async()=>current,go:()=>{},logout:async()=>{},client:{from:builder,auth:{onAuthStateChange:()=>({data:{subscription:{unsubscribe(){}}}})},rpc:async(name,args)=>{const v=data.visits.find(v=>v.id===args.p_visit_id);if(name==='assign_homa_visit'){v.status='assigned';v.caregiver_id=args.p_caregiver_id;v.caregiver=data.profiles.find(p=>p.id===args.p_caregiver_id);}if(name==='start_homa_visit'){v.status='in_progress';v.started_at=new Date().toISOString();}if(name==='complete_homa_visit'){v.status='completed';v.tasks=args.p_tasks;v.report_text=args.p_report;v.mood=args.p_mood;v.next_note=args.p_next_note;v.completed_at=new Date().toISOString();}if(name==='rate_homa_visit')v.rating=args.p_rating;if(name==='book_homa_visit')data.visits.push({id:'new-visit',family_id:current.id,relative_id:args.p_relative_id,care_date:args.p_care_date,status:'pending',care_note:args.p_note,relative:data.relatives.find(r=>r.id===args.p_relative_id),created_at:new Date().toISOString()});return {data:null,error:null};}}};})();`}
+const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.png':'image/png','.ttf':'font/ttf','.webmanifest':'application/manifest+json'};
+http.createServer((req,res)=>{
+const url=new URL(req.url,'http://127.0.0.1:4174');
+if(url.pathname==='/fixture-auth.js'){const role=url.searchParams.get('role');if(!fixtures[role]){res.writeHead(404);return res.end();}res.writeHead(200,{'Content-Type':types['.js']});return res.end(fixture(role));}
+const name=decodeURIComponent(url.pathname).replace(/^\//,'');const file=path.resolve(root,name);
+if(!file.startsWith(root+path.sep)){res.writeHead(403);return res.end();}
+if(!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404);return res.end();}
+let body=fs.readFileSync(file);const role=name.replace('.html','');if(fixtures[role])body=body.toString().replace('<script src="vendor/supabase.js" defer></script>','').replace('<script src="config.js" defer></script>','').replace('<script src="auth.js" defer></script>',`<script src="fixture-auth.js?role=${role}" defer></script>`);
+res.writeHead(200,{'Content-Type':types[path.extname(file)]||'application/octet-stream'});res.end(body);
+}).listen(4174,'127.0.0.1',()=>console.log('UI fixture server: http://127.0.0.1:4174 — test data only'));

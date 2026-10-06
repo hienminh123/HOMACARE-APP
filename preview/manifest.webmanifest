@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "HomaCare",
+  "short_name": "HomaCare",
+  "lang": "vi",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0F4C46",
+  "icons": [
+    {
+      "src": "./assets/app-icon-h.png?v=2",
+      "sizes": "1254x1254",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
