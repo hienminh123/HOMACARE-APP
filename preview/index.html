@@ -2194,6 +2194,21 @@
       color: rgba(255, 255, 255, 0.8) !important;
     }
 
+    /* Gói đang phát triển: desktop hiện bản đầy đủ, điện thoại hiện bản rút gọn */
+    .package-upcoming {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .package-detailed {
+        display: none;
+      }
+
+      .package-card.package-upcoming {
+        display: flex;
+      }
+    }
+
     /* Mục 8: gói đang phát triển chỉ hiện tên */
     .package-card.package-upcoming {
       justify-content: center;
@@ -2210,6 +2225,33 @@
     .services-mobile-heading,
     .journey-tap-hint {
       display: none;
+    }
+
+    /* Desktop: màn hình minh họa đứng yên khi cuộn qua danh sách 6 bước */
+    @media (min-width: 961px) {
+      .journey-split {
+        align-items: start;
+      }
+
+      /* Thêm chỗ để khung minh họa vẫn đứng yên khi đọc tới bước 6 */
+      .steps-list {
+        padding-bottom: 300px;
+      }
+
+      .journey-phone-container {
+        position: sticky;
+        top: 96px;
+      }
+
+      /* Khung điện thoại + ô ghi chú phải thấp hơn màn hình thì mới đứng yên được khi cuộn */
+      .journey-device {
+        height: clamp(460px, calc(100vh - 290px), 640px);
+      }
+
+      .step-insight-card {
+        margin-top: 14px;
+        padding: 12px 18px;
+      }
     }
 
     @keyframes demoEnter {
@@ -2821,7 +2863,7 @@
         <h2 class="section-title">Năng lực công nghệ phục vụ yêu thương</h2>
         <p class="section-desc">
           Các tính năng thiết thực trên Webapp HomaCare được xây dựng để giảm bớt âu lo cho người ở xa, kết nối gia đình
-          và chuyên viên thành một vòng tròn đồng hành tin cậy.
+          và chuyên viên thành một vòng tròn đồng hành tin&nbsp;cậy.
         </p>
       </div>
 
@@ -3343,14 +3385,66 @@
           </div>
         </div>
 
-        <!-- GÓI 2: CHĂM CHÚT (đang phát triển) -->
+        <!-- GÓI 2: CHĂM CHÚT (bản đầy đủ, chỉ hiện trên desktop) -->
+        <div class="package-card package-detailed">
+          <div>
+            <span class="mini-tag tag-apricot">Đang phát triển · Chưa mở đặt lịch trong app</span>
+            <h3 style="font-size: 1.6rem; margin-top: 8px;">Gói Chăm chút</h3>
+            <p style="font-size: 0.9rem; margin-top: 4px;">
+              Thêm thời gian hỗ trợ người thân trong các sinh hoạt ban ngày.
+            </p>
+            <div class="package-price" style="font-size: 1.85rem;">
+              600.000–800.000đ <span>/ buổi</span>
+            </div>
+            <p style="font-size: 0.88rem; margin-top: 6px;">
+              Thời lượng dự kiến: <b>8–12 giờ / buổi</b>
+            </p>
+            <p style="font-size: 0.9rem; margin-top: 12px; line-height: 1.6;">
+              Đồng hành trong sinh hoạt ban ngày, hỗ trợ dùng bữa trưa và chiều, theo dõi nề nếp sinh hoạt.
+            </p>
+          </div>
+
+          <div style="margin-top: 24px;">
+            <a href="#contact" class="btn btn-secondary" style="width: 100%;">
+              Trao đổi nhu cầu
+            </a>
+          </div>
+        </div>
+
+        <!-- GÓI 3: THÂN TÌNH (bản đầy đủ, chỉ hiện trên desktop) -->
+        <div class="package-card package-detailed">
+          <div>
+            <span class="mini-tag tag-teal">Đang phát triển · Chưa mở đặt lịch trong app</span>
+            <h3 style="font-size: 1.6rem; margin-top: 8px;">Gói Thân tình</h3>
+            <p style="font-size: 0.9rem; margin-top: 4px;">
+              Định hướng đồng hành định kỳ để gia đình chủ động sắp xếp trong tháng.
+            </p>
+            <div class="package-price" style="font-size: 1.85rem;">
+              2.800.000đ <span>/ tháng</span>
+            </div>
+            <p style="font-size: 0.88rem; margin-top: 6px;">
+              Dự kiến: <b>7 ngày lựa chọn/tháng · 8 giờ/ngày</b>
+            </p>
+            <p style="font-size: 0.9rem; margin-top: 12px; line-height: 1.6;">
+              Gói đồng hành định kỳ hàng tháng giúp người thân có người quen thuộc đồng hành đều đặn.
+            </p>
+          </div>
+
+          <div style="margin-top: 24px;">
+            <a href="#contact" class="btn btn-secondary" style="width: 100%;">
+              Trao đổi nhu cầu
+            </a>
+          </div>
+        </div>
+
+        <!-- GÓI 2: CHĂM CHÚT (bản rút gọn, chỉ hiện trên điện thoại) -->
         <div class="package-card package-upcoming">
           <span class="mini-tag tag-apricot">Đang phát triển</span>
           <h3 style="font-size: 1.6rem; margin-top: 8px;">Gói Chăm chút</h3>
           <p>Thông tin chi tiết sẽ được cập nhật khi gói sẵn sàng.</p>
         </div>
 
-        <!-- GÓI 3: THÂN TÌNH (đang phát triển) -->
+        <!-- GÓI 3: THÂN TÌNH (bản rút gọn, chỉ hiện trên điện thoại) -->
         <div class="package-card package-upcoming">
           <span class="mini-tag tag-teal">Đang phát triển</span>
           <h3 style="font-size: 1.6rem; margin-top: 8px;">Gói Thân tình</h3>
@@ -3883,24 +3977,76 @@
     window.addEventListener('resize', syncJourneyLayout);
     syncJourneyLayout();
 
-    // Điện thoại: bấm vào bước nào thì minh họa của bước đó hiện ngay dưới thẻ (mờ dần + trượt nhẹ).
-    // Chỉ dùng opacity/transform nên không làm xô lệch bố cục, không bị giật.
+    // Điện thoại: bấm sang bước khác thì chạy 2 nhịp nối tiếp, không tự cuộn trang:
+    //   1) minh họa đang mở thu lại (thẻ bên dưới tự trôi lên theo)
+    //   2) minh họa của bước vừa bấm mở ra ngay dưới thẻ đó
+    const DEMO_CLOSE_MS = 350;
+    const DEMO_OPEN_MS = 500;
+    const DEMO_EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
+    let journeyDemoBusy = false;
+
+    function demoBox(el) {
+      const c = getComputedStyle(el);
+      const gap = parseFloat(getComputedStyle(el.parentElement).rowGap) || 0;
+      return {
+        open: { height: el.offsetHeight + 'px', paddingTop: c.paddingTop, paddingBottom: c.paddingBottom,
+          borderTopWidth: c.borderTopWidth, borderBottomWidth: c.borderBottomWidth,
+          marginTop: c.marginTop, marginBottom: c.marginBottom, opacity: 1 },
+        // Thu về 0 kể cả khoảng cách của danh sách (gap) để lúc gỡ ra không bị nhảy
+        closed: { height: '0px', paddingTop: '0px', paddingBottom: '0px', borderTopWidth: '0px', borderBottomWidth: '0px',
+          marginTop: '0px', marginBottom: -gap + 'px', opacity: 0 }
+      };
+    }
+
     function openJourneyStepMobile(stepIndex) {
       const btns = document.querySelectorAll('.step-item-btn');
       const card = btns[stepIndex];
       const phone = document.getElementById('journeyPhoneContainer');
-      if (!card || !phone) return;
+      if (!card || !phone || journeyDemoBusy) return;
       if (stepIndex === currentJourneyIndex && phone.previousElementSibling === card) return;
 
-      const before = card.getBoundingClientRect().top;
-      applyJourneyStep(stepIndex);
-      // Minh họa cũ ở phía trên được gỡ đi: bù ngay trong cùng khung hình để thẻ vừa bấm đứng yên
-      const shift = card.getBoundingClientRect().top - before;
-      if (shift) window.scrollTo({ top: window.scrollY + shift, behavior: 'instant' });
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce || !phone.animate) {
+        const before = card.getBoundingClientRect().top;
+        applyJourneyStep(stepIndex);
+        const shift = card.getBoundingClientRect().top - before;
+        if (shift) window.scrollTo({ top: window.scrollY + shift, behavior: 'instant' });
+        return;
+      }
 
-      phone.classList.remove('demo-enter');
-      void phone.offsetWidth; // chạy lại hiệu ứng
-      phone.classList.add('demo-enter');
+      journeyDemoBusy = true;
+      // Phản hồi ngay trên thẻ vừa bấm
+      btns.forEach((btn, i) => btn.classList.toggle('active', i === stepIndex));
+      phone.style.boxSizing = 'border-box';
+      phone.style.overflow = 'hidden';
+
+      const finish = () => {
+        phone.style.boxSizing = '';
+        phone.style.overflow = '';
+        journeyDemoBusy = false;
+      };
+
+      // Nhịp 1: thu minh họa đang mở
+      const closing = phone.animate([demoBox(phone).open, demoBox(phone).closed],
+        { duration: DEMO_CLOSE_MS, easing: DEMO_EASE, fill: 'forwards' });
+      closing.onfinish = () => {
+        // Nhịp 2: chuyển minh họa xuống dưới thẻ mới và mở ra
+        applyJourneyStep(stepIndex);
+        closing.cancel();
+        const box = demoBox(phone);
+        const opening = phone.animate([box.closed, box.open], { duration: DEMO_OPEN_MS, easing: DEMO_EASE });
+        opening.onfinish = finish;
+        opening.oncancel = finish;
+      };
+      closing.oncancel = () => { if (journeyDemoBusy && phone.previousElementSibling !== card) applyJourneyStep(stepIndex); finish(); };
+      // Dự phòng nếu trình duyệt tạm dừng animation (ví dụ chuyển tab giữa chừng)
+      setTimeout(() => {
+        if (!journeyDemoBusy) return;
+        closing.cancel();
+        if (phone.previousElementSibling !== card) applyJourneyStep(stepIndex);
+        phone.getAnimations().forEach((an) => an.cancel());
+        finish();
+      }, DEMO_CLOSE_MS + DEMO_OPEN_MS + 400);
     }
 
     // Step 6 Star Rating interactive demo
