@@ -2262,6 +2262,31 @@
         display: none;
       }
 
+      /* Hero chiếm trọn màn hình đầu tiên; tab và điện thoại minh họa nằm bên dưới */
+      .hero {
+        padding-top: 0;
+      }
+
+      .hero-content {
+        min-height: calc(100vh - 64px);
+        min-height: calc(100svh - 64px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0;
+        padding: 20px 0 28px;
+      }
+
+      /* "Sự quan tâm vẫn ở gần." nằm trên một dòng */
+      .hero-title {
+        font-size: clamp(1.55rem, 8.2vw, 2.5rem);
+      }
+
+      .hero-title em {
+        white-space: nowrap;
+      }
+
       .hero-screen-tabs {
         display: flex;
         width: 100%;
