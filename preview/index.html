@@ -2268,8 +2268,8 @@
       }
 
       .hero-content {
-        min-height: calc(100vh - 64px);
-        min-height: calc(100svh - 64px);
+        min-height: calc(100vh - 64px - 110px);
+        min-height: calc(100svh - 64px - 110px);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -2310,6 +2310,10 @@
 
       #heroPhoneStage {
         touch-action: pan-y;
+      }
+
+      .hero-screen-tabs {
+        margin-top: 16px;
       }
 
       /* Mục 4 */
@@ -3954,13 +3958,24 @@
         });
       }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
       const targetSet = new Set(revealTargets);
+      // Điện thoại: tab + điện thoại minh họa của hero chỉ hiện khi người xem bắt đầu cuộn
+      const heroPart2 = window.innerWidth <= 768 ? [...document.querySelectorAll('.hero-screen-tabs, .hero-stage, .hero-dots-nav')] : [];
+      if (heroPart2.length) {
+        const showHeroPart2 = () => {
+          if (window.scrollY < 8) return;
+          heroPart2.forEach((el) => el.classList.add('in-view'));
+          window.removeEventListener('scroll', showHeroPart2);
+        };
+        window.addEventListener('scroll', showHeroPart2, { passive: true });
+        showHeroPart2();
+      }
       revealTargets.forEach((el) => {
         // Phần chữ đầu trang hiện ngay; tab và điện thoại minh họa của hero vẫn có hiệu ứng khi cuộn tới
         if (el.closest('.hero-content')) return;
         const siblings = [...el.parentElement.children].filter((c) => targetSet.has(c));
         el.style.setProperty('--reveal-delay', Math.min(siblings.indexOf(el), 4) * 80 + 'ms');
         el.classList.add('reveal');
-        revealObserver.observe(el);
+        if (!heroPart2.includes(el)) revealObserver.observe(el);
       });
     }
 
