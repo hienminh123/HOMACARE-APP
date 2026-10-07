@@ -2145,6 +2145,11 @@
       display: none;
     }
 
+    /* Tự bù vị trí cuộn bằng JS khi minh họa đổi bước, tắt cơ chế tự động của trình duyệt để không bị bù hai lần */
+    .journey-section {
+      overflow-anchor: none;
+    }
+
     /* Mục 4: thứ tự "Về HomaCare" trước "Dõi theo từ xa" chỉ trên điện thoại */
     .intro-order {
       display: contents;
@@ -3699,6 +3704,7 @@
     let currentJourneyIndex = 0;
     let journeyTimer = null;
     let journeyVisible = false;
+    let journeyScrollLock = 0;
 
     function restartJourneyAutoPlay() {
       clearInterval(journeyTimer);
@@ -3714,7 +3720,10 @@
 
     function selectJourneyStep(stepIndex, fromAutoPlay = false) {
       currentJourneyIndex = stepIndex;
-      if (!fromAutoPlay) restartJourneyAutoPlay();
+      if (!fromAutoPlay) {
+        restartJourneyAutoPlay();
+        journeyScrollLock = Date.now() + 900;
+      }
       const stepBtns = document.querySelectorAll('.step-item-btn');
       stepBtns.forEach((btn, i) => {
         btn.classList.toggle('active', i === stepIndex);
@@ -3769,6 +3778,41 @@
 
     window.addEventListener('resize', syncJourneyLayout);
     syncJourneyLayout();
+
+    // Điện thoại: cuộn qua hết minh họa của một bước thì bước kế tiếp tự mở minh họa
+    function changeJourneyStepByScroll(nextIndex) {
+      const btns = document.querySelectorAll('.step-item-btn');
+      const anchor = btns[nextIndex];
+      const before = anchor.getBoundingClientRect().top;
+      selectJourneyStep(nextIndex, true);
+      // Giữ nguyên vị trí bước mới trên màn hình khi minh họa phía trên được gỡ đi
+      const shift = anchor.getBoundingClientRect().top - before;
+      if (shift) window.scrollTo({ top: window.scrollY + shift, behavior: 'instant' });
+      restartJourneyAutoPlay();
+    }
+
+    let journeyScrollTicking = false;
+    function onJourneyScroll() {
+      journeyScrollTicking = false;
+      if (window.innerWidth > 960 || Date.now() < journeyScrollLock) return;
+      const btns = document.querySelectorAll('.step-item-btn');
+      const phone = document.getElementById('journeyPhoneContainer');
+      const header = document.querySelector('.header');
+      if (!phone || !btns.length) return;
+      const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+      const k = currentJourneyIndex;
+      if (k < btns.length - 1 && phone.getBoundingClientRect().bottom < headerBottom + 24) {
+        changeJourneyStepByScroll(k + 1);
+      } else if (k > 0 && btns[k].getBoundingClientRect().top > window.innerHeight * 0.75) {
+        changeJourneyStepByScroll(k - 1);
+      }
+    }
+    window.addEventListener('scroll', () => {
+      if (!journeyScrollTicking) {
+        journeyScrollTicking = true;
+        requestAnimationFrame(onJourneyScroll);
+      }
+    }, { passive: true });
 
     // Step 6 Star Rating interactive demo
     let currentRating = 5;
