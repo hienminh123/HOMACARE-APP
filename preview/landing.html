@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HomaCare · Gửi trọn quan tâm, vẹn tròn đạo hiếu</title>
-  <meta name="description" content="Nền tảng kết nối và điều phối chăm sóc người cao tuổi tại nhà. Đồng hành cùng cha mẹ trong từng bữa ăn, vận động và câu chuyện thường ngày.">
-  
+  <meta name="description"
+    content="Nền tảng kết nối và điều phối chăm sóc người cao tuổi tại nhà. Đồng hành cùng cha mẹ trong từng bữa ăn, vận động và câu chuyện thường ngày.">
+
   <!-- Local Font: Cal Sans -->
   <link rel="apple-touch-icon" href="assets/app-icon-h.png?v=2">
   <link rel="icon" type="image/png" href="assets/app-icon-h.png?v=2">
@@ -44,24 +46,26 @@
       --surface: #FFFFFF;
       --border: rgba(15, 76, 70, 0.12);
       --border-subtle: rgba(0, 0, 0, 0.06);
-      
+
       --font-heading: 'Cal Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-body: 'Cal Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      
+
       --radius-sm: 8px;
       --radius-md: 14px;
       --radius-lg: 24px;
       --radius-xl: 36px;
       --radius-full: 9999px;
-      
+
       --shadow-sm: 0 2px 8px rgba(15, 76, 70, 0.04);
       --shadow-md: 0 12px 32px -4px rgba(15, 76, 70, 0.08);
       --shadow-lg: 0 24px 60px -12px rgba(15, 76, 70, 0.16);
       --shadow-glow: 0 0 40px -10px rgba(242, 140, 104, 0.4);
-      --shadow-mockup: 0 30px 80px -20px rgba(15, 76, 70, 0.25), 0 0 0 1px rgba(0,0,0,0.08);
+      --shadow-mockup: 0 30px 80px -20px rgba(15, 76, 70, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.08);
     }
 
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -79,7 +83,7 @@
       font-family: 'Cal Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       color: var(--text);
       background-color: #FAFAF8;
-      background-image: 
+      background-image:
         radial-gradient(circle at 50% 0%, rgba(15, 76, 70, 0.05) 0%, transparent 60%),
         radial-gradient(rgba(15, 76, 70, 0.04) 1px, transparent 1px);
       background-size: 100% 100%, 32px 32px;
@@ -87,7 +91,10 @@
       overflow-x: hidden;
     }
 
-    button, input, select, textarea {
+    button,
+    input,
+    select,
+    textarea {
       font-family: 'Cal Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
@@ -102,7 +109,11 @@
     }
 
     /* Typography */
-    h1, h2, h3, h4, h5 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
       font-family: var(--font-heading);
       color: var(--navy);
       font-weight: 700;
@@ -141,6 +152,7 @@
       color: #FFFFFF;
       box-shadow: 0 4px 16px rgba(15, 76, 70, 0.2);
     }
+
     .btn-primary:hover {
       background-color: var(--primary-light);
       transform: translateY(-2px);
@@ -152,6 +164,7 @@
       color: #FFFFFF;
       box-shadow: 0 6px 20px rgba(242, 140, 104, 0.35);
     }
+
     .btn-apricot:hover {
       background-color: var(--apricot-hover);
       transform: translateY(-2px);
@@ -164,6 +177,7 @@
       border-color: var(--border);
       backdrop-filter: blur(8px);
     }
+
     .btn-secondary:hover {
       background: #FFFFFF;
       border-color: var(--primary);
@@ -192,17 +206,30 @@
       overflow: hidden;
       margin-bottom: 24px;
     }
+
     .badge-pill::after {
       content: '';
       position: absolute;
-      top: 0; left: -100%; width: 60%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
       animation: badgeShimmer 3.5s infinite;
     }
+
     @keyframes badgeShimmer {
-      0% { left: -100%; }
-      30% { left: 120%; }
-      100% { left: 120%; }
+      0% {
+        left: -100%;
+      }
+
+      30% {
+        left: 120%;
+      }
+
+      100% {
+        left: 120%;
+      }
     }
 
     /* Section Headers */
@@ -215,12 +242,14 @@
       margin-bottom: 12px;
       display: block;
     }
+
     .section-title {
       font-size: clamp(2.2rem, 4.5vw, 3.4rem);
       color: var(--navy);
       letter-spacing: -0.03em;
       margin-bottom: 16px;
     }
+
     .section-desc {
       font-size: 1.15rem;
       max-width: 640px;
@@ -228,7 +257,10 @@
       color: var(--text-muted);
       line-height: 1.6;
     }
-    .text-center { text-align: center; }
+
+    .text-center {
+      text-align: center;
+    }
 
     /* =====================================================================
        2. STICKY HEADER (GLASSMORPHISM)
@@ -243,24 +275,28 @@
       border-bottom: 1px solid rgba(15, 76, 70, 0.08);
       transition: all 0.3s ease;
     }
+
     .header-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
       height: 76px;
     }
+
     .brand {
       display: flex;
       align-items: center;
       gap: 12px;
       text-decoration: none;
     }
+
     .brand-logo-img {
       width: 36px;
       height: 36px;
       border-radius: 9px;
       object-fit: contain;
     }
+
     .brand-name {
       font-family: var(--font-heading);
       font-size: 1.5rem;
@@ -268,24 +304,29 @@
       color: var(--primary);
       letter-spacing: -0.02em;
     }
+
     .brand-name span {
       color: var(--apricot);
     }
+
     .nav-menu {
       display: flex;
       align-items: center;
       gap: 32px;
       list-style: none;
     }
+
     .nav-link {
       font-size: 0.94rem;
       font-weight: 600;
       color: var(--navy);
       transition: color 0.2s;
     }
+
     .nav-link:hover {
       color: var(--primary);
     }
+
     .header-actions {
       display: flex;
       align-items: center;
@@ -300,10 +341,10 @@
       width: 280px;
       height: 570px;
       background: #090B0E;
-      border-radius: 48px;
-      border: 4px solid #363C44;
-      box-shadow: 
-        0 0 0 2px #181B1F,
+      border-radius: 46px;
+      border: 2px solid #282D36;
+      box-shadow:
+        0 0 0 1px #14171C,
         0 30px 60px -15px rgba(0, 0, 0, 0.3),
         0 15px 35px -10px rgba(15, 76, 70, 0.2);
       overflow: hidden;
@@ -313,6 +354,7 @@
       user-select: none;
       transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
     }
+
     /* Dynamic Island */
     .dynamic-island {
       position: absolute;
@@ -329,6 +371,7 @@
       justify-content: space-between;
       padding: 0 8px;
     }
+
     .island-lens {
       width: 8px;
       height: 8px;
@@ -336,6 +379,7 @@
       border-radius: 50%;
       border: 1px solid #1a2233;
     }
+
     .island-sensor {
       width: 6px;
       height: 6px;
@@ -356,7 +400,8 @@
       font-family: var(--font-body);
       font-size: 11px;
       color: #1E293B;
-      padding-top: 38px; /* space for dynamic island */
+      padding-top: 38px;
+      /* space for dynamic island */
     }
 
     /* Status Bar */
@@ -375,6 +420,7 @@
       color: #000;
       z-index: 40;
     }
+
     .status-icons {
       display: flex;
       align-items: center;
@@ -391,11 +437,13 @@
       justify-content: space-between;
       gap: 8px;
     }
+
     .screen-brand {
       display: inline-flex;
       align-items: center;
       gap: 7px;
     }
+
     .screen-logo-img {
       width: 22px;
       height: 22px;
@@ -404,6 +452,7 @@
       flex-shrink: 0;
       box-shadow: 0 2px 5px rgba(15, 76, 70, 0.15);
     }
+
     .screen-brand-text {
       font-weight: 800;
       font-size: 15px;
@@ -412,7 +461,11 @@
       line-height: 1;
       white-space: nowrap;
     }
-    .screen-brand-text span { color: var(--apricot); }
+
+    .screen-brand-text span {
+      color: var(--apricot);
+    }
+
     .screen-body {
       padding: 14px 15px;
       flex: 1;
@@ -422,6 +475,7 @@
       gap: 12px;
       background: #F8FAF9;
     }
+
     .screen-bottom-bar {
       position: absolute;
       bottom: 6px;
@@ -440,8 +494,9 @@
       border-radius: 12px;
       padding: 10px;
       border: 1px solid rgba(15, 76, 70, 0.08);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
     }
+
     .mini-tag {
       display: inline-block;
       font-size: 9px;
@@ -450,9 +505,21 @@
       border-radius: 6px;
       text-transform: uppercase;
     }
-    .tag-teal { background: #E6F3F1; color: var(--primary); }
-    .tag-apricot { background: #FEF0EA; color: #D65A31; }
-    .tag-green { background: #E7F7ED; color: #167E48; }
+
+    .tag-teal {
+      background: #E6F3F1;
+      color: var(--primary);
+    }
+
+    .tag-apricot {
+      background: #FEF0EA;
+      color: #D65A31;
+    }
+
+    .tag-green {
+      background: #E7F7ED;
+      color: #167E48;
+    }
 
     /* =====================================================================
        4. HERO SECTION WITH 5-DEVICE 3D FAN-OUT
@@ -464,10 +531,12 @@
       overflow: hidden;
       text-align: center;
     }
+
     .hero-content {
       max-width: 820px;
       margin: 0 auto 50px;
     }
+
     .hero-title {
       font-size: clamp(2.8rem, 5.8vw, 4.6rem);
       font-weight: 800;
@@ -476,12 +545,14 @@
       letter-spacing: -0.035em;
       margin-bottom: 22px;
     }
+
     .hero-title em {
       font-style: normal;
       background: linear-gradient(135deg, var(--primary) 0%, #1c7c72 50%, var(--apricot) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+
     .hero-subtitle {
       font-size: clamp(1.1rem, 2vw, 1.3rem);
       color: var(--text-muted);
@@ -491,6 +562,7 @@
       margin-left: auto;
       margin-right: auto;
     }
+
     .hero-actions {
       display: flex;
       align-items: center;
@@ -509,10 +581,12 @@
       overflow: hidden;
       text-align: center;
     }
+
     .hero-content {
       max-width: 820px;
       margin: 0 auto 24px;
     }
+
     .hero-title {
       font-size: clamp(2.6rem, 5.5vw, 4.4rem);
       font-weight: 800;
@@ -521,12 +595,14 @@
       letter-spacing: -0.035em;
       margin-bottom: 20px;
     }
+
     .hero-title em {
       font-style: normal;
       background: linear-gradient(135deg, var(--primary) 0%, #1c7c72 50%, var(--apricot) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+
     .hero-subtitle {
       font-size: clamp(1.05rem, 1.8vw, 1.25rem);
       color: var(--text-muted);
@@ -536,6 +612,7 @@
       margin-left: auto;
       margin-right: auto;
     }
+
     .hero-actions {
       display: flex;
       align-items: center;
@@ -560,9 +637,11 @@
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
     }
+
     .hero-screen-tabs::-webkit-scrollbar {
       display: none;
     }
+
     .screen-tab {
       padding: 9px 18px;
       border-radius: var(--radius-full);
@@ -578,10 +657,12 @@
       align-items: center;
       gap: 8px;
     }
+
     .screen-tab:hover {
       background: rgba(255, 255, 255, 0.8);
       color: var(--primary);
     }
+
     .screen-tab.active {
       background: var(--primary);
       color: #FFFFFF;
@@ -620,11 +701,12 @@
       justify-content: center;
       flex-shrink: 0;
     }
+
     .hero-main-device {
       width: min(340px, 92vw);
       height: 630px;
       margin: 0 auto;
-      box-shadow: 
+      box-shadow:
         0 0 0 2px #181B1F,
         0 30px 80px -15px rgba(15, 76, 70, 0.28),
         0 15px 35px -10px rgba(0, 0, 0, 0.2);
@@ -633,14 +715,19 @@
     /* Screen Panels inside Phone */
     .screen-panel {
       position: absolute;
-      inset: 0;
-      padding-top: 38px;
+      inset: 4px;
+      background: #F8F9FA;
+      border-radius: 42px;
+      overflow: hidden;
+      padding-top: 36px;
       display: none;
       opacity: 0;
       transition: opacity 0.35s ease, transform 0.35s ease;
       transform: scale(0.98);
       z-index: 10;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
     }
+
     .screen-panel.active {
       display: flex;
       opacity: 1;
@@ -668,6 +755,7 @@
       z-index: 60;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
     .stage-nav-arrow:hover {
       background: var(--primary);
       color: #FFFFFF;
@@ -675,8 +763,14 @@
       transform: translateY(-50%) scale(1.12);
       box-shadow: 0 8px 25px rgba(15, 76, 70, 0.35);
     }
-    .arrow-left { left: -22px; }
-    .arrow-right { right: -22px; }
+
+    .arrow-left {
+      left: -60px;
+    }
+
+    .arrow-right {
+      right: -60px;
+    }
 
     /* Floating Glass Cards (Desktop Highlights) */
     .hero-float-card {
@@ -693,6 +787,7 @@
       text-align: left;
       transition: transform 0.3s ease;
     }
+
     .hero-float-card:hover {
       transform: translateY(-6px);
     }
@@ -705,6 +800,7 @@
       gap: 8px;
       margin-top: 24px;
     }
+
     .hero-dot {
       width: 8px;
       height: 8px;
@@ -713,6 +809,7 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
+
     .hero-dot.active {
       width: 26px;
       border-radius: 12px;
@@ -729,6 +826,7 @@
       border-bottom: 1px solid var(--border-subtle);
       overflow: hidden;
     }
+
     .parallax-grid {
       display: flex;
       justify-content: center;
@@ -736,6 +834,7 @@
       margin-top: 60px;
       align-items: flex-end;
     }
+
     .parallax-card {
       display: flex;
       flex-direction: column;
@@ -743,19 +842,33 @@
       gap: 20px;
       transition: transform 0.5s ease;
     }
-    .parallax-card:nth-child(1) { transform: translateY(40px); }
-    .parallax-card:nth-child(2) { transform: translateY(0); }
-    .parallax-card:nth-child(3) { transform: translateY(70px); }
-    .parallax-card:hover { transform: translateY(-10px) !important; }
-    
+
+    .parallax-card:nth-child(1) {
+      transform: translateY(40px);
+    }
+
+    .parallax-card:nth-child(2) {
+      transform: translateY(0);
+    }
+
+    .parallax-card:nth-child(3) {
+      transform: translateY(70px);
+    }
+
+    .parallax-card:hover {
+      transform: translateY(-10px) !important;
+    }
+
     .parallax-caption {
       text-align: center;
       max-width: 260px;
     }
+
     .parallax-caption h4 {
       font-size: 1.1rem;
       margin-bottom: 6px;
     }
+
     .parallax-caption p {
       font-size: 0.9rem;
     }
@@ -766,6 +879,7 @@
     .features-split {
       padding: 120px 0;
     }
+
     .split-row {
       display: flex;
       align-items: center;
@@ -773,32 +887,39 @@
       gap: 80px;
       margin-bottom: 120px;
     }
+
     .split-row:last-child {
       margin-bottom: 0;
     }
+
     .split-row.reverse {
       flex-direction: row-reverse;
     }
+
     .split-text {
       flex: 1;
       max-width: 520px;
     }
+
     .split-text h3 {
       font-size: clamp(2rem, 3.5vw, 2.7rem);
       margin-bottom: 20px;
       line-height: 1.15;
     }
+
     .split-text p {
       font-size: 1.1rem;
       line-height: 1.7;
       margin-bottom: 28px;
     }
+
     .split-visual {
       flex: 1;
       display: flex;
       justify-content: center;
       position: relative;
     }
+
     .split-visual-bg {
       position: absolute;
       width: 380px;
@@ -818,12 +939,14 @@
       padding: 100px 0;
       background: var(--sand);
     }
+
     .bento-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
       margin-top: 60px;
     }
+
     .bento-card {
       background: #FFFFFF;
       border-radius: var(--radius-lg);
@@ -836,21 +959,26 @@
       overflow: hidden;
       transition: all 0.35s ease;
     }
+
     .bento-card:hover {
       transform: translateY(-4px);
       box-shadow: var(--shadow-md);
       border-color: rgba(15, 76, 70, 0.2);
     }
+
     .bento-card.col-2 {
       grid-column: span 2;
     }
+
     .bento-card.col-3 {
       grid-column: span 3;
     }
+
     .bento-card h3 {
       font-size: 1.5rem;
       margin-bottom: 12px;
     }
+
     .bento-card p {
       font-size: 0.98rem;
       line-height: 1.6;
@@ -863,6 +991,7 @@
       gap: 14px;
       margin-top: 24px;
     }
+
     .activity-chip {
       display: flex;
       align-items: center;
@@ -872,6 +1001,7 @@
       border-radius: var(--radius-md);
       border: 1px solid rgba(15, 76, 70, 0.07);
     }
+
     .chip-icon {
       width: 40px;
       height: 40px;
@@ -891,6 +1021,7 @@
       gap: 12px;
       margin-top: 20px;
     }
+
     .status-step {
       display: flex;
       align-items: center;
@@ -898,21 +1029,32 @@
       font-size: 0.92rem;
       font-weight: 600;
     }
+
     .status-dot {
       width: 14px;
       height: 14px;
       border-radius: 50%;
       background: #CBD5E1;
     }
+
     .status-dot.active {
       background: #10B981;
       box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
       animation: pulseGreen 2s infinite;
     }
+
     @keyframes pulseGreen {
-      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+      0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+      }
+
+      70% {
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
     }
 
     /* 3 Roles Pills */
@@ -922,6 +1064,7 @@
       margin-top: 24px;
       flex-wrap: wrap;
     }
+
     .role-badge {
       display: flex;
       align-items: center;
@@ -941,16 +1084,19 @@
       padding: 100px 0;
       overflow: hidden;
     }
+
     .carousel-header {
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
       margin-bottom: 40px;
     }
+
     .carousel-controls {
       display: flex;
       gap: 12px;
     }
+
     .control-btn {
       width: 48px;
       height: 48px;
@@ -965,6 +1111,7 @@
       font-size: 1.2rem;
       transition: all 0.2s;
     }
+
     .control-btn:hover {
       background: var(--primary);
       color: #FFFFFF;
@@ -980,9 +1127,11 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
     .carousel-container::-webkit-scrollbar {
       display: none;
     }
+
     .carousel-card {
       flex: 0 0 340px;
       scroll-snap-align: start;
@@ -995,18 +1144,22 @@
       flex-direction: column;
       transition: transform 0.3s;
     }
+
     .carousel-card:hover {
       transform: translateY(-6px);
       box-shadow: var(--shadow-md);
     }
+
     .carousel-card-img {
       height: 220px;
       width: 100%;
       object-fit: cover;
     }
+
     .carousel-card-body {
       padding: 24px;
     }
+
     .carousel-card-body h4 {
       font-size: 1.25rem;
       margin-bottom: 8px;
@@ -1019,6 +1172,7 @@
       padding: 100px 0;
       background: var(--sand);
     }
+
     .pricing-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1026,6 +1180,7 @@
       margin-top: 60px;
       align-items: stretch;
     }
+
     .pricing-card {
       background: #FFFFFF;
       border-radius: var(--radius-lg);
@@ -1036,6 +1191,7 @@
       position: relative;
       transition: all 0.3s;
     }
+
     .pricing-card.featured {
       background: linear-gradient(180deg, #FFFFFF 0%, #F5FAF9 100%);
       border: 2px solid var(--primary);
@@ -1043,6 +1199,7 @@
       transform: scale(1.04);
       z-index: 2;
     }
+
     .featured-ribbon {
       position: absolute;
       top: -14px;
@@ -1058,6 +1215,7 @@
       text-transform: uppercase;
       box-shadow: 0 4px 12px rgba(242, 140, 104, 0.35);
     }
+
     .price-value {
       font-family: var(--font-heading);
       font-size: 2.5rem;
@@ -1065,11 +1223,13 @@
       color: var(--navy);
       margin: 16px 0 6px;
     }
+
     .price-value span {
       font-size: 0.95rem;
       font-weight: 500;
       color: var(--text-muted);
     }
+
     .pricing-features {
       list-style: none;
       margin: 28px 0;
@@ -1078,6 +1238,7 @@
       gap: 14px;
       flex: 1;
     }
+
     .pricing-features li {
       display: flex;
       align-items: flex-start;
@@ -1085,6 +1246,7 @@
       font-size: 0.95rem;
       color: var(--text);
     }
+
     .pricing-features li svg {
       flex-shrink: 0;
       width: 18px;
@@ -1104,6 +1266,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 40px;
     }
+
     .scope-col h4 {
       display: flex;
       align-items: center;
@@ -1118,12 +1281,14 @@
     .testimonials-section {
       padding: 100px 0;
     }
+
     .testimonials-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
       margin-top: 60px;
     }
+
     .testimonial-card {
       background: #FFFFFF;
       border-radius: var(--radius-lg);
@@ -1134,22 +1299,26 @@
       flex-direction: column;
       justify-content: space-between;
     }
+
     .stars {
       color: #F59E0B;
       font-size: 1.1rem;
       margin-bottom: 14px;
     }
+
     .quote-text {
       font-size: 1rem;
       color: var(--navy);
       line-height: 1.6;
       margin-bottom: 24px;
     }
+
     .user-profile {
       display: flex;
       align-items: center;
       gap: 12px;
     }
+
     .user-avatar {
       width: 44px;
       height: 44px;
@@ -1161,11 +1330,13 @@
       align-items: center;
       justify-content: center;
     }
+
     .user-name {
       font-weight: 700;
       font-size: 0.95rem;
       color: var(--navy);
     }
+
     .user-role {
       font-size: 0.82rem;
       color: var(--text-muted);
@@ -1178,6 +1349,7 @@
       padding: 100px 0;
       background: var(--sand);
     }
+
     .faq-wrapper {
       max-width: 780px;
       margin: 60px auto 0;
@@ -1185,6 +1357,7 @@
       flex-direction: column;
       gap: 16px;
     }
+
     .faq-item {
       background: #FFFFFF;
       border-radius: var(--radius-md);
@@ -1192,6 +1365,7 @@
       overflow: hidden;
       transition: all 0.2s;
     }
+
     .faq-question {
       padding: 22px 28px;
       font-size: 1.05rem;
@@ -1203,6 +1377,7 @@
       justify-content: space-between;
       user-select: none;
     }
+
     .faq-question svg {
       transition: transform 0.3s;
       width: 20px;
@@ -1210,9 +1385,11 @@
       color: var(--primary);
       flex-shrink: 0;
     }
+
     .faq-item.active .faq-question svg {
       transform: rotate(180deg);
     }
+
     .faq-answer {
       max-height: 0;
       overflow: hidden;
@@ -1221,6 +1398,7 @@
       color: var(--text-muted);
       line-height: 1.7;
     }
+
     .faq-item.active .faq-answer {
       max-height: 220px;
       padding-bottom: 24px;
@@ -1232,6 +1410,7 @@
     .cta-banner-section {
       padding: 100px 0 60px;
     }
+
     .cta-banner {
       background: linear-gradient(135deg, #0B3A35 0%, #0F4C46 50%, #173B4D 100%);
       border-radius: var(--radius-xl);
@@ -1242,18 +1421,24 @@
       overflow: hidden;
       box-shadow: 0 30px 80px -20px rgba(15, 76, 70, 0.4);
     }
+
     .cta-banner::before {
       content: '';
       position: absolute;
-      top: -50%; left: -20%; width: 140%; height: 200%;
+      top: -50%;
+      left: -20%;
+      width: 140%;
+      height: 200%;
       background: radial-gradient(circle at 50% 50%, rgba(242, 140, 104, 0.15), transparent 60%);
       pointer-events: none;
     }
+
     .cta-banner h2 {
       color: #FFFFFF;
       font-size: clamp(2.3rem, 4.5vw, 3.6rem);
       margin-bottom: 18px;
     }
+
     .cta-banner p {
       color: #E2E8F0;
       font-size: 1.2rem;
@@ -1267,6 +1452,7 @@
       border-top: 1px solid var(--border-subtle);
       padding: 60px 0 40px;
     }
+
     .footer-inner {
       display: flex;
       align-items: center;
@@ -1275,20 +1461,24 @@
       gap: 24px;
       margin-bottom: 40px;
     }
+
     .footer-links {
       display: flex;
       gap: 28px;
       list-style: none;
     }
+
     .footer-links a {
       font-size: 0.94rem;
       font-weight: 600;
       color: var(--text-muted);
       transition: color 0.2s;
     }
+
     .footer-links a:hover {
       color: var(--primary);
     }
+
     .footer-bottom {
       border-top: 1px solid var(--border-subtle);
       padding-top: 24px;
@@ -1311,19 +1501,22 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
+
     .modal-backdrop.open {
       display: flex;
       opacity: 1;
     }
+
     .modal-card {
       background: #FFFFFF;
       width: 90%;
       max-width: 480px;
       border-radius: var(--radius-lg);
       padding: 36px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
       position: relative;
     }
+
     .modal-close {
       position: absolute;
       top: 20px;
@@ -1334,6 +1527,7 @@
       cursor: pointer;
       color: var(--text-muted);
     }
+
     .role-option-card {
       display: flex;
       align-items: center;
@@ -1346,6 +1540,7 @@
       text-decoration: none;
       transition: all 0.2s;
     }
+
     .role-option-card:hover {
       background: #FFFFFF;
       border-color: var(--primary);
@@ -1357,57 +1552,146 @@
        13. RESPONSIVE MEDIA QUERIES (FLUID & SMOOTH)
        ===================================================================== */
     @media (max-width: 1200px) {
-      .hero-stage { gap: 32px; }
-      .hero-float-card { width: 240px; padding: 18px; }
-      .arrow-left { left: -20px; }
-      .arrow-right { right: -20px; }
+      .hero-stage {
+        gap: 32px;
+      }
+
+      .hero-float-card {
+        width: 240px;
+        padding: 18px;
+      }
+
+      .stage-nav-arrow {
+        display: none;
+      }
     }
 
     @media (max-width: 1080px) {
-      .hero-stage { gap: 20px; }
-      .hero-float-card { width: 215px; padding: 16px; }
-      .arrow-left { left: -18px; }
-      .arrow-right { right: -18px; }
+      .hero-stage {
+        gap: 20px;
+      }
+
+      .hero-float-card {
+        width: 215px;
+        padding: 16px;
+      }
     }
 
     @media (max-width: 960px) {
-      .hero-float-card { display: none; }
-      .split-row { gap: 40px; }
-      .bento-grid { grid-template-columns: repeat(2, 1fr); }
-      .bento-card.col-2 { grid-column: span 2; }
-      .pricing-grid { grid-template-columns: 1fr; max-width: 480px; margin-left: auto; margin-right: auto; }
-      .pricing-card.featured { transform: none; }
-      .testimonials-grid { grid-template-columns: 1fr; }
-      .scope-box { grid-template-columns: 1fr; }
+      .hero-float-card {
+        display: none;
+      }
+
+      .split-row {
+        gap: 40px;
+      }
+
+      .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .bento-card.col-2 {
+        grid-column: span 2;
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .pricing-card.featured {
+        transform: none;
+      }
+
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .scope-box {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 768px) {
-      .nav-menu { display: none; }
-      .stage-nav-arrow { width: 40px; height: 40px; font-size: 20px; }
-      .arrow-left { left: -14px; }
-      .arrow-right { right: -14px; }
+      .nav-menu {
+        display: none;
+      }
+
+      .stage-nav-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+      }
+
+      .arrow-left {
+        left: -14px;
+      }
+
+      .arrow-right {
+        right: -14px;
+      }
+
       .hero-screen-tabs {
         justify-content: flex-start;
         padding-left: 14px;
         padding-right: 14px;
         border-radius: var(--radius-md);
       }
-      .parallax-grid { flex-direction: column; align-items: center; }
-      .parallax-card:nth-child(n) { transform: none; }
-      .split-row, .split-row.reverse { flex-direction: column; gap: 40px; }
-      .bento-grid { grid-template-columns: 1fr; }
-      .bento-card.col-2 { grid-column: span 1; }
-      .bento-activities-grid { grid-template-columns: 1fr; }
-      .footer-inner { flex-direction: column; text-align: center; }
-      .footer-links { flex-wrap: wrap; justify-content: center; }
-      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+
+      .parallax-grid {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .parallax-card:nth-child(n) {
+        transform: none;
+      }
+
+      .split-row,
+      .split-row.reverse {
+        flex-direction: column;
+        gap: 40px;
+      }
+
+      .bento-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bento-card.col-2 {
+        grid-column: span 1;
+      }
+
+      .bento-activities-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
     }
 
     @media (max-width: 480px) {
-      .stage-nav-arrow { display: none; }
+      .stage-nav-arrow {
+        display: none;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <!-- =====================================================================
@@ -1433,8 +1717,10 @@
 
       <div class="header-actions">
         <button class="btn btn-apricot btn-sm" onclick="openRoleModal()">
-          Vào Webapp 
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Vào Webapp
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
         </button>
       </div>
     </div>
@@ -1454,12 +1740,15 @@
           <em>Quan tâm gần.</em>
         </h1>
         <p class="hero-subtitle">
-          Một người đồng hành tận tâm bên cha mẹ mỗi tối. Một nền tảng số minh bạch để con cái đi làm xa luôn biết cha mẹ đang được chăm sóc và yêu thương như thế nào.
+          Một người đồng hành tận tâm bên cha mẹ mỗi tối. Một nền tảng số minh bạch để con cái đi làm xa luôn biết cha
+          mẹ đang được chăm sóc và yêu thương như thế nào.
         </p>
         <div class="hero-actions">
           <button class="btn btn-apricot" onclick="openRoleModal()">
             Trải nghiệm Webapp ngay
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
           </button>
           <a href="#pricing" class="btn btn-secondary">
             Khám phá ca Ân Cần 320.000đ
@@ -1530,8 +1819,10 @@
               </div>
               <div class="screen-body">
                 <div style="position:relative; border-radius: 12px; overflow:hidden; height: 135px;">
-                  <img src="assets/photos/companion.jpg" alt="Nhật ký" style="width:100%; height:100%; object-fit:cover;">
-                  <div style="position:absolute; bottom:6px; left:6px; background: rgba(0,0,0,0.65); color:white; font-size:10.5px; padding:3px 9px; border-radius:6px; backdrop-filter:blur(4px);">
+                  <img src="assets/photos/companion.jpg" alt="Nhật ký"
+                    style="width:100%; height:100%; object-fit:cover;">
+                  <div
+                    style="position:absolute; bottom:6px; left:6px; background: rgba(0,0,0,0.65); color:white; font-size:10.5px; padding:3px 9px; border-radius:6px; backdrop-filter:blur(4px);">
                     Ảnh chụp ca tối 07/10
                   </div>
                 </div>
@@ -1553,7 +1844,8 @@
                   </div>
                 </div>
 
-                <div style="background: linear-gradient(135deg, var(--primary), #1A6C63); color: white; text-align: center; padding: 12px; border-radius: 12px; font-weight: 700; font-size: 13px;">
+                <div
+                  style="background: linear-gradient(135deg, var(--primary), #1A6C63); color: white; text-align: center; padding: 12px; border-radius: 12px; font-weight: 700; font-size: 13px;">
                   Đánh giá & Gửi lời cảm ơn
                 </div>
               </div>
@@ -1604,7 +1896,8 @@
                   </div>
                 </div>
 
-                <div style="background: var(--apricot); color: white; text-align: center; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11px;">
+                <div
+                  style="background: var(--apricot); color: white; text-align: center; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11px;">
                   Gửi yêu cầu ca Ân Cần →
                 </div>
               </div>
@@ -1636,13 +1929,15 @@
                     <div style="background: #E8F5E9; padding: 6px; border-radius: 6px; font-size: 10px;">
                       <b>20:00:</b> Trò chuyện cùng cụ ✓
                     </div>
-                    <div style="background: #FFF3E0; padding: 6px; border-radius: 6px; font-size: 10px; border: 1px dashed var(--apricot);">
+                    <div
+                      style="background: #FFF3E0; padding: 6px; border-radius: 6px; font-size: 10px; border: 1px dashed var(--apricot);">
                       <b>21:00:</b> Nhắc lịch sinh hoạt...
                     </div>
                   </div>
                 </div>
 
-                <div style="background: var(--primary); color: white; text-align: center; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11px;">
+                <div
+                  style="background: var(--primary); color: white; text-align: center; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11px;">
                   Gửi báo cáo nhật ký
                 </div>
               </div>
@@ -1665,7 +1960,8 @@
                 <div class="mini-card" style="flex:1;">
                   <strong style="font-size: 11px;">Hồ sơ cha mẹ:</strong>
                   <div style="display:flex; align-items:center; gap: 8px; margin-top: 8px;">
-                    <div style="width:32px; height:32px; border-radius:50%; background:var(--primary-subtle); display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--primary);">
+                    <div
+                      style="width:32px; height:32px; border-radius:50%; background:var(--primary-subtle); display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--primary);">
                       A
                     </div>
                     <div>
@@ -1675,7 +1971,8 @@
                   </div>
                 </div>
 
-                <div style="background: var(--apricot); color: white; text-align: center; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11px;">
+                <div
+                  style="background: var(--apricot); color: white; text-align: center; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11px;">
                   + Đặt thêm ca mới
                 </div>
               </div>
@@ -1692,24 +1989,28 @@
                 <div class="mini-card" style="border-left: 3px solid var(--apricot);">
                   <div style="font-size: 9px; color: var(--text-muted);">Yêu cầu chăm sóc #109</div>
                   <strong style="font-size: 11px;">Q. Ba Đình · Ca Ân Cần</strong>
-                  <div style="font-size: 9px; color: var(--text-muted); margin-top: 2px;">Cần chuyên viên nữ, nhẹ nhàng</div>
+                  <div style="font-size: 9px; color: var(--text-muted); margin-top: 2px;">Cần chuyên viên nữ, nhẹ nhàng
+                  </div>
                 </div>
 
                 <div class="mini-card" style="flex:1;">
                   <strong style="font-size: 10px;">Chuyên viên trống lịch:</strong>
                   <div style="display:flex; flex-direction:column; gap:6px; margin-top: 6px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:10px; background:#F1F5F9; padding:5px; border-radius:6px;">
+                    <div
+                      style="display:flex; justify-content:space-between; align-items:center; font-size:10px; background:#F1F5F9; padding:5px; border-radius:6px;">
                       <span>Trần Thu Trang (1.2km)</span>
                       <span style="color:var(--primary); font-weight:700;">Gán ca</span>
                     </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:10px; background:#F1F5F9; padding:5px; border-radius:6px;">
+                    <div
+                      style="display:flex; justify-content:space-between; align-items:center; font-size:10px; background:#F1F5F9; padding:5px; border-radius:6px;">
                       <span>Vũ Hoài An (2.5km)</span>
                       <span style="color:var(--primary); font-weight:700;">Gán ca</span>
                     </div>
                   </div>
                 </div>
 
-                <div style="background: var(--navy); color: white; text-align: center; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11px;">
+                <div
+                  style="background: var(--navy); color: white; text-align: center; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11px;">
                   Bảng tổng quan điều phối
                 </div>
               </div>
@@ -1728,7 +2029,8 @@
           <p style="font-size: 0.82rem; color: var(--text-muted);">
             — Chị Lan Anh (Quận Đống Đa)
           </p>
-          <div style="margin-top:12px; padding-top:10px; border-top:1px solid var(--border-subtle); font-size:0.78rem; color:var(--primary); font-weight:700;">
+          <div
+            style="margin-top:12px; padding-top:10px; border-top:1px solid var(--border-subtle); font-size:0.78rem; color:var(--primary); font-weight:700;">
             ✓ Đã xác thực trên Webapp
           </div>
         </div>
@@ -1753,7 +2055,8 @@
       <span class="section-eyebrow">Trải nghiệm khác biệt</span>
       <h2 class="section-title">Một ứng dụng dựng bằng trọn đạo hiếu</h2>
       <p class="section-desc">
-        HomaCare tinh giản mọi thao tác để từ con cái ở xa, chuyên viên tại nhà đến điều phối viên đều kết nối liền mạch chỉ trong vài chạm.
+        HomaCare tinh giản mọi thao tác để từ con cái ở xa, chuyên viên tại nhà đến điều phối viên đều kết nối liền mạch
+        chỉ trong vài chạm.
       </p>
 
       <div class="parallax-grid">
@@ -1771,7 +2074,8 @@
                   <strong style="font-size:12px;">Đặt lịch trong 3 phút</strong>
                   <p style="font-size:10px; margin-top:4px;">Chọn khung giờ và ghi chú những điều cha mẹ thích.</p>
                 </div>
-                <div style="margin-top:auto; background:var(--primary); color:white; padding:8px; border-radius:8px; text-align:center; font-size:10px; font-weight:700;">
+                <div
+                  style="margin-top:auto; background:var(--primary); color:white; padding:8px; border-radius:8px; text-align:center; font-size:10px; font-weight:700;">
                   Tiếp tục →
                 </div>
               </div>
@@ -1786,7 +2090,8 @@
 
         <!-- Parallax 2 -->
         <div class="parallax-card">
-          <div class="iphone-device" style="height: 520px; width: 260px; box-shadow: 0 25px 60px -15px rgba(15,76,70,0.3);">
+          <div class="iphone-device"
+            style="height: 520px; width: 260px; box-shadow: 0 25px 60px -15px rgba(15,76,70,0.3);">
             <div class="dynamic-island" style="width:76px; height:20px;"></div>
             <div class="iphone-screen">
               <div class="screen-header">
@@ -1799,7 +2104,8 @@
                 </div>
                 <div class="mini-card">
                   <strong style="font-size:12px;">Đồng hành tận tâm</strong>
-                  <p style="font-size:10px; margin-top:4px;">Chuyên viên hỗ trợ vận động, bữa ăn và chia sẻ niềm vui.</p>
+                  <p style="font-size:10px; margin-top:4px;">Chuyên viên hỗ trợ vận động, bữa ăn và chia sẻ niềm vui.
+                  </p>
                 </div>
               </div>
               <div class="screen-bottom-bar"></div>
@@ -1826,7 +2132,8 @@
                   <strong style="font-size:12px;">An tâm tuyệt đối</strong>
                   <p style="font-size:10px; margin-top:4px;">Đọc nhật ký sinh hoạt và ngắm nụ cười cha mẹ mỗi ngày.</p>
                 </div>
-                <div style="margin-top:auto; background:var(--apricot); color:white; padding:8px; border-radius:8px; text-align:center; font-size:10px; font-weight:700;">
+                <div
+                  style="margin-top:auto; background:var(--apricot); color:white; padding:8px; border-radius:8px; text-align:center; font-size:10px; font-weight:700;">
                   Xem nhật ký
                 </div>
               </div>
@@ -1847,14 +2154,15 @@
        ===================================================================== -->
   <section class="features-split" id="features">
     <div class="container">
-      
+
       <!-- ROW 1 -->
       <div class="split-row">
         <div class="split-text">
           <span class="section-eyebrow">Cá nhân hoá chăm sóc</span>
           <h3>Đặt ca Ân Cần theo thói quen của người thân</h3>
           <p>
-            Mỗi người già có một nhịp sống riêng. HomaCare cho phép bạn ghi chú sở thích dùng bữa, thói quen đi dạo hay những câu chuyện cha mẹ yêu thích, để người đồng hành chăm sóc tự nhiên và chu đáo nhất.
+            Mỗi người già có một nhịp sống riêng. HomaCare cho phép bạn ghi chú sở thích dùng bữa, thói quen đi dạo hay
+            những câu chuyện cha mẹ yêu thích, để người đồng hành chăm sóc tự nhiên và chu đáo nhất.
           </p>
           <button class="btn btn-primary" onclick="openRoleModal()">
             Tìm hiểu quy trình đặt lịch →
@@ -1880,7 +2188,8 @@
                 </div>
                 <div class="mini-card" style="margin-top:10px;">
                   <strong style="font-size:11px;">Khung giờ định kỳ:</strong>
-                  <div style="font-size:10px; color:var(--primary); font-weight:700; margin-top:4px;">18:00 – 22:00 Mỗi tối thứ 3, 5, 7</div>
+                  <div style="font-size:10px; color:var(--primary); font-weight:700; margin-top:4px;">18:00 – 22:00 Mỗi
+                    tối thứ 3, 5, 7</div>
                 </div>
               </div>
               <div class="screen-bottom-bar"></div>
@@ -1895,7 +2204,8 @@
           <span class="section-eyebrow">Minh bạch tuyệt đối</span>
           <h3>Nhật ký số sau mỗi ca — Con ở xa luôn an lòng</h3>
           <p>
-            Không còn nỗi bất an "ở xa không biết cha mẹ ăn cơm chưa, có vui không". Ngay khi kết thúc ca, chuyên viên gửi nhật ký sinh hoạt kèm hình ảnh thực tế, chỉ số sức khỏe và những điều cần lưu ý.
+            Không còn nỗi bất an "ở xa không biết cha mẹ ăn cơm chưa, có vui không". Ngay khi kết thúc ca, chuyên viên
+            gửi nhật ký sinh hoạt kèm hình ảnh thực tế, chỉ số sức khỏe và những điều cần lưu ý.
           </p>
           <button class="btn btn-apricot" onclick="openRoleModal()">
             Xem mẫu nhật ký ca →
@@ -1916,7 +2226,8 @@
                 </div>
                 <div class="mini-card">
                   <strong style="font-size:11px;">Báo cáo hoạt động tối nay:</strong>
-                  <div style="margin-top:6px; font-size:10px; color:var(--text-muted); display:flex; flex-direction:column; gap:4px;">
+                  <div
+                    style="margin-top:6px; font-size:10px; color:var(--text-muted); display:flex; flex-direction:column; gap:4px;">
                     <div>🥣 <b>Dùng bữa:</b> Cụ ăn ngon, hết 1 chén canh rau ngót.</div>
                     <div>🚶 <b>Vận động:</b> Đi dạo 2 vòng sân chung cư.</div>
                     <div>❤️ <b>Tinh thần:</b> Cụ cười nhiều, nhắc nhớ các cháu.</div>
@@ -1954,7 +2265,8 @@
           <span class="mini-tag tag-teal" style="width: fit-content; margin-bottom: 12px;">Đồng hành chuẩn mực</span>
           <h3>4 Hoạt động chăm sóc cốt lõi trong ca Ân Cần</h3>
           <p>
-            Được nghiên cứu dựa trên nhu cầu tâm sinh lý thực tế của người cao tuổi Việt Nam trong khung giờ 18:00 - 22:00.
+            Được nghiên cứu dựa trên nhu cầu tâm sinh lý thực tế của người cao tuổi Việt Nam trong khung giờ 18:00 -
+            22:00.
           </p>
           <div class="bento-activities-grid">
             <div class="activity-chip">
@@ -2018,9 +2330,11 @@
           <span class="mini-tag tag-apricot" style="width: fit-content; margin-bottom: 12px;">Chất lượng</span>
           <h3>Đánh giá 2 chiều</h3>
           <p>Gia đình trực tiếp chấm điểm và gửi phản hồi sau mỗi ca để không ngừng nâng cao chất lượng.</p>
-          <div style="margin-top: 24px; padding: 16px; background: #FFFBEB; border-radius: 12px; border: 1px solid #FDE68A;">
+          <div
+            style="margin-top: 24px; padding: 16px; background: #FFFBEB; border-radius: 12px; border: 1px solid #FDE68A;">
             <div style="font-size: 1.2rem; color: #F59E0B; margin-bottom: 6px;">★★★★★ 5.0</div>
-            <div style="font-size: 0.88rem; font-weight: 600; color: #92400E;">"Chuyên viên rất lễ phép và kiên nhẫn với mẹ mình."</div>
+            <div style="font-size: 0.88rem; font-weight: 600; color: #92400E;">"Chuyên viên rất lễ phép và kiên nhẫn với
+              mẹ mình."</div>
             <div style="font-size: 0.78rem; color: #B45309; margin-top: 4px;">— Chị Minh Trang (Cầu Giấy)</div>
           </div>
         </div>
@@ -2078,7 +2392,7 @@
       </div>
 
       <div class="carousel-container" id="momentsCarousel">
-        
+
         <!-- Card 1 -->
         <div class="carousel-card">
           <img src="assets/photos/companion.jpg" alt="Lắng nghe" class="carousel-card-img">
@@ -2159,23 +2473,33 @@
 
           <ul class="pricing-features">
             <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
               <span>Khung giờ tối <b>18:00 – 22:00</b></span>
             </li>
             <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
               <span>Hỗ trợ chuẩn bị & dùng bữa tối</span>
             </li>
             <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
               <span>Đồng hành đi dạo nhẹ nhàng</span>
             </li>
             <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
               <span>Trò chuyện, đọc sách, nhắc uống thuốc</span>
             </li>
             <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
               <span>Nhật ký số & hình ảnh gửi ngay sau ca</span>
             </li>
           </ul>
@@ -2196,19 +2520,27 @@
 
           <ul class="pricing-features">
             <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
               <span>Khung giờ linh hoạt theo nhu cầu</span>
             </li>
             <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
               <span>Đồng hành 2 bữa ăn trưa & chiều</span>
             </li>
             <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
               <span>Theo dõi sinh hoạt suốt ngày dài</span>
             </li>
             <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
               <span>Báo cáo 2 lần trong ngày</span>
             </li>
           </ul>
@@ -2229,19 +2561,27 @@
 
           <ul class="pricing-features">
             <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
               <span>Tùy chọn 7 ngày trong tháng (8h/ngày)</span>
             </li>
             <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
               <span>Ưu tiên giữ 1 chuyên viên quen thuộc</span>
             </li>
             <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
               <span>Điều phối viên riêng theo dõi sát sao</span>
             </li>
             <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
               <span>Tổng kết sức khỏe & tinh thần hàng tháng</span>
             </li>
           </ul>
@@ -2256,10 +2596,13 @@
       <div class="scope-box">
         <div class="scope-col">
           <h4 style="color: var(--primary);">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
             Phạm vi hỗ trợ trong ca HomaCare
           </h4>
-          <ul style="display:flex; flex-direction:column; gap:8px; font-size:0.92rem; color:var(--text); list-style:disc; padding-left:20px;">
+          <ul
+            style="display:flex; flex-direction:column; gap:8px; font-size:0.92rem; color:var(--text); list-style:disc; padding-left:20px;">
             <li>Hỗ trợ ăn uống, chuẩn bị bữa tối thanh đạm.</li>
             <li>Đồng hành đi dạo, vận động an toàn quanh nhà.</li>
             <li>Lắng nghe, trò chuyện, đọc sách báo tinh thần.</li>
@@ -2269,10 +2612,14 @@
         </div>
         <div class="scope-col">
           <h4 style="color: #DC2626;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
             Giới hạn chuyên môn (Không thay thế y tế)
           </h4>
-          <ul style="display:flex; flex-direction:column; gap:8px; font-size:0.92rem; color:var(--text-muted); list-style:disc; padding-left:20px;">
+          <ul
+            style="display:flex; flex-direction:column; gap:8px; font-size:0.92rem; color:var(--text-muted); list-style:disc; padding-left:20px;">
             <li>Không khám bệnh, chẩn đoán hay kê đơn thuốc.</li>
             <li>Không thực hiện tiêm truyền, rửa vết thương ngoại khoa.</li>
             <li>Không phục hồi chức năng chuyên sâu hoặc cấp cứu.</li>
@@ -2297,7 +2644,8 @@
         <div class="testimonial-card">
           <div class="stars">★★★★★</div>
           <p class="quote-text">
-            "Mình đi công tác Sài Gòn cả tuần, nhờ có ca Ân Cần của HomaCare mà tối nào cũng biết mẹ ăn gì, huyết áp bao nhiêu. Thấy ảnh mẹ cười đọc sách mà nhẹ cả lòng."
+            "Mình đi công tác Sài Gòn cả tuần, nhờ có ca Ân Cần của HomaCare mà tối nào cũng biết mẹ ăn gì, huyết áp bao
+            nhiêu. Thấy ảnh mẹ cười đọc sách mà nhẹ cả lòng."
           </p>
           <div class="user-profile">
             <div class="user-avatar">LA</div>
@@ -2311,7 +2659,8 @@
         <div class="testimonial-card">
           <div class="stars">★★★★★</div>
           <p class="quote-text">
-            "Bố tôi trước đây rất ngại người lạ, nhưng bạn Trúc chuyên viên HomaCare rất khéo léo và biết kính trọng người già. Giờ cứ đến chiều là bố lại ngóng bạn đến trò chuyện."
+            "Bố tôi trước đây rất ngại người lạ, nhưng bạn Trúc chuyên viên HomaCare rất khéo léo và biết kính trọng
+            người già. Giờ cứ đến chiều là bố lại ngóng bạn đến trò chuyện."
           </p>
           <div class="user-profile">
             <div class="user-avatar">HM</div>
@@ -2325,7 +2674,8 @@
         <div class="testimonial-card">
           <div class="stars">★★★★★</div>
           <p class="quote-text">
-            "Đang làm việc tại Nhật Bản, khoảng cách múi giờ làm tôi luôn lo lắng. HomaCare đã trở thành cầu nối hiếu nghĩa vô giá để tôi dõi theo sức khỏe bố mỗi ngày."
+            "Đang làm việc tại Nhật Bản, khoảng cách múi giờ làm tôi luôn lo lắng. HomaCare đã trở thành cầu nối hiếu
+            nghĩa vô giá để tôi dõi theo sức khỏe bố mỗi ngày."
           </p>
           <div class="user-profile">
             <div class="user-avatar">TT</div>
@@ -2354,50 +2704,67 @@
         <div class="faq-item active">
           <div class="faq-question" onclick="toggleFaq(this)">
             <span>Ca Ân Cần 4 giờ bao gồm những hoạt động gì?</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
           </div>
           <div class="faq-answer">
-            Ca Ân Cần kéo dài từ 18:00 đến 22:00. Chuyên viên sẽ hỗ trợ bữa tối, đi dạo nhẹ nhàng, trò chuyện tinh thần, nhắc lịch sinh hoạt và kiểm tra an toàn trước khi ra về. Sau ca, gia đình sẽ nhận được nhật ký kèm hình ảnh trên ứng dụng.
+            Ca Ân Cần kéo dài từ 18:00 đến 22:00. Chuyên viên sẽ hỗ trợ bữa tối, đi dạo nhẹ nhàng, trò chuyện tinh thần,
+            nhắc lịch sinh hoạt và kiểm tra an toàn trước khi ra về. Sau ca, gia đình sẽ nhận được nhật ký kèm hình ảnh
+            trên ứng dụng.
           </div>
         </div>
 
         <div class="faq-item">
           <div class="faq-question" onclick="toggleFaq(this)">
             <span>HomaCare có làm dịch vụ y tế hay tiêm truyền không?</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
           </div>
           <div class="faq-answer">
-            HomaCare tập trung vào chăm sóc sinh hoạt và đồng hành tinh thần phi y tế. Chúng tôi không thực hiện các thủ thuật y khoa như tiêm truyền, kê đơn hay phục hồi chức năng chuyên sâu.
+            HomaCare tập trung vào chăm sóc sinh hoạt và đồng hành tinh thần phi y tế. Chúng tôi không thực hiện các thủ
+            thuật y khoa như tiêm truyền, kê đơn hay phục hồi chức năng chuyên sâu.
           </div>
         </div>
 
         <div class="faq-item">
           <div class="faq-question" onclick="toggleFaq(this)">
             <span>Làm thế nào để tôi theo dõi ca khi đang ở xa?</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
           </div>
           <div class="faq-answer">
-            Bạn đăng nhập vào Không gian Gia đình trên webapp. Tại đây, trạng thái ca sẽ cập nhật theo thời gian thực (Đang chăm sóc, Hoàn thành). Sau ca, bạn có thể xem chi tiết nhật ký kèm ảnh chụp và chỉ số sức khỏe của người thân.
+            Bạn đăng nhập vào Không gian Gia đình trên webapp. Tại đây, trạng thái ca sẽ cập nhật theo thời gian thực
+            (Đang chăm sóc, Hoàn thành). Sau ca, bạn có thể xem chi tiết nhật ký kèm ảnh chụp và chỉ số sức khỏe của
+            người thân.
           </div>
         </div>
 
         <div class="faq-item">
           <div class="faq-question" onclick="toggleFaq(this)">
             <span>Đội ngũ chuyên viên HomaCare được tuyển chọn ra sao?</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
           </div>
           <div class="faq-answer">
-            100% chuyên viên đều được xác minh nhân thân, lý lịch rõ ràng và hoàn thành khoá đào tạo căn bản 30 giờ về giao tiếp người cao tuổi, hỗ trợ vận động an toàn và xử lý tình huống khẩn cấp.
+            100% chuyên viên đều được xác minh nhân thân, lý lịch rõ ràng và hoàn thành khoá đào tạo căn bản 30 giờ về
+            giao tiếp người cao tuổi, hỗ trợ vận động an toàn và xử lý tình huống khẩn cấp.
           </div>
         </div>
 
         <div class="faq-item">
           <div class="faq-question" onclick="toggleFaq(this)">
             <span>Thanh toán chi phí ca chăm sóc như thế nào?</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
           </div>
           <div class="faq-answer">
-            Hiện tại ở giai đoạn thử nghiệm, khi bạn gửi yêu cầu đặt ca trên webapp, hệ thống chưa thu tiền ngay. Điều phối viên sẽ liên hệ xác nhận thông tin và hướng dẫn thanh toán thuận tiện nhất.
+            Hiện tại ở giai đoạn thử nghiệm, khi bạn gửi yêu cầu đặt ca trên webapp, hệ thống chưa thu tiền ngay. Điều
+            phối viên sẽ liên hệ xác nhận thông tin và hướng dẫn thanh toán thuận tiện nhất.
           </div>
         </div>
       </div>
@@ -2417,7 +2784,9 @@
         <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
           <button class="btn btn-apricot" onclick="openRoleModal('family')">
             Trải nghiệm Webapp HomaCare
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
           </button>
           <a href="tel:0338031425" class="btn btn-secondary" style="color:var(--navy);">
             Hotline: 0338 031 425
@@ -2471,7 +2840,8 @@
         <span style="font-size: 1.6rem;">🏡</span>
         <div>
           <strong style="font-size: 1.05rem; color: var(--navy); display:block;">Không gian Gia đình</strong>
-          <small style="color: var(--text-muted); font-size: 0.84rem;">Đặt lịch chăm sóc, quản lý hồ sơ và xem nhật ký sau ca.</small>
+          <small style="color: var(--text-muted); font-size: 0.84rem;">Đặt lịch chăm sóc, quản lý hồ sơ và xem nhật ký
+            sau ca.</small>
         </div>
       </a>
 
@@ -2479,7 +2849,8 @@
         <span style="font-size: 1.6rem;">🤝</span>
         <div>
           <strong style="font-size: 1.05rem; color: var(--navy); display:block;">Không gian Chuyên viên</strong>
-          <small style="color: var(--text-muted); font-size: 0.84rem;">Nhận ca được phân công, check-in và gửi báo cáo nhật ký.</small>
+          <small style="color: var(--text-muted); font-size: 0.84rem;">Nhận ca được phân công, check-in và gửi báo cáo
+            nhật ký.</small>
         </div>
       </a>
 
@@ -2487,7 +2858,8 @@
         <span style="font-size: 1.6rem;">🛡️</span>
         <div>
           <strong style="font-size: 1.05rem; color: var(--navy); display:block;">Không gian Điều phối viên</strong>
-          <small style="color: var(--text-muted); font-size: 0.84rem;">Quản lý phân ca, điều phối chuyên viên và giám sát chất lượng.</small>
+          <small style="color: var(--text-muted); font-size: 0.84rem;">Quản lý phân ca, điều phối chuyên viên và giám
+            sát chất lượng.</small>
         </div>
       </a>
     </div>
@@ -2536,7 +2908,7 @@
 
     function switchHeroScreen(index) {
       currentHeroScreen = (index + totalHeroScreens) % totalHeroScreens;
-      
+
       // Update tabs
       document.querySelectorAll('.screen-tab').forEach((tab, i) => {
         tab.classList.toggle('active', i === currentHeroScreen);
@@ -2604,22 +2976,31 @@
   </script>
 
   <!-- FLOATING 3-VERSION COMPARISON SWITCHER -->
-  <div style="position:fixed; bottom:22px; right:22px; z-index:99999; background:rgba(27,42,65,0.96); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); color:#ffffff; border-radius:9999px; padding:10px 20px; font-size:13px; box-shadow:0 14px 40px rgba(0,0,0,0.32); display:flex; align-items:center; gap:12px; border:1px solid rgba(255,255,255,0.2);">
+  <div
+    style="position:fixed; bottom:22px; right:22px; z-index:99999; background:rgba(27,42,65,0.96); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); color:#ffffff; border-radius:9999px; padding:10px 20px; font-size:13px; box-shadow:0 14px 40px rgba(0,0,0,0.32); display:flex; align-items:center; gap:12px; border:1px solid rgba(255,255,255,0.2);">
     <span style="display:flex; align-items:center; gap:6px;">
-      <span style="width:9px; height:9px; border-radius:50%; background:#10B981; display:inline-block; box-shadow:0 0 8px #10B981;"></span>
+      <span
+        style="width:9px; height:9px; border-radius:50%; background:#10B981; display:inline-block; box-shadow:0 0 8px #10B981;"></span>
       <span>Đang xem: <b>Bản 1 (Showcase)</b></span>
     </span>
     <div style="display:flex; align-items:center; gap:6px;">
-      <span style="background:#0F4C46; color:#ffffff; padding:5px 12px; border-radius:9999px; font-weight:800; font-size:11.5px; border:1px solid rgba(255,255,255,0.2);">
+      <span
+        style="background:#0F4C46; color:#ffffff; padding:5px 12px; border-radius:9999px; font-weight:800; font-size:11.5px; border:1px solid rgba(255,255,255,0.2);">
         ★ Bản 1
       </span>
-      <a href="landing-v2.html" style="background:rgba(255,255,255,0.14); color:#ffffff; padding:5px 11px; border-radius:9999px; font-weight:700; text-decoration:none; font-size:11.5px; transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.14)'">
+      <a href="landing-v2.html"
+        style="background:rgba(255,255,255,0.14); color:#ffffff; padding:5px 11px; border-radius:9999px; font-weight:700; text-decoration:none; font-size:11.5px; transition:all 0.2s;"
+        onmouseover="this.style.background='rgba(255,255,255,0.25)'"
+        onmouseout="this.style.background='rgba(255,255,255,0.14)'">
         Bản 2
       </a>
-      <a href="landing-v3.html" style="background:#F28C68; color:#ffffff; padding:5px 12px; border-radius:9999px; font-weight:800; text-decoration:none; font-size:11.5px; transition:all 0.2s;" onmouseover="this.style.background='#e27954'" onmouseout="this.style.background='#F28C68'">
+      <a href="landing-v3.html"
+        style="background:#F28C68; color:#ffffff; padding:5px 12px; border-radius:9999px; font-weight:800; text-decoration:none; font-size:11.5px; transition:all 0.2s;"
+        onmouseover="this.style.background='#e27954'" onmouseout="this.style.background='#F28C68'">
         Bản 3 (Mới) ➔
       </a>
     </div>
   </div>
 </body>
+
 </html>
