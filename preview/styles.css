@@ -1,4 +1,4 @@
-@font-face{font-family:'Cal Sans';src:url('assets/CalSans-Regular.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:'Cal Sans';src:url('assets/CalSans-Regular.ttf') format('truetype');font-style:normal;font-weight:400;font-display:block}
 /* Readable text and comfortable controls across the public pages and workspaces. */
 .dashboard-layout>*{min-width:0}.dashboard-grid>*,.care-layout>*{min-width:0}
 :where([data-icon]){display:inline-flex;align-items:center;justify-content:center}:where([data-icon]) svg{width:20px;height:20px;flex-shrink:0}.trust-row .check svg{width:14px;height:14px}

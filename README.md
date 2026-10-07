@@ -63,7 +63,8 @@ Biểu tượng trình duyệt và màn hình chính chỉ có biểu tượng l
 ```text
 HOMACARE APP/
 ├── preview/                     # Website được xuất bản lên Netlify
-│   ├── index.html               # Trang chủ
+│   ├── index.html               # Trang chủ (landing page)
+│   ├── home-classic.html        # Trang chủ cũ: Góc sức khỏe, nhận diện phiên đăng nhập
 │   ├── auth.html                # Đăng ký, đăng nhập và khôi phục mật khẩu
 │   ├── family.html              # Không gian gia đình
 │   ├── caregiver.html           # Không gian chuyên viên
@@ -179,7 +180,7 @@ Vị trí chỉnh sửa chính:
 
 | Nội dung | File nguồn |
 | --- | --- |
-| Nội dung trang chủ | `preview/index.html` |
+| Nội dung trang chủ | `preview/index.html` (sửa trực tiếp; builder chỉ cập nhật `home-classic.html`) |
 | Style chung và tài khoản | `preview/styles.css`, `preview/account.css` |
 | Đăng nhập, phiên và vai trò | `preview/auth.js` |
 | Dashboard và thao tác dữ liệu | `preview/workspace.js` |

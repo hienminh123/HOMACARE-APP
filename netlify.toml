@@ -1,2 +1,8 @@
 [build]
   publish = "preview"
+
+# Trang chủ mới là landing page v4; giữ link cũ hoạt động
+[[redirects]]
+  from = "/landing-v4.html"
+  to = "/"
+  status = 301
