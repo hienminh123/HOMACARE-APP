@@ -1445,6 +1445,23 @@
       color: var(--primary);
     }
 
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .footer-tagline {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .footer-contact a {
+      color: inherit;
+      font-weight: 600;
+    }
+
     .footer-bottom {
       border-top: 1px solid var(--border-subtle);
       padding-top: 24px;
@@ -1634,9 +1651,38 @@
         grid-template-columns: 1fr;
       }
 
+      .footer {
+        padding: 32px 0 24px;
+      }
+
       .footer-inner {
         flex-direction: column;
         text-align: center;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+
+      .footer-brand {
+        align-items: center;
+      }
+
+      .footer-links {
+        gap: 6px 12px;
+      }
+
+      .footer-links a {
+        font-size: 0.86rem;
+      }
+
+      /* Số điện thoại và email đã có ngay bên dưới */
+      .footer-links li:last-child {
+        display: none;
+      }
+
+      .footer-bottom {
+        padding-top: 16px;
+        gap: 6px !important;
+        font-size: 0.8rem !important;
       }
 
       .footer-links {
@@ -3546,32 +3592,27 @@
   <footer class="footer">
     <div class="container">
       <div class="footer-inner">
-        <a href="#hero" class="brand">
-          <img src="assets/app-icon-h.png" alt="HomaCare" class="brand-logo-img">
-          <span class="brand-name">Homa<span>Care</span></span>
-        </a>
+        <div class="footer-brand">
+          <a href="#hero" class="brand">
+            <img src="assets/app-icon-h.png" alt="HomaCare" class="brand-logo-img">
+            <span class="brand-name">Homa<span>Care</span></span>
+          </a>
+          <p class="footer-tagline">Gửi trọn quan tâm, vẹn tròn đạo hiếu.</p>
+        </div>
 
         <ul class="footer-links">
           <li><a href="#about">Về HomaCare</a></li>
           <li><a href="#how-it-works">Cách sử dụng</a></li>
           <li><a href="#services">Dịch vụ</a></li>
-          <li><a href="#faq">Câu hỏi thường gặp</a></li>
+          <li><a href="#faq">Hỏi đáp</a></li>
           <li><a href="#contact">Liên hệ</a></li>
         </ul>
       </div>
 
-      <p style="font-size:0.92rem; color:var(--text-muted); margin-bottom:16px;">
-        <b>HomaCare · Gửi trọn quan tâm, vẹn tròn đạo hiếu.</b><br>
-        Nền tảng kết nối và điều phối chăm sóc người cao tuổi tại nhà, giúp gia đình sắp xếp và theo dõi những buổi đồng
-        hành từ xa.
-      </p>
-
       <div class="footer-bottom">
-        <div>
-          HomaCare · Dự án sinh viên Đại học Kinh tế Quốc dân · © 2026 HomaCare.
-        </div>
-        <div>
-          Liên hệ: <b>0338 031 425</b> · <b>homacare@gmail.com</b>
+        <div>© 2026 HomaCare · Dự án sinh viên Đại học Kinh tế Quốc dân</div>
+        <div class="footer-contact">
+          <a href="tel:0338031425">0338 031 425</a> · <a href="mailto:homacare@gmail.com">homacare@gmail.com</a>
         </div>
       </div>
     </div>
@@ -3763,29 +3804,88 @@
     syncJourneyLayout();
 
     // Điện thoại: khi đáy khung điện thoại minh họa đã lên tới 45% chiều cao màn hình thì bước kế tiếp tự mở
+    // Đổi bước bằng chuyển động accordion: minh họa cũ thu lại, minh họa mới mở ra dưới thẻ bước mới,
+    // thẻ bước mới lướt dần lên gần header. Mọi thứ chạy cùng một nhịp nên không bị giật.
+    let journeyAnimating = false;
+    const JOURNEY_ANIM_MS = 700;
+    const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
     function changeJourneyStepByScroll(nextIndex) {
       const btns = document.querySelectorAll('.step-item-btn');
       const anchor = btns[nextIndex];
-      const before = anchor.getBoundingClientRect().top;
+      const phone = document.getElementById('journeyPhoneContainer');
+      if (!anchor || !phone || journeyAnimating) return;
       const goingForward = nextIndex > currentJourneyIndex;
+      const header = document.querySelector('.header');
+      const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+      const startTop = anchor.getBoundingClientRect().top;
+      // Cuộn xuống: thẻ bước mới lướt lên gần header. Cuộn lên: thẻ bước trước đứng yên.
+      const targetTop = goingForward ? Math.min(startTop, headerBottom + 12) : startTop;
+
+      // Bản sao tĩnh của minh họa cũ để thu lại tại chỗ
+      const ghost = phone.cloneNode(true);
+      ghost.removeAttribute('id');
+      ghost.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+      ghost.classList.remove('reveal', 'in-view');
+      ghost.setAttribute('aria-hidden', 'true');
+      const box = (el) => {
+        const c = getComputedStyle(el);
+        return { h: el.offsetHeight, mt: parseFloat(c.marginTop), mb: parseFloat(c.marginBottom), pt: parseFloat(c.paddingTop), pb: parseFloat(c.paddingBottom), bt: parseFloat(c.borderTopWidth), bb: parseFloat(c.borderBottomWidth) };
+      };
+      const old = box(phone);
+      // Khoảng cách giữa các phần tử trong danh sách bước (flex gap), cũng thu/mở dần để không giật khi gỡ bản sao
+      const gap = parseFloat(getComputedStyle(phone.parentElement).rowGap) || 0;
+      phone.before(ghost);
+
       selectJourneyStep(nextIndex, true);
-      // Giữ nguyên vị trí bước mới trên màn hình khi minh họa phía trên được gỡ đi
-      const shift = anchor.getBoundingClientRect().top - before;
-      if (shift) window.scrollTo({ top: window.scrollY + shift, behavior: 'instant' });
-      // Cuộn xuống: đưa thẻ hướng dẫn của bước mới lên sát dưới header, minh họa trượt xuống ngay bên dưới
-      if (goingForward) {
-        const header = document.querySelector('.header');
-        const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
-        const target = window.scrollY + anchor.getBoundingClientRect().top - headerBottom - 12;
-        journeyScrollLock = Date.now() + 700;
-        window.scrollTo({ top: target, behavior: 'smooth' });
-      }
+      const next = box(phone);
+
+      const prep = (el) => {
+        el.style.boxSizing = 'border-box';
+        el.style.overflow = 'hidden';
+        el.style.animation = 'none';
+      };
+      prep(ghost);
+      prep(phone);
+      const apply = (el, b, k) => {
+        el.style.height = b.h * k + 'px';
+        el.style.marginTop = b.mt * k + 'px';
+        el.style.marginBottom = b.mb * k + 'px';
+        el.style.paddingTop = b.pt * k + 'px';
+        el.style.paddingBottom = b.pb * k + 'px';
+        el.style.borderTopWidth = b.bt * k + 'px';
+        el.style.borderBottomWidth = b.bb * k + 'px';
+        el.style.opacity = String(k);
+      };
+      const frame = (e) => {
+        apply(ghost, old, 1 - e);
+        ghost.style.marginBottom = old.mb * (1 - e) - gap * e + 'px';
+        apply(phone, next, e);
+        phone.style.marginTop = next.mt * e - gap * (1 - e) + 'px';
+        const desired = startTop + (targetTop - startTop) * e;
+        const actual = anchor.getBoundingClientRect().top;
+        if (Math.abs(actual - desired) > 0.5) window.scrollTo({ top: window.scrollY + actual - desired, behavior: 'instant' });
+      };
+
+      journeyAnimating = true;
+      frame(0);
+      const t0 = performance.now();
+      const tick = (now) => {
+        const t = Math.min(1, (now - t0) / JOURNEY_ANIM_MS);
+        frame(easeInOut(t));
+        if (t < 1) { requestAnimationFrame(tick); return; }
+        ghost.remove();
+        ['boxSizing', 'overflow', 'animation', 'height', 'marginTop', 'marginBottom', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth', 'opacity'].forEach((p) => { phone.style[p] = ''; });
+        journeyAnimating = false;
+        journeyScrollLock = Date.now() + 250;
+      };
+      requestAnimationFrame(tick);
     }
 
     let journeyScrollTicking = false;
     function onJourneyScroll() {
       journeyScrollTicking = false;
-      if (window.innerWidth > 960 || Date.now() < journeyScrollLock) return;
+      if (window.innerWidth > 960 || journeyAnimating || Date.now() < journeyScrollLock) return;
       const btns = document.querySelectorAll('.step-item-btn');
       const phone = document.querySelector('#journeyPhoneContainer .journey-device');
       const header = document.querySelector('.header');
