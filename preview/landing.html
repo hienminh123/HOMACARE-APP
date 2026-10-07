@@ -1,0 +1,2577 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HomaCare · Gửi trọn quan tâm, vẹn tròn đạo hiếu</title>
+  <meta name="description" content="Nền tảng kết nối và điều phối chăm sóc người cao tuổi tại nhà. Đồng hành cùng cha mẹ trong từng bữa ăn, vận động và câu chuyện thường ngày.">
+  
+  <!-- Local Font: Cal Sans -->
+  <link rel="apple-touch-icon" href="assets/app-icon-h.png?v=2">
+  <link rel="icon" type="image/png" href="assets/app-icon-h.png?v=2">
+  <link rel="manifest" href="manifest.webmanifest?v=2">
+  <meta name="theme-color" content="#0F4C46">
+
+  <style>
+    /* =====================================================================
+       0. LOCAL CAL SANS FONT DECLARATION
+       ===================================================================== */
+    @font-face {
+      font-family: 'Cal Sans';
+      src: url('assets/CalSans-Regular.ttf') format('truetype');
+      font-style: normal;
+      font-weight: 100 900;
+      font-display: swap;
+    }
+
+    /* =====================================================================
+       1. DESIGN SYSTEM & MODERN MAGIC UI TOKENS
+       ===================================================================== */
+    :root {
+      --primary: #0F4C46;
+      --primary-light: #18635c;
+      --primary-subtle: #e8f4f2;
+      --apricot: #F28C68;
+      --apricot-hover: #e57751;
+      --apricot-subtle: #fef0eb;
+      --sand: #F8F6F0;
+      --sand-dark: #EDE8DF;
+      --navy: #1B2A41;
+      --navy-light: #2D3E57;
+      --text: #1E293B;
+      --text-muted: #64748B;
+      --text-light: #94A3B8;
+      --surface: #FFFFFF;
+      --border: rgba(15, 76, 70, 0.12);
+      --border-subtle: rgba(0, 0, 0, 0.06);
+      
+      --font-heading: 'Cal Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: 'Cal Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 24px;
+      --radius-xl: 36px;
+      --radius-full: 9999px;
+      
+      --shadow-sm: 0 2px 8px rgba(15, 76, 70, 0.04);
+      --shadow-md: 0 12px 32px -4px rgba(15, 76, 70, 0.08);
+      --shadow-lg: 0 24px 60px -12px rgba(15, 76, 70, 0.16);
+      --shadow-glow: 0 0 40px -10px rgba(242, 140, 104, 0.4);
+      --shadow-mockup: 0 30px 80px -20px rgba(15, 76, 70, 0.25), 0 0 0 1px rgba(0,0,0,0.08);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cal Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Cal Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+      background-color: #FAFAF8;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(15, 76, 70, 0.05) 0%, transparent 60%),
+        radial-gradient(rgba(15, 76, 70, 0.04) 1px, transparent 1px);
+      background-size: 100% 100%, 32px 32px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    button, input, select, textarea {
+      font-family: 'Cal Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: 1240px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4, h5 {
+      font-family: var(--font-heading);
+      color: var(--navy);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+    }
+
+    p {
+      color: var(--text-muted);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Button Tokens */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: var(--radius-full);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #FFFFFF;
+      box-shadow: 0 4px 16px rgba(15, 76, 70, 0.2);
+    }
+    .btn-primary:hover {
+      background-color: var(--primary-light);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(15, 76, 70, 0.25);
+    }
+
+    .btn-apricot {
+      background-color: var(--apricot);
+      color: #FFFFFF;
+      box-shadow: 0 6px 20px rgba(242, 140, 104, 0.35);
+    }
+    .btn-apricot:hover {
+      background-color: var(--apricot-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--navy);
+      border-color: var(--border);
+      backdrop-filter: blur(8px);
+    }
+    .btn-secondary:hover {
+      background: #FFFFFF;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .btn-sm {
+      padding: 9px 18px;
+      font-size: 0.88rem;
+    }
+
+    /* Shimmer Pill Badge */
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 18px;
+      border-radius: var(--radius-full);
+      background: rgba(15, 76, 70, 0.06);
+      border: 1px solid rgba(15, 76, 70, 0.15);
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .badge-pill::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+      animation: badgeShimmer 3.5s infinite;
+    }
+    @keyframes badgeShimmer {
+      0% { left: -100%; }
+      30% { left: 120%; }
+      100% { left: 120%; }
+    }
+
+    /* Section Headers */
+    .section-eyebrow {
+      text-transform: uppercase;
+      font-size: 0.82rem;
+      letter-spacing: 0.14em;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 12px;
+      display: block;
+    }
+    .section-title {
+      font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+      color: var(--navy);
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    .section-desc {
+      font-size: 1.15rem;
+      max-width: 640px;
+      margin: 0 auto;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .text-center { text-align: center; }
+
+    /* =====================================================================
+       2. STICKY HEADER (GLASSMORPHISM)
+       ===================================================================== */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250, 250, 248, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(15, 76, 70, 0.08);
+      transition: all 0.3s ease;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 76px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .brand-logo-img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+    }
+    .brand-name {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.02em;
+    }
+    .brand-name span {
+      color: var(--apricot);
+    }
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-link {
+      font-size: 0.94rem;
+      font-weight: 600;
+      color: var(--navy);
+      transition: color 0.2s;
+    }
+    .nav-link:hover {
+      color: var(--primary);
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* =====================================================================
+       3. IPHONE DEVICE MOCKUP (PURE CSS ULTRA-REALISTIC)
+       ===================================================================== */
+    .iphone-device {
+      position: relative;
+      width: 280px;
+      height: 570px;
+      background: #090B0E;
+      border-radius: 48px;
+      border: 4px solid #363C44;
+      box-shadow: 
+        0 0 0 2px #181B1F,
+        0 30px 60px -15px rgba(0, 0, 0, 0.3),
+        0 15px 35px -10px rgba(15, 76, 70, 0.2);
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+    }
+    /* Dynamic Island */
+    .dynamic-island {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 86px;
+      height: 22px;
+      background: #000000;
+      border-radius: 20px;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+    }
+    .island-lens {
+      width: 8px;
+      height: 8px;
+      background: #0a1120;
+      border-radius: 50%;
+      border: 1px solid #1a2233;
+    }
+    .island-sensor {
+      width: 6px;
+      height: 6px;
+      background: #06090e;
+      border-radius: 50%;
+    }
+
+    /* iPhone Screen Inner */
+    .iphone-screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #F8F9FA;
+      border-radius: 42px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      font-family: var(--font-body);
+      font-size: 11px;
+      color: #1E293B;
+      padding-top: 38px; /* space for dynamic island */
+    }
+
+    /* Status Bar */
+    .status-bar {
+      position: absolute;
+      top: 10px;
+      left: 0;
+      right: 0;
+      height: 20px;
+      padding: 0 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 10px;
+      font-weight: 700;
+      color: #000;
+      z-index: 40;
+    }
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Screen Content Layouts */
+    .screen-header {
+      padding: 10px 14px 8px;
+      background: #FFFFFF;
+      border-bottom: 1px solid #ECEFF2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .screen-brand {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 800;
+      font-size: 13px;
+      color: var(--primary);
+    }
+    .screen-brand span { color: var(--apricot); }
+    .screen-body {
+      padding: 12px;
+      flex: 1;
+      overflow-y: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #F8FAF9;
+    }
+    .screen-bottom-bar {
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: #111827;
+      border-radius: 4px;
+      z-index: 40;
+    }
+
+    /* Mini UI elements inside phones */
+    .mini-card {
+      background: #FFFFFF;
+      border-radius: 12px;
+      padding: 10px;
+      border: 1px solid rgba(15, 76, 70, 0.08);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .mini-tag {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+    .tag-teal { background: #E6F3F1; color: var(--primary); }
+    .tag-apricot { background: #FEF0EA; color: #D65A31; }
+    .tag-green { background: #E7F7ED; color: #167E48; }
+
+    /* =====================================================================
+       4. HERO SECTION WITH 5-DEVICE 3D FAN-OUT
+       ===================================================================== */
+    .hero {
+      padding-top: 60px;
+      padding-bottom: 100px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+    .hero-content {
+      max-width: 820px;
+      margin: 0 auto 50px;
+    }
+    .hero-title {
+      font-size: clamp(2.8rem, 5.8vw, 4.6rem);
+      font-weight: 800;
+      line-height: 1.08;
+      color: var(--navy);
+      letter-spacing: -0.035em;
+      margin-bottom: 22px;
+    }
+    .hero-title em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--primary) 0%, #1c7c72 50%, var(--apricot) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+      font-size: clamp(1.1rem, 2vw, 1.3rem);
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 36px;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* =====================================================================
+       4. HERO SECTION WITH INTERACTIVE STAGE (100% FLUID RESPONSIVE)
+       ===================================================================== */
+    .hero {
+      padding-top: 50px;
+      padding-bottom: 90px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+    .hero-content {
+      max-width: 820px;
+      margin: 0 auto 24px;
+    }
+    .hero-title {
+      font-size: clamp(2.6rem, 5.5vw, 4.4rem);
+      font-weight: 800;
+      line-height: 1.08;
+      color: var(--navy);
+      letter-spacing: -0.035em;
+      margin-bottom: 20px;
+    }
+    .hero-title em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--primary) 0%, #1c7c72 50%, var(--apricot) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 32px;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* Screen Switcher Pills (Linear / Apple style) */
+    .hero-screen-tabs {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(15, 76, 70, 0.05);
+      padding: 6px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(15, 76, 70, 0.1);
+      margin: 36px auto 30px;
+      max-width: 100%;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .hero-screen-tabs::-webkit-scrollbar {
+      display: none;
+    }
+    .screen-tab {
+      padding: 9px 18px;
+      border-radius: var(--radius-full);
+      border: 0;
+      background: transparent;
+      color: var(--navy);
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .screen-tab:hover {
+      background: rgba(255, 255, 255, 0.8);
+      color: var(--primary);
+    }
+    .screen-tab.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      box-shadow: 0 4px 16px rgba(15, 76, 70, 0.25);
+    }
+
+    /* Hero Showcase Stage */
+    .hero-stage {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+      margin: 10px auto 0;
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    /* Ambient Glow */
+    .hero-stage-glow {
+      position: absolute;
+      width: 520px;
+      height: 380px;
+      background: radial-gradient(circle, rgba(15, 76, 70, 0.15) 0%, rgba(242, 140, 104, 0.1) 50%, transparent 70%);
+      filter: blur(60px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Center Phone Box */
+    .hero-phone-box {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-main-device {
+      width: min(310px, 86vw);
+      height: 600px;
+      margin: 0 auto;
+      box-shadow: 
+        0 0 0 2px #181B1F,
+        0 30px 80px -15px rgba(15, 76, 70, 0.28),
+        0 15px 35px -10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Screen Panels inside Phone */
+    .screen-panel {
+      position: absolute;
+      inset: 0;
+      padding-top: 38px;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      transform: scale(0.98);
+      z-index: 10;
+    }
+    .screen-panel.active {
+      display: flex;
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Stage Navigation Arrows */
+    .stage-nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 16px rgba(15, 76, 70, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--navy);
+      cursor: pointer;
+      z-index: 30;
+      transition: all 0.2s;
+    }
+    .stage-nav-arrow:hover {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+      transform: translateY(-50%) scale(1.08);
+    }
+    .arrow-left { left: -68px; }
+    .arrow-right { right: -68px; }
+
+    /* Floating Glass Cards (Desktop Highlights) */
+    .hero-float-card {
+      position: relative;
+      z-index: 10;
+      width: 250px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      border: 1px solid rgba(15, 76, 70, 0.12);
+      box-shadow: 0 20px 45px -10px rgba(15, 76, 70, 0.12);
+      text-align: left;
+      transition: transform 0.3s ease;
+    }
+    .hero-float-card:hover {
+      transform: translateY(-6px);
+    }
+    .float-card-left { margin-right: -10px; }
+    .float-card-right { margin-left: -10px; }
+
+    /* Dots indicator */
+    .hero-dots-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px;
+    }
+    .hero-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #CBD5E1;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .hero-dot.active {
+      width: 26px;
+      border-radius: 12px;
+      background: var(--primary);
+    }
+
+    /* =====================================================================
+       5. EXPERIENCE PARALLAX (3 MOCKUPS STAGGERED)
+       ===================================================================== */
+    .experience-section {
+      padding: 100px 0;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      overflow: hidden;
+    }
+    .parallax-grid {
+      display: flex;
+      justify-content: center;
+      gap: 36px;
+      margin-top: 60px;
+      align-items: flex-end;
+    }
+    .parallax-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      transition: transform 0.5s ease;
+    }
+    .parallax-card:nth-child(1) { transform: translateY(40px); }
+    .parallax-card:nth-child(2) { transform: translateY(0); }
+    .parallax-card:nth-child(3) { transform: translateY(70px); }
+    .parallax-card:hover { transform: translateY(-10px) !important; }
+    
+    .parallax-caption {
+      text-align: center;
+      max-width: 260px;
+    }
+    .parallax-caption h4 {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+    .parallax-caption p {
+      font-size: 0.9rem;
+    }
+
+    /* =====================================================================
+       6. FEATURE HIGHLIGHT (SPLIT ROWS ZIC-ZAC)
+       ===================================================================== */
+    .features-split {
+      padding: 120px 0;
+    }
+    .split-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 80px;
+      margin-bottom: 120px;
+    }
+    .split-row:last-child {
+      margin-bottom: 0;
+    }
+    .split-row.reverse {
+      flex-direction: row-reverse;
+    }
+    .split-text {
+      flex: 1;
+      max-width: 520px;
+    }
+    .split-text h3 {
+      font-size: clamp(2rem, 3.5vw, 2.7rem);
+      margin-bottom: 20px;
+      line-height: 1.15;
+    }
+    .split-text p {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+    .split-visual {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+    .split-visual-bg {
+      position: absolute;
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(15, 76, 70, 0.08) 0%, transparent 70%);
+      z-index: 0;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* =====================================================================
+       7. BENTO GRID (MAGIC UI STYLE)
+       ===================================================================== */
+    .bento-section {
+      padding: 100px 0;
+      background: var(--sand);
+    }
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 60px;
+    }
+    .bento-card {
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      border: 1px solid rgba(15, 76, 70, 0.09);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.35s ease;
+    }
+    .bento-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(15, 76, 70, 0.2);
+    }
+    .bento-card.col-2 {
+      grid-column: span 2;
+    }
+    .bento-card.col-3 {
+      grid-column: span 3;
+    }
+    .bento-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+    .bento-card p {
+      font-size: 0.98rem;
+      line-height: 1.6;
+    }
+
+    /* Bento inner visual components */
+    .bento-activities-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 24px;
+    }
+    .activity-chip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: #F8FAF9;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(15, 76, 70, 0.07);
+    }
+    .chip-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--primary-subtle);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    /* Live status indicator */
+    .status-tracker {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .status-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+    .status-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #CBD5E1;
+    }
+    .status-dot.active {
+      background: #10B981;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+      animation: pulseGreen 2s infinite;
+    }
+    @keyframes pulseGreen {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    /* 3 Roles Pills */
+    .roles-cluster {
+      display: flex;
+      gap: 14px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .role-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      background: var(--sand);
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 0.95rem;
+    }
+
+    /* =====================================================================
+       8. HORIZONTAL SNAP CAROUSEL
+       ===================================================================== */
+    .carousel-section {
+      padding: 100px 0;
+      overflow: hidden;
+    }
+    .carousel-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+    .carousel-controls {
+      display: flex;
+      gap: 12px;
+    }
+    .control-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.2s;
+    }
+    .control-btn:hover {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+    }
+
+    .carousel-container {
+      display: flex;
+      gap: 28px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 24px;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .carousel-container::-webkit-scrollbar {
+      display: none;
+    }
+    .carousel-card {
+      flex: 0 0 340px;
+      scroll-snap-align: start;
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid rgba(15, 76, 70, 0.08);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s;
+    }
+    .carousel-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+    }
+    .carousel-card-img {
+      height: 220px;
+      width: 100%;
+      object-fit: cover;
+    }
+    .carousel-card-body {
+      padding: 24px;
+    }
+    .carousel-card-body h4 {
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+
+    /* =====================================================================
+       9. PACKAGES & SCOPE SECTION
+       ===================================================================== */
+    .pricing-section {
+      padding: 100px 0;
+      background: var(--sand);
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 60px;
+      align-items: stretch;
+    }
+    .pricing-card {
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      padding: 40px 32px;
+      border: 1px solid rgba(15, 76, 70, 0.1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.3s;
+    }
+    .pricing-card.featured {
+      background: linear-gradient(180deg, #FFFFFF 0%, #F5FAF9 100%);
+      border: 2px solid var(--primary);
+      box-shadow: 0 20px 50px -10px rgba(15, 76, 70, 0.18);
+      transform: scale(1.04);
+      z-index: 2;
+    }
+    .featured-ribbon {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--apricot);
+      color: #FFFFFF;
+      padding: 5px 18px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      box-shadow: 0 4px 12px rgba(242, 140, 104, 0.35);
+    }
+    .price-value {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin: 16px 0 6px;
+    }
+    .price-value span {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .pricing-features {
+      list-style: none;
+      margin: 28px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+    .pricing-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+    .pricing-features li svg {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: var(--primary);
+      margin-top: 2px;
+    }
+
+    /* Scope boundary box */
+    .scope-box {
+      margin-top: 60px;
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      border: 1px solid rgba(15, 76, 70, 0.1);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    .scope-col h4 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+    }
+
+    /* =====================================================================
+       10. TESTIMONIALS (MASONRY COLUMNS)
+       ===================================================================== */
+    .testimonials-section {
+      padding: 100px 0;
+    }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 60px;
+    }
+    .testimonial-card {
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      border: 1px solid rgba(15, 76, 70, 0.08);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .stars {
+      color: #F59E0B;
+      font-size: 1.1rem;
+      margin-bottom: 14px;
+    }
+    .quote-text {
+      font-size: 1rem;
+      color: var(--navy);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .user-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--primary-subtle);
+      color: var(--primary);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .user-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--navy);
+    }
+    .user-role {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* =====================================================================
+       11. FAQ ACCORDION
+       ===================================================================== */
+    .faq-section {
+      padding: 100px 0;
+      background: var(--sand);
+    }
+    .faq-wrapper {
+      max-width: 780px;
+      margin: 60px auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .faq-item {
+      background: #FFFFFF;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(15, 76, 70, 0.09);
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+    .faq-question {
+      padding: 22px 28px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--navy);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+    .faq-question svg {
+      transition: transform 0.3s;
+      width: 20px;
+      height: 20px;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+    .faq-item.active .faq-question svg {
+      transform: rotate(180deg);
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.3s ease;
+      padding: 0 28px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .faq-item.active .faq-answer {
+      max-height: 220px;
+      padding-bottom: 24px;
+    }
+
+    /* =====================================================================
+       12. BIG IMPACT CTA BANNER & FOOTER
+       ===================================================================== */
+    .cta-banner-section {
+      padding: 100px 0 60px;
+    }
+    .cta-banner {
+      background: linear-gradient(135deg, #0B3A35 0%, #0F4C46 50%, #173B4D 100%);
+      border-radius: var(--radius-xl);
+      padding: 80px 40px;
+      color: #FFFFFF;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 30px 80px -20px rgba(15, 76, 70, 0.4);
+    }
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -20%; width: 140%; height: 200%;
+      background: radial-gradient(circle at 50% 50%, rgba(242, 140, 104, 0.15), transparent 60%);
+      pointer-events: none;
+    }
+    .cta-banner h2 {
+      color: #FFFFFF;
+      font-size: clamp(2.3rem, 4.5vw, 3.6rem);
+      margin-bottom: 18px;
+    }
+    .cta-banner p {
+      color: #E2E8F0;
+      font-size: 1.2rem;
+      max-width: 620px;
+      margin: 0 auto 36px;
+    }
+
+    /* Footer */
+    .footer {
+      background: #FFFFFF;
+      border-top: 1px solid var(--border-subtle);
+      padding: 60px 0 40px;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 0.94rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+    .footer-bottom {
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      color: var(--text-light);
+    }
+
+    /* Role selection modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .modal-backdrop.open {
+      display: flex;
+      opacity: 1;
+    }
+    .modal-card {
+      background: #FFFFFF;
+      width: 90%;
+      max-width: 480px;
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .role-option-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: #F8FAF9;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-top: 12px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .role-option-card:hover {
+      background: #FFFFFF;
+      border-color: var(--primary);
+      transform: translateX(4px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* =====================================================================
+       13. RESPONSIVE MEDIA QUERIES (FLUID & SMOOTH)
+       ===================================================================== */
+    @media (max-width: 1080px) {
+      .hero-stage { gap: 20px; }
+      .hero-float-card { width: 220px; padding: 18px; }
+      .arrow-left { left: -24px; }
+      .arrow-right { right: -24px; }
+    }
+
+    @media (max-width: 960px) {
+      .hero-float-card { display: none; }
+      .split-row { gap: 40px; }
+      .bento-grid { grid-template-columns: repeat(2, 1fr); }
+      .bento-card.col-2 { grid-column: span 2; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 480px; margin-left: auto; margin-right: auto; }
+      .pricing-card.featured { transform: none; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .scope-box { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-menu { display: none; }
+      .stage-nav-arrow { width: 40px; height: 40px; font-size: 20px; }
+      .arrow-left { left: -14px; }
+      .arrow-right { right: -14px; }
+      .hero-screen-tabs {
+        justify-content: flex-start;
+        padding-left: 14px;
+        padding-right: 14px;
+        border-radius: var(--radius-md);
+      }
+      .parallax-grid { flex-direction: column; align-items: center; }
+      .parallax-card:nth-child(n) { transform: none; }
+      .split-row, .split-row.reverse { flex-direction: column; gap: 40px; }
+      .bento-grid { grid-template-columns: 1fr; }
+      .bento-card.col-2 { grid-column: span 1; }
+      .bento-activities-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .stage-nav-arrow { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =====================================================================
+       HEADER
+       ===================================================================== -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="landing.html" class="brand">
+        <img src="assets/logo.png" alt="HomaCare Logo" class="brand-logo-img">
+        <span class="brand-name">Homa<span>Care</span></span>
+      </a>
+
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="#hero" class="nav-link">Trang chủ</a></li>
+          <li><a href="#features" class="nav-link">Tính năng</a></li>
+          <li><a href="#ecosystem" class="nav-link">Hệ sinh thái</a></li>
+          <li><a href="#carousel" class="nav-link">Khoảnh khắc</a></li>
+          <li><a href="#pricing" class="nav-link">Gói dịch vụ</a></li>
+          <li><a href="#faq" class="nav-link">Hỏi đáp</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn btn-apricot btn-sm" onclick="openRoleModal()">
+          Vào Webapp 
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       HERO SECTION (MAGIC UI 5-DEVICE 3D FAN-OUT)
+       ===================================================================== -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="badge-pill">
+          <span>✦</span> Nền tảng chăm sóc người cao tuổi tại nhà chuẩn hoá
+        </div>
+        <h1 class="hero-title">
+          Khoảng cách xa.<br>
+          <em>Quan tâm gần.</em>
+        </h1>
+        <p class="hero-subtitle">
+          Một người đồng hành tận tâm bên cha mẹ mỗi tối. Một nền tảng số minh bạch để con cái đi làm xa luôn biết cha mẹ đang được chăm sóc và yêu thương như thế nào.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-apricot" onclick="openRoleModal()">
+            Trải nghiệm Webapp ngay
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <a href="#pricing" class="btn btn-secondary">
+            Khám phá ca Ân Cần 320.000đ
+          </a>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE SCREEN SWITCHER PILLS -->
+      <div class="hero-screen-tabs">
+        <button class="screen-tab active" data-screen="0" onclick="switchHeroScreen(0)">
+          <span>📖</span> Nhật ký số & Ảnh thật
+        </button>
+        <button class="screen-tab" data-screen="1" onclick="switchHeroScreen(1)">
+          <span>🌸</span> Đặt ca Ân Cần 320k
+        </button>
+        <button class="screen-tab" data-screen="2" onclick="switchHeroScreen(2)">
+          <span>📋</span> Chuyên viên Check-in
+        </button>
+        <button class="screen-tab" data-screen="3" onclick="switchHeroScreen(3)">
+          <span>🏡</span> Gia đình dõi theo
+        </button>
+        <button class="screen-tab" data-screen="4" onclick="switchHeroScreen(4)">
+          <span>🛡️</span> Bảng điều phối
+        </button>
+      </div>
+
+      <!-- HERO SHOWCASE STAGE (100% FLUID RESPONSIVE) -->
+      <div class="hero-stage">
+        <div class="hero-stage-glow"></div>
+
+        <!-- LEFT FLOATING GLASS CARD (DESKTOP) -->
+        <div class="hero-float-card float-card-left">
+          <span class="mini-tag tag-green" style="margin-bottom:8px;">● Đang trong ca</span>
+          <h4 style="font-size:1.05rem; margin-bottom:4px; color:var(--navy);">Bác Trần Văn An</h4>
+          <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.4;">
+            Huyết áp: <b style="color:var(--primary);">120/80 mmHg</b><br>
+            Bữa tối: Đã dùng xong lúc 18:45<br>
+            Vận động: Đi dạo sân vườn 20p
+          </p>
+          <div style="margin-top:10px; font-size:0.8rem; font-weight:700; color:var(--primary);">
+            Chuyên viên: Thanh Trúc
+          </div>
+        </div>
+
+        <!-- CENTER IPHONE MOCKUP WITH PREV/NEXT BUTTONS -->
+        <div class="hero-phone-box" id="heroPhoneStage">
+          <button class="stage-nav-arrow arrow-left" onclick="prevHeroScreen()" aria-label="Màn hình trước">‹</button>
+          <button class="stage-nav-arrow arrow-right" onclick="nextHeroScreen()" aria-label="Màn hình sau">›</button>
+
+          <div class="iphone-device hero-main-device" onclick="openRoleModal()">
+            <div class="status-bar">
+              <span>9:41</span>
+              <div class="status-icons">●●● 5G 🔋</div>
+            </div>
+            <div class="dynamic-island">
+              <div class="island-lens"></div>
+              <div class="island-sensor"></div>
+            </div>
+
+            <!-- SCREEN 0: NHẬT KÝ CHĂM SÓC (ACTIVE DEFAULT) -->
+            <div class="iphone-screen screen-panel active" id="hero-panel-0">
+              <div class="screen-header">
+                <div class="screen-brand">Homa<span>Care</span></div>
+                <span class="mini-tag tag-green">Hoàn thành ✓</span>
+              </div>
+              <div class="screen-body">
+                <div style="position:relative; border-radius: 10px; overflow:hidden; height: 125px;">
+                  <img src="assets/photos/companion.jpg" alt="Nhật ký" style="width:100%; height:100%; object-fit:cover;">
+                  <div style="position:absolute; bottom:6px; left:6px; background: rgba(0,0,0,0.65); color:white; font-size:9px; padding:2px 8px; border-radius:4px; backdrop-filter:blur(4px);">
+                    Ảnh chụp ca tối 07/10
+                  </div>
+                </div>
+
+                <div class="mini-card">
+                  <div style="display:flex; justify-content:space-between;">
+                    <strong style="font-size:12px; color:var(--navy);">Nhật ký ca Ân Cần</strong>
+                    <span style="color:#F59E0B; font-size:11px;">★★★★★ 5.0</span>
+                  </div>
+                  <p style="font-size:10px; color:var(--text-muted); margin-top:4px; line-height: 1.4;">
+                    "Bác ăn hết 1 bát cháo sen, tinh thần phấn chấn. Sau bữa cơm bác đi dạo 15 phút và cùng đọc sách."
+                  </p>
+                </div>
+
+                <div class="mini-card" style="padding: 8px;">
+                  <div style="display:flex; justify-content:space-between; font-size:10px;">
+                    <span>Huyết áp lúc 20:30:</span>
+                    <strong style="color:var(--primary);">120/80 mmHg (Tốt)</strong>
+                  </div>
+                </div>
+
+                <div style="background: linear-gradient(135deg, var(--primary), #1A6C63); color: white; text-align: center; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11px;">
+                  Đánh giá & Gửi lời cảm ơn
+                </div>
+              </div>
+              <div class="screen-bottom-bar"></div>
+            </div>
+
+            <!-- SCREEN 1: ĐẶT CA ÂN CẦN -->
+            <div class="iphone-screen screen-panel" id="hero-panel-1">
+              <div class="screen-header">
+                <div class="screen-brand">Homa<span>Care</span></div>
+                <span class="mini-tag tag-teal">Đặt ca</span>
+              </div>
+              <div class="screen-body">
+                <div class="mini-card" style="border-left: 3px solid var(--primary);">
+                  <div style="font-size: 10px; color: var(--text-muted);">Người thân nhận chăm sóc</div>
+                  <strong style="font-size: 13px; color: var(--navy);">Bà Nguyễn Thị Mai (72t)</strong>
+                  <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">📍 Đống Đa, Hà Nội</div>
+                </div>
+
+                <div class="mini-card">
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="mini-tag tag-apricot">Gói Ân Cần</span>
+                    <strong style="color: var(--apricot); font-size: 12px;">320.000đ</strong>
+                  </div>
+                  <div style="font-size: 10px; color: var(--text-muted); margin-top: 6px;">
+                    🕒 18:00 – 22:00 (4 tiếng)
+                  </div>
+                </div>
+
+                <div class="mini-card" style="flex:1;">
+                  <strong style="font-size: 11px;">Hoạt động đã chọn:</strong>
+                  <div style="display:flex; flex-direction:column; gap: 6px; margin-top: 6px;">
+                    <div style="display:flex; align-items:center; gap: 6px; font-size: 10px;">
+                      <span style="color: #10B981;">✓</span> Hỗ trợ bữa tối thanh đạm
+                    </div>
+                    <div style="display:flex; align-items:center; gap: 6px; font-size: 10px;">
+                      <span style="color: #10B981;">✓</span> Đi dạo vườn hoa 20 phút
+                    </div>
+                    <div style="display:flex; align-items:center; gap: 6px; font-size: 10px;">
+                      <span style="color: #10B981;">✓</span> Đọc báo & tâm sự
+                    </div>
+                    <div style="display:flex; align-items:center; gap: 6px; font-size: 10px;">
+                      <span style="color: #10B981;">✓</span> Nhắc uống thuốc huyết áp
+                    </div>
+                  </div>
+                </div>
+
+                <div style="background: var(--apricot); color: white; text-align: center; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11px;">
+                  Gửi yêu cầu ca Ân Cần →
+                </div>
+              </div>
+              <div class="screen-bottom-bar"></div>
+            </div>
+
+            <!-- SCREEN 2: CHUYÊN VIÊN CHECK-IN -->
+            <div class="iphone-screen screen-panel" id="hero-panel-2">
+              <div class="screen-header">
+                <div class="screen-brand">Chuyên viên</div>
+                <span class="mini-tag tag-green">Đang trong ca</span>
+              </div>
+              <div class="screen-body">
+                <div class="mini-card">
+                  <div style="font-size: 10px; color: var(--text-muted);">Chuyên viên chăm sóc</div>
+                  <strong style="font-size: 12px;">Nguyễn Thanh Trúc</strong>
+                  <div style="font-size: 10px; color: #10B981; margin-top: 2px;">● Đã check-in lúc 17:55</div>
+                </div>
+
+                <div class="mini-card" style="flex:1;">
+                  <strong style="font-size: 11px;">Tiến trình hoạt động (3/4)</strong>
+                  <div style="display:flex; flex-direction:column; gap: 8px; margin-top: 8px;">
+                    <div style="background: #E8F5E9; padding: 6px; border-radius: 6px; font-size: 10px;">
+                      <b>18:30:</b> Hỗ trợ bữa tối ✓
+                    </div>
+                    <div style="background: #E8F5E9; padding: 6px; border-radius: 6px; font-size: 10px;">
+                      <b>19:15:</b> Đi dạo sân vườn ✓
+                    </div>
+                    <div style="background: #E8F5E9; padding: 6px; border-radius: 6px; font-size: 10px;">
+                      <b>20:00:</b> Trò chuyện cùng cụ ✓
+                    </div>
+                    <div style="background: #FFF3E0; padding: 6px; border-radius: 6px; font-size: 10px; border: 1px dashed var(--apricot);">
+                      <b>21:00:</b> Nhắc lịch sinh hoạt...
+                    </div>
+                  </div>
+                </div>
+
+                <div style="background: var(--primary); color: white; text-align: center; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11px;">
+                  Gửi báo cáo nhật ký
+                </div>
+              </div>
+              <div class="screen-bottom-bar"></div>
+            </div>
+
+            <!-- SCREEN 3: KHÔNG GIAN GIA ĐÌNH -->
+            <div class="iphone-screen screen-panel" id="hero-panel-3">
+              <div class="screen-header">
+                <div class="screen-brand">Gia đình Lan Anh</div>
+                <span style="font-size:14px;">🔔</span>
+              </div>
+              <div class="screen-body">
+                <div class="mini-card" style="background: var(--navy); color: white;">
+                  <div style="font-size: 10px; color: #94A3B8;">Lịch hẹn sắp tới</div>
+                  <strong style="font-size: 13px; color: #FFFFFF;">Ngày mai · 18:00 - 22:00</strong>
+                  <div style="font-size: 10px; color: var(--apricot); margin-top: 4px;">Chuyên viên: Thanh Trúc</div>
+                </div>
+
+                <div class="mini-card" style="flex:1;">
+                  <strong style="font-size: 11px;">Hồ sơ cha mẹ:</strong>
+                  <div style="display:flex; align-items:center; gap: 8px; margin-top: 8px;">
+                    <div style="width:32px; height:32px; border-radius:50%; background:var(--primary-subtle); display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--primary);">
+                      A
+                    </div>
+                    <div>
+                      <b style="font-size:11px;">Bác Trần Văn An</b>
+                      <div style="font-size:9px; color:var(--text-muted);">75 tuổi · Đã hoàn thành 8 ca</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="background: var(--apricot); color: white; text-align: center; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11px;">
+                  + Đặt thêm ca mới
+                </div>
+              </div>
+              <div class="screen-bottom-bar"></div>
+            </div>
+
+            <!-- SCREEN 4: ĐIỀU PHỐI VIÊN -->
+            <div class="iphone-screen screen-panel" id="hero-panel-4">
+              <div class="screen-header">
+                <div class="screen-brand">Điều phối</div>
+                <span class="mini-tag tag-apricot">3 ca mới</span>
+              </div>
+              <div class="screen-body">
+                <div class="mini-card" style="border-left: 3px solid var(--apricot);">
+                  <div style="font-size: 9px; color: var(--text-muted);">Yêu cầu chăm sóc #109</div>
+                  <strong style="font-size: 11px;">Q. Ba Đình · Ca Ân Cần</strong>
+                  <div style="font-size: 9px; color: var(--text-muted); margin-top: 2px;">Cần chuyên viên nữ, nhẹ nhàng</div>
+                </div>
+
+                <div class="mini-card" style="flex:1;">
+                  <strong style="font-size: 10px;">Chuyên viên trống lịch:</strong>
+                  <div style="display:flex; flex-direction:column; gap:6px; margin-top: 6px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:10px; background:#F1F5F9; padding:5px; border-radius:6px;">
+                      <span>Trần Thu Trang (1.2km)</span>
+                      <span style="color:var(--primary); font-weight:700;">Gán ca</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:10px; background:#F1F5F9; padding:5px; border-radius:6px;">
+                      <span>Vũ Hoài An (2.5km)</span>
+                      <span style="color:var(--primary); font-weight:700;">Gán ca</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="background: var(--navy); color: white; text-align: center; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 11px;">
+                  Bảng tổng quan điều phối
+                </div>
+              </div>
+              <div class="screen-bottom-bar"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- RIGHT FLOATING GLASS CARD (DESKTOP) -->
+        <div class="hero-float-card float-card-right">
+          <div style="font-size: 1.1rem; color: #F59E0B; margin-bottom: 6px;">★★★★★ 5.0</div>
+          <h4 style="font-size: 0.95rem; line-height:1.4; color:var(--navy); margin-bottom:8px;">
+            "Nhận nhật ký và thấy ảnh mẹ cười mà con ở xa nhẹ lòng."
+          </h4>
+          <p style="font-size: 0.82rem; color: var(--text-muted);">
+            — Chị Lan Anh (Quận Đống Đa)
+          </p>
+          <div style="margin-top:12px; padding-top:10px; border-top:1px solid var(--border-subtle); font-size:0.78rem; color:var(--primary); font-weight:700;">
+            ✓ Đã xác thực trên Webapp
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGINATION DOTS -->
+      <div class="hero-dots-nav">
+        <span class="hero-dot active" data-dot="0" onclick="switchHeroScreen(0)"></span>
+        <span class="hero-dot" data-dot="1" onclick="switchHeroScreen(1)"></span>
+        <span class="hero-dot" data-dot="2" onclick="switchHeroScreen(2)"></span>
+        <span class="hero-dot" data-dot="3" onclick="switchHeroScreen(3)"></span>
+        <span class="hero-dot" data-dot="4" onclick="switchHeroScreen(4)"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       EXPERIENCE PARALLAX (3 MOCKUPS SO LE)
+       ===================================================================== -->
+  <section class="experience-section" id="experience">
+    <div class="container text-center">
+      <span class="section-eyebrow">Trải nghiệm khác biệt</span>
+      <h2 class="section-title">Một ứng dụng dựng bằng trọn đạo hiếu</h2>
+      <p class="section-desc">
+        HomaCare tinh giản mọi thao tác để từ con cái ở xa, chuyên viên tại nhà đến điều phối viên đều kết nối liền mạch chỉ trong vài chạm.
+      </p>
+
+      <div class="parallax-grid">
+        <!-- Parallax 1 -->
+        <div class="parallax-card">
+          <div class="iphone-device" style="height: 480px; width: 250px;">
+            <div class="dynamic-island" style="width:70px; height:18px;"></div>
+            <div class="iphone-screen">
+              <div class="screen-header">
+                <span class="screen-brand">Bước 1</span>
+                <span class="mini-tag tag-teal">Chọn ca</span>
+              </div>
+              <div class="screen-body">
+                <div class="mini-card">
+                  <strong style="font-size:12px;">Đặt lịch trong 3 phút</strong>
+                  <p style="font-size:10px; margin-top:4px;">Chọn khung giờ và ghi chú những điều cha mẹ thích.</p>
+                </div>
+                <div style="margin-top:auto; background:var(--primary); color:white; padding:8px; border-radius:8px; text-align:center; font-size:10px; font-weight:700;">
+                  Tiếp tục →
+                </div>
+              </div>
+              <div class="screen-bottom-bar"></div>
+            </div>
+          </div>
+          <div class="parallax-caption">
+            <h4>1. Đặt lịch linh hoạt</h4>
+            <p>Chỉ cần 3 phút để sắp xếp một buổi tối ấm áp cho đấng sinh thành.</p>
+          </div>
+        </div>
+
+        <!-- Parallax 2 -->
+        <div class="parallax-card">
+          <div class="iphone-device" style="height: 520px; width: 260px; box-shadow: 0 25px 60px -15px rgba(15,76,70,0.3);">
+            <div class="dynamic-island" style="width:76px; height:20px;"></div>
+            <div class="iphone-screen">
+              <div class="screen-header">
+                <span class="screen-brand">Bước 2</span>
+                <span class="mini-tag tag-green">Thời gian thực</span>
+              </div>
+              <div class="screen-body">
+                <div style="height:120px; border-radius:8px; overflow:hidden;">
+                  <img src="assets/photos/walk.jpg" alt="Đi dạo" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                <div class="mini-card">
+                  <strong style="font-size:12px;">Đồng hành tận tâm</strong>
+                  <p style="font-size:10px; margin-top:4px;">Chuyên viên hỗ trợ vận động, bữa ăn và chia sẻ niềm vui.</p>
+                </div>
+              </div>
+              <div class="screen-bottom-bar"></div>
+            </div>
+          </div>
+          <div class="parallax-caption">
+            <h4>2. Đồng hành tại nhà</h4>
+            <p>Chuyên viên chăm sóc chu đáo, nhẹ nhàng tôn trọng nhịp sống người thân.</p>
+          </div>
+        </div>
+
+        <!-- Parallax 3 -->
+        <div class="parallax-card">
+          <div class="iphone-device" style="height: 480px; width: 250px;">
+            <div class="dynamic-island" style="width:70px; height:18px;"></div>
+            <div class="iphone-screen">
+              <div class="screen-header">
+                <span class="screen-brand">Bước 3</span>
+                <span class="mini-tag tag-apricot">Nhật ký</span>
+              </div>
+              <div class="screen-body">
+                <div class="mini-card" style="text-align:center;">
+                  <div style="font-size:24px;">⭐</div>
+                  <strong style="font-size:12px;">An tâm tuyệt đối</strong>
+                  <p style="font-size:10px; margin-top:4px;">Đọc nhật ký sinh hoạt và ngắm nụ cười cha mẹ mỗi ngày.</p>
+                </div>
+                <div style="margin-top:auto; background:var(--apricot); color:white; padding:8px; border-radius:8px; text-align:center; font-size:10px; font-weight:700;">
+                  Xem nhật ký
+                </div>
+              </div>
+              <div class="screen-bottom-bar"></div>
+            </div>
+          </div>
+          <div class="parallax-caption">
+            <h4>3. Nhật ký minh bạch</h4>
+            <p>Con cái nhận báo cáo chi tiết và hình ảnh sau mỗi buổi chăm sóc.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       FEATURE SPLIT ROWS (ZIC-ZAC MAGIC UI)
+       ===================================================================== -->
+  <section class="features-split" id="features">
+    <div class="container">
+      
+      <!-- ROW 1 -->
+      <div class="split-row">
+        <div class="split-text">
+          <span class="section-eyebrow">Cá nhân hoá chăm sóc</span>
+          <h3>Đặt ca Ân Cần theo thói quen của người thân</h3>
+          <p>
+            Mỗi người già có một nhịp sống riêng. HomaCare cho phép bạn ghi chú sở thích dùng bữa, thói quen đi dạo hay những câu chuyện cha mẹ yêu thích, để người đồng hành chăm sóc tự nhiên và chu đáo nhất.
+          </p>
+          <button class="btn btn-primary" onclick="openRoleModal()">
+            Tìm hiểu quy trình đặt lịch →
+          </button>
+        </div>
+        <div class="split-visual">
+          <div class="split-visual-bg"></div>
+          <div class="iphone-device" style="width: 270px; height: 530px;">
+            <div class="dynamic-island"></div>
+            <div class="iphone-screen">
+              <div class="screen-header">
+                <span class="screen-brand">Hồ sơ sức khỏe</span>
+              </div>
+              <div class="screen-body">
+                <div class="mini-card">
+                  <div style="font-size:10px; color:var(--text-muted);">Sở thích & Lưu ý</div>
+                  <strong style="font-size:12px; color:var(--navy);">Bác Nguyễn Thị Mai</strong>
+                  <div style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:10px;">
+                    <div>🍵 Thích uống trà hoa cúc sau 19:30</div>
+                    <div>📖 Rất thích nghe đọc tin tức thời sự</div>
+                    <div>🚶 Đi bộ chậm, cần hỗ trợ bậc thềm</div>
+                  </div>
+                </div>
+                <div class="mini-card" style="margin-top:10px;">
+                  <strong style="font-size:11px;">Khung giờ định kỳ:</strong>
+                  <div style="font-size:10px; color:var(--primary); font-weight:700; margin-top:4px;">18:00 – 22:00 Mỗi tối thứ 3, 5, 7</div>
+                </div>
+              </div>
+              <div class="screen-bottom-bar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 2 (REVERSE) -->
+      <div class="split-row reverse">
+        <div class="split-text">
+          <span class="section-eyebrow">Minh bạch tuyệt đối</span>
+          <h3>Nhật ký số sau mỗi ca — Con ở xa luôn an lòng</h3>
+          <p>
+            Không còn nỗi bất an "ở xa không biết cha mẹ ăn cơm chưa, có vui không". Ngay khi kết thúc ca, chuyên viên gửi nhật ký sinh hoạt kèm hình ảnh thực tế, chỉ số sức khỏe và những điều cần lưu ý.
+          </p>
+          <button class="btn btn-apricot" onclick="openRoleModal()">
+            Xem mẫu nhật ký ca →
+          </button>
+        </div>
+        <div class="split-visual">
+          <div class="split-visual-bg"></div>
+          <div class="iphone-device" style="width: 270px; height: 530px;">
+            <div class="dynamic-island"></div>
+            <div class="iphone-screen">
+              <div class="screen-header">
+                <span class="screen-brand">Nhật ký ca #104</span>
+                <span class="mini-tag tag-green">Đã duyệt</span>
+              </div>
+              <div class="screen-body">
+                <div style="height:110px; border-radius:10px; overflow:hidden;">
+                  <img src="assets/photos/meal.jpg" alt="Bữa ăn" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                <div class="mini-card">
+                  <strong style="font-size:11px;">Báo cáo hoạt động tối nay:</strong>
+                  <div style="margin-top:6px; font-size:10px; color:var(--text-muted); display:flex; flex-direction:column; gap:4px;">
+                    <div>🥣 <b>Dùng bữa:</b> Cụ ăn ngon, hết 1 chén canh rau ngót.</div>
+                    <div>🚶 <b>Vận động:</b> Đi dạo 2 vòng sân chung cư.</div>
+                    <div>❤️ <b>Tinh thần:</b> Cụ cười nhiều, nhắc nhớ các cháu.</div>
+                  </div>
+                </div>
+                <div class="mini-card" style="text-align:center; background:#FEF3C7;">
+                  <span style="font-size:10px; font-weight:700; color:#92400E;">Đánh giá của bạn: ★★★★★</span>
+                </div>
+              </div>
+              <div class="screen-bottom-bar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       BENTO GRID (HỆ SINH THÁI 3 TRONG 1)
+       ===================================================================== -->
+  <section class="bento-section" id="ecosystem">
+    <div class="container">
+      <div class="text-center">
+        <span class="section-eyebrow">Hệ sinh thái toàn diện</span>
+        <h2 class="section-title">Mọi điều bạn cần để an tâm gửi gắm</h2>
+        <p class="section-desc">
+          Kết nối gia đình, chuyên viên và điều phối viên trên một nền tảng chuẩn hoá duy nhất.
+        </p>
+      </div>
+
+      <div class="bento-grid">
+        <!-- Bento 1: 4 Nhóm hoạt động (Col 2) -->
+        <div class="bento-card col-2">
+          <span class="mini-tag tag-teal" style="width: fit-content; margin-bottom: 12px;">Đồng hành chuẩn mực</span>
+          <h3>4 Hoạt động chăm sóc cốt lõi trong ca Ân Cần</h3>
+          <p>
+            Được nghiên cứu dựa trên nhu cầu tâm sinh lý thực tế của người cao tuổi Việt Nam trong khung giờ 18:00 - 22:00.
+          </p>
+          <div class="bento-activities-grid">
+            <div class="activity-chip">
+              <div class="chip-icon">💬</div>
+              <div>
+                <strong>Trò chuyện & Đồng hành</strong>
+                <p style="font-size: 0.85rem;">Đọc sách, tâm sự, xua tan cô đơn tuổi già.</p>
+              </div>
+            </div>
+            <div class="activity-chip">
+              <div class="chip-icon">🍲</div>
+              <div>
+                <strong>Bữa ăn & Sinh hoạt</strong>
+                <p style="font-size: 0.85rem;">Chuẩn bị bữa tối ấm áp, hỗ trợ ăn uống an toàn.</p>
+              </div>
+            </div>
+            <div class="activity-chip">
+              <div class="chip-icon">🚶</div>
+              <div>
+                <strong>Vận động nhẹ nhàng</strong>
+                <p style="font-size: 0.85rem;">Đi dạo sân vườn, duy trì sự dẻo dai.</p>
+              </div>
+            </div>
+            <div class="activity-chip">
+              <div class="chip-icon">⏰</div>
+              <div>
+                <strong>Nhắc lịch & Cập nhật</strong>
+                <p style="font-size: 0.85rem;">Nhắc uống thuốc đúng giờ, gửi nhật ký cho con.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bento 2: Trạng thái thời gian thực -->
+        <div class="bento-card">
+          <span class="mini-tag tag-green" style="width: fit-content; margin-bottom: 12px;">Thời gian thực</span>
+          <h3>Theo dõi tiến độ ca</h3>
+          <p>Mỗi bước của ca chăm sóc đều được đồng bộ hóa tức thì trên ứng dụng.</p>
+          <div class="status-tracker">
+            <div class="status-step">
+              <div class="status-dot" style="background:#10B981;"></div>
+              <span>Tiếp nhận yêu cầu</span>
+            </div>
+            <div class="status-step">
+              <div class="status-dot" style="background:#10B981;"></div>
+              <span>Đã phân công chuyên viên</span>
+            </div>
+            <div class="status-step">
+              <div class="status-dot active"></div>
+              <span>Đang chăm sóc tại nhà</span>
+            </div>
+            <div class="status-step">
+              <div class="status-dot"></div>
+              <span>Gửi nhật ký hoàn tất</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bento 3: Đánh giá minh bạch -->
+        <div class="bento-card">
+          <span class="mini-tag tag-apricot" style="width: fit-content; margin-bottom: 12px;">Chất lượng</span>
+          <h3>Đánh giá 2 chiều</h3>
+          <p>Gia đình trực tiếp chấm điểm và gửi phản hồi sau mỗi ca để không ngừng nâng cao chất lượng.</p>
+          <div style="margin-top: 24px; padding: 16px; background: #FFFBEB; border-radius: 12px; border: 1px solid #FDE68A;">
+            <div style="font-size: 1.2rem; color: #F59E0B; margin-bottom: 6px;">★★★★★ 5.0</div>
+            <div style="font-size: 0.88rem; font-weight: 600; color: #92400E;">"Chuyên viên rất lễ phép và kiên nhẫn với mẹ mình."</div>
+            <div style="font-size: 0.78rem; color: #B45309; margin-top: 4px;">— Chị Minh Trang (Cầu Giấy)</div>
+          </div>
+        </div>
+
+        <!-- Bento 4: 3 Vai trò (Col 2) -->
+        <div class="bento-card col-2">
+          <span class="mini-tag tag-teal" style="width: fit-content; margin-bottom: 12px;">Phân quyền thông minh</span>
+          <h3>Một nền tảng — Ba không gian tối ưu cho từng vai trò</h3>
+          <p>
+            Mỗi bên tham gia đều có một giao diện chuyên biệt được tinh chỉnh chuẩn xác theo nhiệm vụ của mình.
+          </p>
+          <div class="roles-cluster">
+            <div class="role-badge">
+              <span style="font-size: 1.3rem;">🏡</span>
+              <div>
+                <div>Gia đình</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">Đặt lịch & Dõi theo</div>
+              </div>
+            </div>
+            <div class="role-badge">
+              <span style="font-size: 1.3rem;">🤝</span>
+              <div>
+                <div>Chuyên viên</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">Nhận ca & Ghi nhật ký</div>
+              </div>
+            </div>
+            <div class="role-badge">
+              <span style="font-size: 1.3rem;">🛡️</span>
+              <div>
+                <div>Điều phối viên</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">Phân công & Giám sát</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       HORIZONTAL SNAP CAROUSEL (KHOẢNH KHẮC)
+       ===================================================================== -->
+  <section class="carousel-section" id="carousel">
+    <div class="container">
+      <div class="carousel-header">
+        <div>
+          <span class="section-eyebrow">Những khoảnh khắc giản dị</span>
+          <h2 class="section-title">HomaCare trong nhịp sống gia đình</h2>
+        </div>
+        <div class="carousel-controls">
+          <button class="control-btn" onclick="scrollCarousel(-1)">←</button>
+          <button class="control-btn" onclick="scrollCarousel(1)">→</button>
+        </div>
+      </div>
+
+      <div class="carousel-container" id="momentsCarousel">
+        
+        <!-- Card 1 -->
+        <div class="carousel-card">
+          <img src="assets/photos/companion.jpg" alt="Lắng nghe" class="carousel-card-img">
+          <div class="carousel-card-body">
+            <span class="mini-tag tag-teal">Lắng nghe</span>
+            <h4 style="margin-top: 8px;">Những câu chuyện không còn cô đơn</h4>
+            <p style="font-size: 0.92rem;">Người cao tuổi được lắng nghe những ký ức xưa bên chén trà ấm mỗi tối.</p>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="carousel-card">
+          <img src="assets/photos/meal.jpg" alt="Bữa ăn" class="carousel-card-img">
+          <div class="carousel-card-body">
+            <span class="mini-tag tag-apricot">Ấm áp</span>
+            <h4 style="margin-top: 8px;">Bữa cơm đúng giờ, đủ chất</h4>
+            <p style="font-size: 0.92rem;">Không còn cảnh ăn cơm nguội một mình khi các con tăng ca muộn.</p>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="carousel-card">
+          <img src="assets/photos/walk.jpg" alt="Đi dạo" class="carousel-card-img">
+          <div class="carousel-card-body">
+            <span class="mini-tag tag-green">Dẻo dai</span>
+            <h4 style="margin-top: 8px;">Vận động an toàn từng bước chân</h4>
+            <p style="font-size: 0.92rem;">Đồng hành dạo mát, hít thở khí trời trong khuôn viên khu phố thân thuộc.</p>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="carousel-card">
+          <img src="assets/photos/caregiver.jpg" alt="Ghi chép" class="carousel-card-img">
+          <div class="carousel-card-body">
+            <span class="mini-tag tag-teal">Tận tâm</span>
+            <h4 style="margin-top: 8px;">Ghi chú cẩn thận từng chi tiết</h4>
+            <p style="font-size: 0.92rem;">Chuyên viên kiểm tra an toàn sinh hoạt và nhắc lịch sinh hoạt chu đáo.</p>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="carousel-card">
+          <img src="assets/photos/family.jpg" alt="Gia đình" class="carousel-card-img">
+          <div class="carousel-card-body">
+            <span class="mini-tag tag-apricot">Gắn kết</span>
+            <h4 style="margin-top: 8px;">Khoảng cách xa, nụ cười gần</h4>
+            <p style="font-size: 0.92rem;">Mỗi lần mở điện thoại là một lần con cái thấy cha mẹ an vui, khỏe mạnh.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       GÓI DỊCH VỤ & BẢNG GIÁ
+       ===================================================================== -->
+  <section class="pricing-section" id="pricing">
+    <div class="container">
+      <div class="text-center">
+        <span class="section-eyebrow">Minh bạch & Rõ ràng</span>
+        <h2 class="section-title">Lựa chọn phù hợp cho người thân</h2>
+        <p class="section-desc">
+          Bảng giá đề xuất trong giai đoạn thử nghiệm. Bạn hoàn toàn có thể đặt trước ca để trải nghiệm chất lượng.
+        </p>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- GÓI 1: ÂN CẦN (FEATURED) -->
+        <div class="pricing-card featured">
+          <div class="featured-ribbon">Phổ biến nhất</div>
+          <span class="mini-tag tag-teal" style="width: fit-content;">Chăm sóc theo buổi</span>
+          <h3 style="font-size: 1.8rem; margin-top: 8px;">Gói Ân Cần</h3>
+          <p style="font-size: 0.92rem;">Một buổi tối 4 tiếng đồng hành, hỗ trợ sinh hoạt và báo cáo nhật ký.</p>
+          <div class="price-value">
+            320.000đ <span>/ buổi · 4 giờ</span>
+          </div>
+
+          <ul class="pricing-features">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Khung giờ tối <b>18:00 – 22:00</b></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Hỗ trợ chuẩn bị & dùng bữa tối</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Đồng hành đi dạo nhẹ nhàng</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Trò chuyện, đọc sách, nhắc uống thuốc</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Nhật ký số & hình ảnh gửi ngay sau ca</span>
+            </li>
+          </ul>
+
+          <button class="btn btn-apricot" onclick="openRoleModal('family')">
+            Đặt ca Ân Cần ngay →
+          </button>
+        </div>
+
+        <!-- GÓI 2: CHĂM CHÚT -->
+        <div class="pricing-card">
+          <span class="mini-tag tag-apricot" style="width: fit-content;">Hỗ trợ ban ngày</span>
+          <h3 style="font-size: 1.8rem; margin-top: 8px;">Gói Chăm Chút</h3>
+          <p style="font-size: 0.92rem;">Đồng hành theo ngày dành cho gia đình cần người trông nom ban ngày.</p>
+          <div class="price-value">
+            600–800k <span>/ ngày · 8–12 giờ</span>
+          </div>
+
+          <ul class="pricing-features">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Khung giờ linh hoạt theo nhu cầu</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Đồng hành 2 bữa ăn trưa & chiều</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Theo dõi sinh hoạt suốt ngày dài</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Báo cáo 2 lần trong ngày</span>
+            </li>
+          </ul>
+
+          <button class="btn btn-secondary" onclick="openRoleModal()">
+            Tìm hiểu gói này
+          </button>
+        </div>
+
+        <!-- GÓI 3: THÂN TÌNH -->
+        <div class="pricing-card">
+          <span class="mini-tag tag-teal" style="width: fit-content;">Gói tháng định kỳ</span>
+          <h3 style="font-size: 1.8rem; margin-top: 8px;">Gói Thân Tình</h3>
+          <p style="font-size: 0.92rem;">Gói gắn bó định kỳ tháng, cố định chuyên viên chăm sóc quen thuộc.</p>
+          <div class="price-value">
+            2.800.000đ <span>/ tháng (7 ngày)</span>
+          </div>
+
+          <ul class="pricing-features">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Tùy chọn 7 ngày trong tháng (8h/ngày)</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Ưu tiên giữ 1 chuyên viên quen thuộc</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Điều phối viên riêng theo dõi sát sao</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Tổng kết sức khỏe & tinh thần hàng tháng</span>
+            </li>
+          </ul>
+
+          <button class="btn btn-secondary" onclick="openRoleModal()">
+            Đăng ký tư vấn
+          </button>
+        </div>
+      </div>
+
+      <!-- SCOPE MATRIX (MINH BẠCH PHẠM VI) -->
+      <div class="scope-box">
+        <div class="scope-col">
+          <h4 style="color: var(--primary);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Phạm vi hỗ trợ trong ca HomaCare
+          </h4>
+          <ul style="display:flex; flex-direction:column; gap:8px; font-size:0.92rem; color:var(--text); list-style:disc; padding-left:20px;">
+            <li>Hỗ trợ ăn uống, chuẩn bị bữa tối thanh đạm.</li>
+            <li>Đồng hành đi dạo, vận động an toàn quanh nhà.</li>
+            <li>Lắng nghe, trò chuyện, đọc sách báo tinh thần.</li>
+            <li>Nhắc nhở lịch uống thuốc theo đơn gia đình để sẵn.</li>
+            <li>Kiểm tra an toàn nhà cửa trước khi kết thúc ca.</li>
+          </ul>
+        </div>
+        <div class="scope-col">
+          <h4 style="color: #DC2626;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Giới hạn chuyên môn (Không thay thế y tế)
+          </h4>
+          <ul style="display:flex; flex-direction:column; gap:8px; font-size:0.92rem; color:var(--text-muted); list-style:disc; padding-left:20px;">
+            <li>Không khám bệnh, chẩn đoán hay kê đơn thuốc.</li>
+            <li>Không thực hiện tiêm truyền, rửa vết thương ngoại khoa.</li>
+            <li>Không phục hồi chức năng chuyên sâu hoặc cấp cứu.</li>
+            <li><i>Gia đình cần liên hệ cơ sở y tế với các trường hợp bệnh lý cấp tính.</i></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       TESTIMONIALS (ĐÁNH GIÁ TỪ GIA ĐÌNH)
+       ===================================================================== -->
+  <section class="testimonials-section">
+    <div class="container">
+      <div class="text-center">
+        <span class="section-eyebrow">Chia sẻ chân thực</span>
+        <h2 class="section-title">Hàng trăm gia đình đã an tâm hơn</h2>
+      </div>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p class="quote-text">
+            "Mình đi công tác Sài Gòn cả tuần, nhờ có ca Ân Cần của HomaCare mà tối nào cũng biết mẹ ăn gì, huyết áp bao nhiêu. Thấy ảnh mẹ cười đọc sách mà nhẹ cả lòng."
+          </p>
+          <div class="user-profile">
+            <div class="user-avatar">LA</div>
+            <div>
+              <div class="user-name">Chị Lan Anh</div>
+              <div class="user-role">Quận Đống Đa, Hà Nội</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p class="quote-text">
+            "Bố tôi trước đây rất ngại người lạ, nhưng bạn Trúc chuyên viên HomaCare rất khéo léo và biết kính trọng người già. Giờ cứ đến chiều là bố lại ngóng bạn đến trò chuyện."
+          </p>
+          <div class="user-profile">
+            <div class="user-avatar">HM</div>
+            <div>
+              <div class="user-name">Anh Hoàng Minh</div>
+              <div class="user-role">Quận Cầu Giấy, Hà Nội</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p class="quote-text">
+            "Đang làm việc tại Nhật Bản, khoảng cách múi giờ làm tôi luôn lo lắng. HomaCare đã trở thành cầu nối hiếu nghĩa vô giá để tôi dõi theo sức khỏe bố mỗi ngày."
+          </p>
+          <div class="user-profile">
+            <div class="user-avatar">TT</div>
+            <div>
+              <div class="user-name">Anh Tuấn Thành</div>
+              <div class="user-role">Lập trình viên (Tokyo, Nhật Bản)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       FAQ ACCORDION
+       ===================================================================== -->
+  <section class="faq-section" id="faq">
+    <div class="container">
+      <div class="text-center">
+        <span class="section-eyebrow">Giải đáp thắc mắc</span>
+        <h2 class="section-title">Câu hỏi thường gặp</h2>
+        <p class="section-desc">Mọi điều bạn cần biết trước buổi đồng hành đầu tiên.</p>
+      </div>
+
+      <div class="faq-wrapper">
+        <div class="faq-item active">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Ca Ân Cần 4 giờ bao gồm những hoạt động gì?</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            Ca Ân Cần kéo dài từ 18:00 đến 22:00. Chuyên viên sẽ hỗ trợ bữa tối, đi dạo nhẹ nhàng, trò chuyện tinh thần, nhắc lịch sinh hoạt và kiểm tra an toàn trước khi ra về. Sau ca, gia đình sẽ nhận được nhật ký kèm hình ảnh trên ứng dụng.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>HomaCare có làm dịch vụ y tế hay tiêm truyền không?</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            HomaCare tập trung vào chăm sóc sinh hoạt và đồng hành tinh thần phi y tế. Chúng tôi không thực hiện các thủ thuật y khoa như tiêm truyền, kê đơn hay phục hồi chức năng chuyên sâu.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Làm thế nào để tôi theo dõi ca khi đang ở xa?</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            Bạn đăng nhập vào Không gian Gia đình trên webapp. Tại đây, trạng thái ca sẽ cập nhật theo thời gian thực (Đang chăm sóc, Hoàn thành). Sau ca, bạn có thể xem chi tiết nhật ký kèm ảnh chụp và chỉ số sức khỏe của người thân.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Đội ngũ chuyên viên HomaCare được tuyển chọn ra sao?</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            100% chuyên viên đều được xác minh nhân thân, lý lịch rõ ràng và hoàn thành khoá đào tạo căn bản 30 giờ về giao tiếp người cao tuổi, hỗ trợ vận động an toàn và xử lý tình huống khẩn cấp.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Thanh toán chi phí ca chăm sóc như thế nào?</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">
+            Hiện tại ở giai đoạn thử nghiệm, khi bạn gửi yêu cầu đặt ca trên webapp, hệ thống chưa thu tiền ngay. Điều phối viên sẽ liên hệ xác nhận thông tin và hướng dẫn thanh toán thuận tiện nhất.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       BIG IMPACT CTA BANNER & FOOTER
+       ===================================================================== -->
+  <section class="cta-banner-section">
+    <div class="container">
+      <div class="cta-banner">
+        <h2>Gửi trọn quan tâm, vẹn tròn đạo hiếu</h2>
+        <p>
+          Bắt đầu hành trình đồng hành cùng cha mẹ ngay hôm nay. Đặt ca dễ dàng, theo dõi minh bạch và an tâm tuyệt đối.
+        </p>
+        <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
+          <button class="btn btn-apricot" onclick="openRoleModal('family')">
+            Trải nghiệm Webapp HomaCare
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <a href="tel:0338031425" class="btn btn-secondary" style="color:var(--navy);">
+            Hotline: 0338 031 425
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="landing.html" class="brand">
+          <img src="assets/logo.png" alt="HomaCare" class="brand-logo-img">
+          <span class="brand-name">Homa<span>Care</span></span>
+        </a>
+
+        <ul class="footer-links">
+          <li><a href="#hero">Trang chủ</a></li>
+          <li><a href="#features">Tính năng</a></li>
+          <li><a href="#pricing">Bảng giá</a></li>
+          <li><a href="#faq">Hỏi đáp</a></li>
+          <li><a href="index.html">Bản Webapp cũ</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          HomaCare · Dự án khởi nghiệp sinh viên Đại học Kinh tế Quốc dân (NEU)<br>
+          © 2026 HomaCare. Gửi trọn quan tâm, vẹn tròn đạo hiếu.
+        </div>
+        <div>
+          Hotline: <b>0338 031 425</b> · Email: <b>homacare@gmail.com</b>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =====================================================================
+       ROLE SELECTION MODAL
+       ===================================================================== -->
+  <div class="modal-backdrop" id="roleModal" onclick="handleBackdropClick(event)">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeRoleModal()">✕</button>
+      <span class="section-eyebrow">Chào mừng bạn đến với HomaCare</span>
+      <h3 style="font-size: 1.5rem; margin-bottom: 6px;">Bạn đến với vai trò nào?</h3>
+      <p style="font-size: 0.92rem; margin-bottom: 20px;">Chọn không gian làm việc phù hợp với bạn trên Webapp:</p>
+
+      <a href="auth.html?role=family" class="role-option-card">
+        <span style="font-size: 1.6rem;">🏡</span>
+        <div>
+          <strong style="font-size: 1.05rem; color: var(--navy); display:block;">Không gian Gia đình</strong>
+          <small style="color: var(--text-muted); font-size: 0.84rem;">Đặt lịch chăm sóc, quản lý hồ sơ và xem nhật ký sau ca.</small>
+        </div>
+      </a>
+
+      <a href="auth.html?role=caregiver" class="role-option-card">
+        <span style="font-size: 1.6rem;">🤝</span>
+        <div>
+          <strong style="font-size: 1.05rem; color: var(--navy); display:block;">Không gian Chuyên viên</strong>
+          <small style="color: var(--text-muted); font-size: 0.84rem;">Nhận ca được phân công, check-in và gửi báo cáo nhật ký.</small>
+        </div>
+      </a>
+
+      <a href="auth.html?role=coordinator" class="role-option-card">
+        <span style="font-size: 1.6rem;">🛡️</span>
+        <div>
+          <strong style="font-size: 1.05rem; color: var(--navy); display:block;">Không gian Điều phối viên</strong>
+          <small style="color: var(--text-muted); font-size: 0.84rem;">Quản lý phân ca, điều phối chuyên viên và giám sát chất lượng.</small>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- SCRIPT FOR INTERACTION -->
+  <script>
+    // FAQ Accordion Toggle
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const allItems = document.querySelectorAll('.faq-item');
+      allItems.forEach(i => {
+        if (i !== item) i.classList.remove('active');
+      });
+      item.classList.toggle('active');
+    }
+
+    // Role Modal Controls
+    function openRoleModal(role) {
+      if (role === 'family') {
+        window.location.href = 'auth.html?role=family&booking=1';
+        return;
+      }
+      const modal = document.getElementById('roleModal');
+      modal.classList.add('open');
+    }
+    function closeRoleModal() {
+      const modal = document.getElementById('roleModal');
+      modal.classList.remove('open');
+    }
+    function handleBackdropClick(e) {
+      if (e.target.id === 'roleModal') closeRoleModal();
+    }
+
+    // Horizontal Carousel Scroll
+    function scrollCarousel(dir) {
+      const carousel = document.getElementById('momentsCarousel');
+      const scrollAmount = 360 * dir;
+      carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+
+    // Hero Interactive Stage Controls
+    let currentHeroScreen = 0;
+    const totalHeroScreens = 5;
+    let heroAutoPlayTimer = null;
+
+    function switchHeroScreen(index) {
+      currentHeroScreen = (index + totalHeroScreens) % totalHeroScreens;
+      
+      // Update tabs
+      document.querySelectorAll('.screen-tab').forEach((tab, i) => {
+        tab.classList.toggle('active', i === currentHeroScreen);
+      });
+
+      // Update screen panels
+      document.querySelectorAll('.screen-panel').forEach((panel, i) => {
+        panel.classList.toggle('active', i === currentHeroScreen);
+      });
+
+      // Update dots
+      document.querySelectorAll('.hero-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentHeroScreen);
+      });
+    }
+
+    function nextHeroScreen() {
+      switchHeroScreen(currentHeroScreen + 1);
+    }
+
+    function prevHeroScreen() {
+      switchHeroScreen(currentHeroScreen - 1);
+    }
+
+    // Auto-play every 4.8s with pause on hover
+    function startHeroAutoPlay() {
+      stopHeroAutoPlay();
+      heroAutoPlayTimer = setInterval(nextHeroScreen, 4800);
+    }
+
+    function stopHeroAutoPlay() {
+      if (heroAutoPlayTimer) clearInterval(heroAutoPlayTimer);
+    }
+
+    const heroStageEl = document.getElementById('heroPhoneStage');
+    if (heroStageEl) {
+      heroStageEl.addEventListener('mouseenter', stopHeroAutoPlay);
+      heroStageEl.addEventListener('mouseleave', startHeroAutoPlay);
+      heroStageEl.addEventListener('touchstart', stopHeroAutoPlay, { passive: true });
+    }
+
+    startHeroAutoPlay();
+
+    // ESC key closes modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeRoleModal();
+    });
+
+    // Smooth scroll reveal (Magic UI aesthetic)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.split-row, .bento-card, .pricing-card, .testimonial-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(28px)';
+      el.style.transition = 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
