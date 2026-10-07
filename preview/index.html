@@ -3932,6 +3932,7 @@
     // Hiệu ứng xuất hiện khi cuộn tới
     if ('IntersectionObserver' in window) {
       const revealTargets = document.querySelectorAll([
+        '.hero-screen-tabs', '.hero-stage', '.hero-dots-nav',
         'section .text-center', '.story-text', '.value-card', '.mv-card', '.core-val-card',
         '.bento-card', '.step-item-btn', '.journey-phone-container', '.package-card',
         '.scope-notice-bar', '.roles-section .container > *', '.quality-section .container > *',
@@ -3954,7 +3955,8 @@
       }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
       const targetSet = new Set(revealTargets);
       revealTargets.forEach((el) => {
-        if (el.closest('.hero')) return;
+        // Phần chữ đầu trang hiện ngay; tab và điện thoại minh họa của hero vẫn có hiệu ứng khi cuộn tới
+        if (el.closest('.hero-content')) return;
         const siblings = [...el.parentElement.children].filter((c) => targetSet.has(c));
         el.style.setProperty('--reveal-delay', Math.min(siblings.indexOf(el), 4) * 80 + 'ms');
         el.classList.add('reveal');
