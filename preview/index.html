@@ -3702,28 +3702,12 @@
     ];
 
     let currentJourneyIndex = 0;
-    let journeyTimer = null;
-    let journeyVisible = false;
     let journeyScrollLock = 0;
 
-    function restartJourneyAutoPlay() {
-      clearInterval(journeyTimer);
-      if (!journeyVisible) return;
-      journeyTimer = setInterval(() => {
-        const total = document.querySelectorAll('.step-item-btn').length;
-        const next = currentJourneyIndex + 1;
-        // Trên điện thoại dừng ở bước cuối để màn minh họa không nhảy về đầu danh sách
-        if (next >= total && window.innerWidth <= 960) { clearInterval(journeyTimer); return; }
-        selectJourneyStep(next % total, true);
-      }, 10000);
-    }
-
-    function selectJourneyStep(stepIndex, fromAutoPlay = false) {
+    function selectJourneyStep(stepIndex, fromScroll = false) {
       currentJourneyIndex = stepIndex;
-      if (!fromAutoPlay) {
-        restartJourneyAutoPlay();
-        journeyScrollLock = Date.now() + 900;
-      }
+      // Bấm trực tiếp vào bước: tạm ngưng đổi bước theo cuộn để không giành điều khiển
+      if (!fromScroll) journeyScrollLock = Date.now() + 900;
       const stepBtns = document.querySelectorAll('.step-item-btn');
       stepBtns.forEach((btn, i) => {
         btn.classList.toggle('active', i === stepIndex);
@@ -3748,7 +3732,7 @@
         const activeBtn = stepBtns[stepIndex];
         if (phoneContainer && activeBtn) {
           activeBtn.after(phoneContainer);
-          if (!fromAutoPlay) {
+          if (!fromScroll) {
             setTimeout(() => {
               activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 40);
@@ -3779,7 +3763,7 @@
     window.addEventListener('resize', syncJourneyLayout);
     syncJourneyLayout();
 
-    // Điện thoại: cuộn qua hết minh họa của một bước thì bước kế tiếp tự mở minh họa
+    // Điện thoại: cuộn qua hết ảnh minh họa (khung điện thoại) của một bước thì bước kế tiếp tự mở
     function changeJourneyStepByScroll(nextIndex) {
       const btns = document.querySelectorAll('.step-item-btn');
       const anchor = btns[nextIndex];
@@ -3788,7 +3772,6 @@
       // Giữ nguyên vị trí bước mới trên màn hình khi minh họa phía trên được gỡ đi
       const shift = anchor.getBoundingClientRect().top - before;
       if (shift) window.scrollTo({ top: window.scrollY + shift, behavior: 'instant' });
-      restartJourneyAutoPlay();
     }
 
     let journeyScrollTicking = false;
@@ -3796,7 +3779,7 @@
       journeyScrollTicking = false;
       if (window.innerWidth > 960 || Date.now() < journeyScrollLock) return;
       const btns = document.querySelectorAll('.step-item-btn');
-      const phone = document.getElementById('journeyPhoneContainer');
+      const phone = document.querySelector('#journeyPhoneContainer .journey-device');
       const header = document.querySelector('.header');
       if (!phone || !btns.length) return;
       const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
@@ -3843,14 +3826,6 @@
       }
     }
 
-    // Tự chuyển bước chỉ khi phần "Cách sử dụng" đang hiện trên màn hình
-    const journeySection = document.getElementById('how-it-works');
-    if (journeySection && 'IntersectionObserver' in window) {
-      new IntersectionObserver((entries) => {
-        journeyVisible = entries[0].isIntersecting;
-        restartJourneyAutoPlay();
-      }, { rootMargin: '-35% 0px -35% 0px' }).observe(journeySection);
-    }
 
     // Hiệu ứng xuất hiện khi cuộn tới
     if ('IntersectionObserver' in window) {
