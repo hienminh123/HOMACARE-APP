@@ -2212,7 +2212,26 @@
       display: none;
     }
 
+    @keyframes demoEnter {
+      from { opacity: 0; transform: translateY(-14px); }
+      to { opacity: 1; transform: none; }
+    }
+
     @media (max-width: 960px) {
+      .journey-phone-container {
+        animation: none;
+      }
+
+      .journey-phone-container.demo-enter {
+        animation: demoEnter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .journey-phone-container.demo-enter {
+          animation: none;
+        }
+      }
+
       .journey-tap-hint {
         display: flex;
       }
@@ -3835,8 +3854,8 @@
     window.addEventListener('resize', syncJourneyLayout);
     syncJourneyLayout();
 
-    // Điện thoại: bấm vào bước nào thì minh họa của bước đó trượt xuống ngay dưới thẻ.
-    // Thẻ vừa bấm giữ nguyên vị trí rồi cuộn nhẹ lên gần header để thấy minh họa.
+    // Điện thoại: bấm vào bước nào thì minh họa của bước đó hiện ngay dưới thẻ (mờ dần + trượt nhẹ).
+    // Chỉ dùng opacity/transform nên không làm xô lệch bố cục, không bị giật.
     function openJourneyStepMobile(stepIndex) {
       const btns = document.querySelectorAll('.step-item-btn');
       const card = btns[stepIndex];
@@ -3846,33 +3865,13 @@
 
       const before = card.getBoundingClientRect().top;
       applyJourneyStep(stepIndex);
-      // Minh họa cũ nằm phía trên được gỡ đi: bù lại ngay để thẻ vừa bấm không bị nhảy
+      // Minh họa cũ ở phía trên được gỡ đi: bù ngay trong cùng khung hình để thẻ vừa bấm đứng yên
       const shift = card.getBoundingClientRect().top - before;
       if (shift) window.scrollTo({ top: window.scrollY + shift, behavior: 'instant' });
 
-      // Hiệu ứng trượt xuống
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (phone.animate && !reduce) {
-        const c = getComputedStyle(phone);
-        phone.style.boxSizing = 'border-box';
-        phone.style.overflow = 'hidden';
-        phone.style.animation = 'none';
-        const h = phone.offsetHeight;
-        const anim = phone.animate([
-          { height: '0px', paddingTop: '0px', paddingBottom: '0px', marginTop: '0px', opacity: 0 },
-          { height: h + 'px', paddingTop: c.paddingTop, paddingBottom: c.paddingBottom, marginTop: c.marginTop, opacity: 1 }
-        ], { duration: 450, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' });
-        const done = () => { phone.style.boxSizing = ''; phone.style.overflow = ''; phone.style.animation = ''; };
-        anim.onfinish = done;
-        anim.oncancel = done;
-        setTimeout(done, 700); // dự phòng nếu trình duyệt tạm dừng animation
-      }
-
-      // Đưa thẻ lên gần header để thấy minh họa bên dưới
-      const header = document.querySelector('.header');
-      const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
-      const target = window.scrollY + card.getBoundingClientRect().top - headerBottom - 12;
-      if (Math.abs(target - window.scrollY) > 4) window.scrollTo({ top: target, behavior: reduce ? 'instant' : 'smooth' });
+      phone.classList.remove('demo-enter');
+      void phone.offsetWidth; // chạy lại hiệu ứng
+      phone.classList.add('demo-enter');
     }
 
     // Step 6 Star Rating interactive demo
