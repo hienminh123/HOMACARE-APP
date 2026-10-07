@@ -1,6 +1,6 @@
 # Kết nối HOMACARE với Supabase
 
-Website: https://demo-homacare.netlify.app/
+Website: https://homacare-demo.pages.dev/ (Cloudflare Pages)
 
 Project: HOMACARE — `rjxknbmcsnbugjvgchla`.
 
@@ -20,8 +20,8 @@ Script tạo bảng tài khoản, người thân, ca chăm sóc và các quyền
 
 Vào **Authentication → URL Configuration**:
 
-- **Site URL**: `https://demo-homacare.netlify.app/auth.html`
-- Thêm vào **Redirect URLs**: `https://demo-homacare.netlify.app/auth.html*`
+- **Site URL**: `https://homacare-demo.pages.dev/auth.html`
+- Thêm vào **Redirect URLs**: `https://homacare-demo.pages.dev/**`
 - Nếu kiểm tra trên máy: thêm `http://127.0.0.1:4173/auth.html*`.
 - Bấm **Save changes**.
 
@@ -48,11 +48,11 @@ Script có biến `target_email` mặc định là `minh30d@gmail.com`. Màn đ�
 
 Để thêm điều phối viên: tạo một user mới trong Authentication, đổi `target_email` trong script thành email của user đó và chạy query. Mỗi người dùng tài khoản riêng. Không cần sửa config.js, không cần chạy lại schema và không ảnh hưởng quyền điều phối của tài khoản trước. Website không mở đăng ký điều phối công khai.
 
-## 5. Cập nhật Netlify
+## 5. Cập nhật website
 
-1. Vào dự án **demo-homacare** trên Netlify → **Project overview**.
-2. Trong **Production deploys**, tải nguyên folder `preview` mới lên.
-3. Chờ deploy thành công, mở lại https://demo-homacare.netlify.app/.
+1. Commit và push lên nhánh `main` trên GitHub.
+2. Cloudflare Pages (project **homacare-demo**) tự deploy thư mục `preview`.
+3. Chờ deploy thành công, mở lại https://homacare-demo.pages.dev/.
 
 Chỉ tải folder `preview`; các folder `backend`, `tests` và tài liệu thiết lập nằm ngoài phần website.
 

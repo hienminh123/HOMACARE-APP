@@ -6,7 +6,7 @@ HOMACARE là nền tảng kết nối gia đình, chuyên viên chăm sóc và �
 
 Dự án hiện là MVP phục vụ trình diễn và kiểm chứng luồng chăm sóc. Phạm vi dịch vụ trong ứng dụng là hỗ trợ sinh hoạt và đồng hành phi y tế.
 
-- **Website:** [demo-homacare.netlify.app](https://demo-homacare.netlify.app/)
+- **Website:** [homacare-demo.pages.dev](https://homacare-demo.pages.dev/) — Cloudflare Pages. Bản cũ trên Netlify (demo-homacare.netlify.app) đã ngừng cập nhật.
 - **Repository:** [hienminh123/HOMACARE-APP](https://github.com/hienminh123/HOMACARE-APP) — riêng tư, cần quyền truy cập.
 - **Thiết lập Supabase:** [SUPABASE-SETUP.md](SUPABASE-SETUP.md)
 - **Trạng thái công việc và bàn giao:** [CONTINUE-HOMACARE.md](CONTINUE-HOMACARE.md)
@@ -85,7 +85,7 @@ HOMACARE APP/
 │   ├── ui-handlers.txt          # Nguồn các thao tác giao diện chung
 │   └── check-connection.cjs      # Kiểm tra kết nối chỉ đọc
 ├── tests/                       # Kiểm thử và máy chủ dữ liệu giả lập
-├── netlify.toml                 # Publish directory: preview
+├── netlify.toml                 # Cấu hình Netlify cũ (không còn dùng)
 ├── SUPABASE-SETUP.md
 ├── CONTINUE-HOMACARE.md
 └── README.md
@@ -127,8 +127,8 @@ Xem hướng dẫn đầy đủ trong [SUPABASE-SETUP.md](SUPABASE-SETUP.md). Kh
 
 Với website hiện tại:
 
-- **Site URL:** `https://demo-homacare.netlify.app/auth.html`
-- **Redirect URL:** `https://demo-homacare.netlify.app/auth.html*`
+- **Site URL:** `https://homacare-demo.pages.dev/auth.html`
+- **Redirect URL:** `https://homacare-demo.pages.dev/**` (Cloudflare tự bỏ đuôi `.html`, `auth.html` thành `/auth`)
 
 Chỉ đặt **Publishable key** trong website. Mật khẩu và Secret/service-role key không được đưa vào `preview` hoặc Git. Quyền dữ liệu được kiểm tra trong Supabase, không phụ thuộc việc ẩn nút trên giao diện.
 
@@ -143,17 +143,18 @@ Project HOMACARE hiện đã được tạo bảng và cấp tài khoản điề
 
 Không cần sửa email trong cấu hình website khi thêm điều phối viên.
 
-## Triển khai và cập nhật Netlify
+## Triển khai và cập nhật website
 
-### Qua GitHub
+### Qua GitHub (Cloudflare Pages)
 
-Nối repository với dự án Netlify **demo-homacare** tại **Project configuration → Developer settings → Continuous deployment → Repository → Link repository**.
+Repository được nối với project Cloudflare Pages **homacare-demo**.
 
 - Nhánh xuất bản: `main`.
-- Thư mục xuất bản: `preview`, đã khai báo trong `netlify.toml`.
-- Build command: để trống; các file website đã có sẵn trong repository.
+- Build output directory: `preview` (không có dấu cách thừa).
+- Framework preset: None; build command để trống.
+- Chuyển hướng link cũ nằm trong `preview/_redirects`.
 
-Sau khi đã kết nối, Netlify tự triển khai khi thay đổi được push lên nhánh xuất bản. Chỉ sửa file trên máy sẽ chưa cập nhật GitHub hoặc website. Xem [hướng dẫn nối repository](https://docs.netlify.com/build/git-workflows/repo-permissions-linking/).
+Cloudflare tự triển khai miễn phí khi thay đổi được push lên `main`. Chỉ sửa file trên máy sẽ chưa cập nhật GitHub hoặc website. Project Netlify cũ đã dừng build để không tốn credit.
 
 ### Qua GitHub Desktop
 
@@ -161,7 +162,7 @@ Sau khi đã kết nối, Netlify tự triển khai khi thay đổi được pus
 2. Mở GitHub Desktop, xem danh sách **Changes**.
 3. Nhập **Summary**, bấm **Commit to main**.
 4. Bấm **Push origin**.
-5. Kiểm tra Netlify báo **Published**, sau đó thử website thật.
+5. Kiểm tra Cloudflare Pages báo deploy thành công, sau đó thử website thật.
 
 ### Tải folder thủ công
 

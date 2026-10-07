@@ -2073,6 +2073,183 @@
       }
     }
 
+
+    /* =====================================================================
+       MOBILE AUDIT 08/10: hiệu ứng xuất hiện khi cuộn + chỉnh bản điện thoại
+       ===================================================================== */
+    .reveal {
+      opacity: 0;
+      translate: 0 28px;
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), translate 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+
+    .reveal.in-view {
+      opacity: 1;
+      translate: 0 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        opacity: 1;
+        translate: none;
+        transition: none;
+      }
+    }
+
+    /* Mục 3: thẻ "Thông tin nhân sự" nổi bật */
+    .value-card.value-card-featured {
+      background: linear-gradient(160deg, var(--primary) 0%, #16645D 100%);
+      border-color: var(--primary);
+      box-shadow: 0 18px 40px -12px rgba(15, 76, 70, 0.45);
+    }
+
+    .value-card.value-card-featured:hover {
+      background: linear-gradient(160deg, #16645D 0%, var(--primary) 100%);
+    }
+
+    .value-card.value-card-featured h3,
+    .value-card.value-card-featured p {
+      color: #FFFFFF;
+    }
+
+    .value-card.value-card-featured .mini-tag {
+      background: var(--apricot);
+      color: #FFFFFF;
+    }
+
+    .value-card.value-card-featured .value-visual-box {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #FFFFFF;
+    }
+
+    .value-card.value-card-featured .value-visual-box span {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    /* Mục 8: gói đang phát triển chỉ hiện tên */
+    .package-card.package-upcoming {
+      justify-content: center;
+      background: #FAF9F6;
+      border-style: dashed;
+    }
+
+    .package-upcoming p {
+      font-size: 0.92rem;
+      margin-top: 8px;
+      color: var(--text-muted);
+    }
+
+    .services-mobile-heading {
+      display: none;
+    }
+
+    /* Mục 4: thứ tự "Về HomaCare" trước "Dõi theo từ xa" chỉ trên điện thoại */
+    .intro-order {
+      display: contents;
+    }
+
+    @media (max-width: 768px) {
+      /* Mục 2: hero */
+      .hero-trust-line {
+        display: none;
+      }
+
+      .hero-screen-tabs {
+        display: flex;
+        width: 100%;
+        gap: 4px;
+        padding: 4px;
+        border-radius: var(--radius-full);
+        overflow: visible;
+      }
+
+      .hero-screen-tabs .screen-tab {
+        flex: 1 1 auto;
+        justify-content: center;
+        padding: 9px 7px;
+        font-size: 0.74rem;
+        min-width: 0;
+      }
+
+      .hero-screen-tabs .screen-tab span {
+        display: none;
+      }
+
+      #heroPhoneStage {
+        touch-action: pan-y;
+      }
+
+      /* Mục 4 */
+      .intro-order {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .intro-order .story-section {
+        order: -1;
+      }
+
+      .story-extra,
+      .story-photo-box {
+        display: none;
+      }
+
+      .story-layout {
+        margin-bottom: 30px;
+      }
+
+      /* Mục 5: 4 giá trị cốt lõi 2 cột x 2 dòng */
+      .core-values-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .core-val-card {
+        padding: 16px 14px 14px;
+      }
+
+      .val-card-header {
+        margin-bottom: 8px;
+      }
+
+      .val-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 17px;
+        border-radius: 10px;
+      }
+
+      .core-val-card strong {
+        font-size: 1.02rem;
+        margin-bottom: 4px;
+      }
+
+      .core-val-card p {
+        font-size: 0.84rem;
+        line-height: 1.45;
+      }
+
+      /* Mục 7: bỏ phần giới thiệu và 4 thẻ hoạt động, chỉ giữ bảng giá */
+      .services-intro,
+      .services-4grid {
+        display: none;
+      }
+
+      .services-mobile-heading {
+        display: block;
+        margin-bottom: 28px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .hero-screen-tabs .screen-tab {
+        font-size: 0.68rem;
+        padding: 9px 5px;
+      }
+    }
   </style>
 </head>
 
@@ -2350,6 +2527,7 @@
   <!-- =====================================================================
        03. GIÁ TRỊ CHO GIA ĐÌNH (DÕI THEO TỪ XA)
        ===================================================================== -->
+  <div class="intro-order">
   <section class="values-section" id="values">
     <div class="container">
       <div class="text-center">
@@ -2363,7 +2541,7 @@
 
       <div class="values-grid">
         <!-- Card 1 -->
-        <div class="value-card">
+        <div class="value-card value-card-featured">
           <div>
             <span class="mini-tag tag-teal">Thông tin nhân sự</span>
             <h3>Biết người đang đồng hành</h3>
@@ -2431,7 +2609,7 @@
             cao tuổi tại nhà, giúp gia đình sắp xếp sự hỗ trợ tại địa phương và theo dõi những buổi đồng hành qua lịch
             chăm sóc, nhật ký và phản hồi.
           </p>
-          <p>
+          <p class="story-extra">
             Người cao tuổi được ở trong không gian quen thuộc, giữ những thói quen của mình. Người con có thêm một cách
             tham gia vào việc chăm sóc, dù khoảng cách khiến việc có mặt thường xuyên trở nên khó khăn.
           </p>
@@ -2496,6 +2674,7 @@
       </div>
     </div>
   </section>
+  </div>
 
   <!-- =====================================================================
        05A. TÍNH NĂNG NỔI BẬT (ghép từ bản 3)
@@ -2957,7 +3136,7 @@
        ===================================================================== -->
   <section class="services-section" id="services">
     <div class="container">
-      <div class="text-center">
+      <div class="text-center services-intro">
         <span class="section-eyebrow">Đồng hành tại nhà</span>
         <h2 class="section-title">Quan tâm từ những sinh hoạt mỗi ngày.</h2>
         <p class="section-desc">
@@ -2988,6 +3167,11 @@
           <strong>Nhắc lịch và ghi nhận</strong>
           <p>Nhắc lịch sinh hoạt, ghi lại các hoạt động và gửi nhật ký để gia đình theo dõi sau ca.</p>
         </div>
+      </div>
+
+      <div class="text-center services-mobile-heading">
+        <span class="section-eyebrow">Gói dịch vụ</span>
+        <h2 class="section-title">Chăm sóc theo buổi tại nhà</h2>
       </div>
 
       <!-- 3 Packages -->
@@ -3023,56 +3207,18 @@
           </div>
         </div>
 
-        <!-- GÓI 2: CHĂM CHÚT -->
-        <div class="package-card">
-          <div>
-            <span class="mini-tag tag-apricot">Đang phát triển · Chưa mở đặt lịch trong app</span>
-            <h3 style="font-size: 1.6rem; margin-top: 8px;">Gói Chăm chút</h3>
-            <p style="font-size: 0.9rem; margin-top: 4px;">
-              Thêm thời gian hỗ trợ người thân trong các sinh hoạt ban ngày.
-            </p>
-            <div class="package-price" style="font-size: 1.85rem;">
-              600.000–800.000đ <span>/ buổi</span>
-            </div>
-            <p style="font-size: 0.88rem; margin-top: 6px;">
-              Thời lượng dự kiến: <b>8–12 giờ / buổi</b>
-            </p>
-            <p style="font-size: 0.9rem; margin-top: 12px; line-height: 1.6;">
-              Đồng hành trong sinh hoạt ban ngày, hỗ trợ dùng bữa trưa và chiều, theo dõi nề nếp sinh hoạt.
-            </p>
-          </div>
-
-          <div style="margin-top: 24px;">
-            <a href="#contact" class="btn btn-secondary" style="width: 100%;">
-              Trao đổi nhu cầu
-            </a>
-          </div>
+        <!-- GÓI 2: CHĂM CHÚT (đang phát triển) -->
+        <div class="package-card package-upcoming">
+          <span class="mini-tag tag-apricot">Đang phát triển</span>
+          <h3 style="font-size: 1.6rem; margin-top: 8px;">Gói Chăm chút</h3>
+          <p>Thông tin chi tiết sẽ được cập nhật khi gói sẵn sàng.</p>
         </div>
 
-        <!-- GÓI 3: THÂN TÌNH -->
-        <div class="package-card">
-          <div>
-            <span class="mini-tag tag-teal">Đang phát triển · Chưa mở đặt lịch trong app</span>
-            <h3 style="font-size: 1.6rem; margin-top: 8px;">Gói Thân tình</h3>
-            <p style="font-size: 0.9rem; margin-top: 4px;">
-              Định hướng đồng hành định kỳ để gia đình chủ động sắp xếp trong tháng.
-            </p>
-            <div class="package-price" style="font-size: 1.85rem;">
-              2.800.000đ <span>/ tháng</span>
-            </div>
-            <p style="font-size: 0.88rem; margin-top: 6px;">
-              Dự kiến: <b>7 ngày lựa chọn/tháng · 8 giờ/ngày</b>
-            </p>
-            <p style="font-size: 0.9rem; margin-top: 12px; line-height: 1.6;">
-              Gói đồng hành định kỳ hàng tháng giúp người thân có người quen thuộc đồng hành đều đặn.
-            </p>
-          </div>
-
-          <div style="margin-top: 24px;">
-            <a href="#contact" class="btn btn-secondary" style="width: 100%;">
-              Trao đổi nhu cầu
-            </a>
-          </div>
+        <!-- GÓI 3: THÂN TÌNH (đang phát triển) -->
+        <div class="package-card package-upcoming">
+          <span class="mini-tag tag-teal">Đang phát triển</span>
+          <h3 style="font-size: 1.6rem; margin-top: 8px;">Gói Thân tình</h3>
+          <p>Thông tin chi tiết sẽ được cập nhật khi gói sẵn sàng.</p>
         </div>
 
       </div>
@@ -3523,6 +3669,20 @@
       heroStageEl.addEventListener('mouseenter', stopHeroAutoPlay);
       heroStageEl.addEventListener('mouseleave', startHeroAutoPlay);
       heroStageEl.addEventListener('touchstart', stopHeroAutoPlay, { passive: true });
+
+      // Vuốt ngang trên điện thoại để chuyển màn hình
+      let swipeX = 0, swipeY = 0;
+      heroStageEl.addEventListener('touchstart', (e) => {
+        swipeX = e.touches[0].clientX;
+        swipeY = e.touches[0].clientY;
+      }, { passive: true });
+      heroStageEl.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - swipeX;
+        const dy = e.changedTouches[0].clientY - swipeY;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+          dx < 0 ? nextHeroScreen() : prevHeroScreen();
+        }
+      }, { passive: true });
     }
     startHeroAutoPlay();
 
@@ -3536,7 +3696,25 @@
       "Đánh giá của gia đình giúp điều phối viên theo dõi chất lượng từng buổi đồng hành."
     ];
 
-    function selectJourneyStep(stepIndex) {
+    let currentJourneyIndex = 0;
+    let journeyTimer = null;
+    let journeyVisible = false;
+
+    function restartJourneyAutoPlay() {
+      clearInterval(journeyTimer);
+      if (!journeyVisible) return;
+      journeyTimer = setInterval(() => {
+        const total = document.querySelectorAll('.step-item-btn').length;
+        const next = currentJourneyIndex + 1;
+        // Trên điện thoại dừng ở bước cuối để màn minh họa không nhảy về đầu danh sách
+        if (next >= total && window.innerWidth <= 960) { clearInterval(journeyTimer); return; }
+        selectJourneyStep(next % total, true);
+      }, 10000);
+    }
+
+    function selectJourneyStep(stepIndex, fromAutoPlay = false) {
+      currentJourneyIndex = stepIndex;
+      if (!fromAutoPlay) restartJourneyAutoPlay();
       const stepBtns = document.querySelectorAll('.step-item-btn');
       stepBtns.forEach((btn, i) => {
         btn.classList.toggle('active', i === stepIndex);
@@ -3561,9 +3739,11 @@
         const activeBtn = stepBtns[stepIndex];
         if (phoneContainer && activeBtn) {
           activeBtn.after(phoneContainer);
-          setTimeout(() => {
-            activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }, 40);
+          if (!fromAutoPlay) {
+            setTimeout(() => {
+              activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 40);
+          }
         }
       }
     }
@@ -3617,6 +3797,48 @@
           displayEl.style.display = (i === roleIndex) ? 'block' : 'none';
         }
       }
+    }
+
+    // Tự chuyển bước chỉ khi phần "Cách sử dụng" đang hiện trên màn hình
+    const journeySection = document.getElementById('how-it-works');
+    if (journeySection && 'IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        journeyVisible = entries[0].isIntersecting;
+        restartJourneyAutoPlay();
+      }, { rootMargin: '-35% 0px -35% 0px' }).observe(journeySection);
+    }
+
+    // Hiệu ứng xuất hiện khi cuộn tới
+    if ('IntersectionObserver' in window) {
+      const revealTargets = document.querySelectorAll([
+        'section .text-center', '.story-text', '.value-card', '.mv-card', '.core-val-card',
+        '.bento-card', '.step-item-btn', '.journey-phone-container', '.package-card',
+        '.scope-notice-bar', '.roles-section .container > *', '.quality-section .container > *',
+        '.faq-item', '.contact-cta-section .container > *'
+      ].join(','));
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          el.classList.add('in-view');
+          revealObserver.unobserve(el);
+          // Hiện xong thì gỡ class để trả lại hiệu ứng hover gốc của thẻ
+          el.addEventListener('transitionend', function done(e) {
+            if (e.propertyName !== 'opacity') return;
+            el.classList.remove('reveal', 'in-view');
+            el.style.removeProperty('--reveal-delay');
+            el.removeEventListener('transitionend', done);
+          });
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      const targetSet = new Set(revealTargets);
+      revealTargets.forEach((el) => {
+        if (el.closest('.hero')) return;
+        const siblings = [...el.parentElement.children].filter((c) => targetSet.has(c));
+        el.style.setProperty('--reveal-delay', Math.min(siblings.indexOf(el), 4) * 80 + 'ms');
+        el.classList.add('reveal');
+        revealObserver.observe(el);
+      });
     }
 
     // ESC closes modal
