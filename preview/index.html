@@ -2021,11 +2021,31 @@
         display: inline-flex;
         align-items: center;
         gap: 4px;
-        font-size: 0.74rem;
+        font-size: 0.78rem;
         font-weight: 700;
         color: var(--primary);
-        background: var(--primary-subtle);
-        padding: 2px 8px;
+        background: #FFFFFF;
+        border: 1.5px solid var(--primary);
+        padding: 4px 10px;
+        border-radius: var(--radius-full);
+      }
+
+      .step-item-btn.active .mobile-step-toggle-hint {
+        background: var(--primary);
+        color: #FFFFFF;
+      }
+
+      .journey-tap-hint {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin: 0 0 4px;
+        padding: 8px 14px;
+        font-size: 0.86rem;
+        font-weight: 700;
+        color: var(--apricot-hover);
+        background: var(--apricot-subtle);
         border-radius: var(--radius-full);
       }
 
@@ -2187,8 +2207,24 @@
       color: var(--text-muted);
     }
 
-    .services-mobile-heading {
+    .services-mobile-heading,
+    .journey-tap-hint {
       display: none;
+    }
+
+    @media (max-width: 960px) {
+      .journey-tap-hint {
+        display: flex;
+      }
+
+      /* Thẻ bước trên điện thoại: chỉ giữ nút xem minh họa cho gọn */
+      .step-item-btn .step-feature-badge {
+        display: none;
+      }
+
+      .step-item-btn .mobile-step-toggle-hint {
+        white-space: nowrap;
+      }
     }
 
     /* Tự bù vị trí cuộn bằng JS khi minh họa đổi bước, tắt cơ chế tự động của trình duyệt để không bị bù hai lần */
@@ -2864,6 +2900,7 @@
       <div class="journey-split">
         <!-- 6 Clickable Step Buttons -->
         <div class="steps-list" id="stepsList">
+          <p class="journey-tap-hint"><span aria-hidden="true">👆</span> Chạm vào từng bước để xem màn hình minh họa</p>
 
           <div class="step-item-btn active" onclick="selectJourneyStep(0)">
             <span class="step-num">1</span>
@@ -2872,7 +2909,7 @@
                 <strong>Tạo tài khoản gia đình</strong>
                 <div style="display:flex; align-items:center; gap:6px;">
                   <span class="step-feature-badge">Xác nhận email</span>
-                  <span class="mobile-step-toggle-hint">Đang mở minh họa ▴</span>
+                  <span class="mobile-step-toggle-hint">Đang xem minh họa ▴</span>
                 </div>
               </div>
               <p>Bắt đầu bằng tài khoản của bạn. Chọn vai trò Gia đình, đăng ký và xác nhận email để vào không gian chăm
@@ -2887,7 +2924,7 @@
                 <strong>Thêm người thân</strong>
                 <div style="display:flex; align-items:center; gap:6px;">
                   <span class="step-feature-badge">Thói quen & mong muốn</span>
-                  <span class="mobile-step-toggle-hint">Xem minh họa ▾</span>
+                  <span class="mobile-step-toggle-hint">Bấm để xem minh họa ▾</span>
                 </div>
               </div>
               <p>Cho HomaCare biết người thân cần được đồng hành như thế nào. Lưu thông tin cơ bản, khu vực chăm sóc,
@@ -2902,7 +2939,7 @@
                 <strong>Chọn ngày và xem lại yêu cầu</strong>
                 <div style="display:flex; align-items:center; gap:6px;">
                   <span class="step-feature-badge">320.000đ/buổi</span>
-                  <span class="mobile-step-toggle-hint">Xem minh họa ▾</span>
+                  <span class="mobile-step-toggle-hint">Bấm để xem minh họa ▾</span>
                 </div>
               </div>
               <p>Chọn người thân, ngày chăm sóc và những điều cần lưu ý. Xem lại thông tin, thời lượng và giá
@@ -2917,7 +2954,7 @@
                 <strong>Theo dõi lịch và phân công</strong>
                 <div style="display:flex; align-items:center; gap:6px;">
                   <span class="step-feature-badge">4 trạng thái ca</span>
-                  <span class="mobile-step-toggle-hint">Xem minh họa ▾</span>
+                  <span class="mobile-step-toggle-hint">Bấm để xem minh họa ▾</span>
                 </div>
               </div>
               <p>Xem yêu cầu đang ở bước nào (Chờ phân công → Đã phân công → Đang chăm sóc → Hoàn thành). Tên chuyên
@@ -2932,7 +2969,7 @@
                 <strong>Đọc nhật ký sau ca</strong>
                 <div style="display:flex; align-items:center; gap:6px;">
                   <span class="step-feature-badge">4 hoạt động</span>
-                  <span class="mobile-step-toggle-hint">Xem minh họa ▾</span>
+                  <span class="mobile-step-toggle-hint">Bấm để xem minh họa ▾</span>
                 </div>
               </div>
               <p>Hiểu thêm về buổi đồng hành của người thân. Đọc các hoạt động đã ghi nhận, những điều cần lưu ý và mong
@@ -2947,7 +2984,7 @@
                 <strong>Đánh giá và sắp xếp buổi tiếp theo</strong>
                 <div style="display:flex; align-items:center; gap:6px;">
                   <span class="step-feature-badge">Đánh giá 1–5 sao</span>
-                  <span class="mobile-step-toggle-hint">Xem minh họa ▾</span>
+                  <span class="mobile-step-toggle-hint">Bấm để xem minh họa ▾</span>
                 </div>
               </div>
               <p>Chia sẻ đánh giá từ 1 đến 5 sao của bạn sau ca. Khi cần thêm một buổi đồng hành, tạo yêu cầu mới ngay
@@ -3742,18 +3779,20 @@
     ];
 
     let currentJourneyIndex = 0;
-    let journeyScrollLock = 0;
+    function selectJourneyStep(stepIndex) {
+      // Điện thoại: minh họa trượt xuống ngay dưới thẻ vừa bấm
+      if (window.innerWidth <= 960) { openJourneyStepMobile(stepIndex); return; }
+      applyJourneyStep(stepIndex);
+    }
 
-    function selectJourneyStep(stepIndex, fromScroll = false) {
+    function applyJourneyStep(stepIndex) {
       currentJourneyIndex = stepIndex;
-      // Bấm trực tiếp vào bước: tạm ngưng đổi bước theo cuộn để không giành điều khiển
-      if (!fromScroll) journeyScrollLock = Date.now() + 900;
       const stepBtns = document.querySelectorAll('.step-item-btn');
       stepBtns.forEach((btn, i) => {
         btn.classList.toggle('active', i === stepIndex);
         const hint = btn.querySelector('.mobile-step-toggle-hint');
         if (hint) {
-          hint.innerText = (i === stepIndex) ? 'Đang mở minh họa ▴' : 'Xem minh họa ▾';
+          hint.innerText = (i === stepIndex) ? 'Đang xem minh họa ▴' : 'Bấm để xem minh họa ▾';
         }
       });
 
@@ -3770,14 +3809,7 @@
       if (window.innerWidth <= 960) {
         const phoneContainer = document.getElementById('journeyPhoneContainer');
         const activeBtn = stepBtns[stepIndex];
-        if (phoneContainer && activeBtn) {
-          activeBtn.after(phoneContainer);
-          if (!fromScroll) {
-            setTimeout(() => {
-              activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 40);
-          }
-        }
+        if (phoneContainer && activeBtn) activeBtn.after(phoneContainer);
       }
     }
 
@@ -3789,7 +3821,7 @@
       if (!phoneContainer || !stepsList || !journeySplit) return;
 
       if (isMobile) {
-        const activeBtn = stepsList.querySelector('.step-item-btn.active') || stepsList.children[0];
+        const activeBtn = stepsList.querySelector('.step-item-btn.active') || stepsList.querySelector('.step-item-btn');
         if (activeBtn && phoneContainer.previousElementSibling !== activeBtn) {
           activeBtn.after(phoneContainer);
         }
@@ -3803,107 +3835,45 @@
     window.addEventListener('resize', syncJourneyLayout);
     syncJourneyLayout();
 
-    // Điện thoại: khi đáy khung điện thoại minh họa đã lên tới 45% chiều cao màn hình thì bước kế tiếp tự mở
-    // Đổi bước bằng chuyển động accordion: minh họa cũ thu lại, minh họa mới mở ra dưới thẻ bước mới,
-    // thẻ bước mới lướt dần lên gần header. Mọi thứ chạy cùng một nhịp nên không bị giật.
-    let journeyAnimating = false;
-    const JOURNEY_ANIM_MS = 700;
-    const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-
-    function changeJourneyStepByScroll(nextIndex) {
+    // Điện thoại: bấm vào bước nào thì minh họa của bước đó trượt xuống ngay dưới thẻ.
+    // Thẻ vừa bấm giữ nguyên vị trí rồi cuộn nhẹ lên gần header để thấy minh họa.
+    function openJourneyStepMobile(stepIndex) {
       const btns = document.querySelectorAll('.step-item-btn');
-      const anchor = btns[nextIndex];
+      const card = btns[stepIndex];
       const phone = document.getElementById('journeyPhoneContainer');
-      if (!anchor || !phone || journeyAnimating) return;
-      const goingForward = nextIndex > currentJourneyIndex;
+      if (!card || !phone) return;
+      if (stepIndex === currentJourneyIndex && phone.previousElementSibling === card) return;
+
+      const before = card.getBoundingClientRect().top;
+      applyJourneyStep(stepIndex);
+      // Minh họa cũ nằm phía trên được gỡ đi: bù lại ngay để thẻ vừa bấm không bị nhảy
+      const shift = card.getBoundingClientRect().top - before;
+      if (shift) window.scrollTo({ top: window.scrollY + shift, behavior: 'instant' });
+
+      // Hiệu ứng trượt xuống
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (phone.animate && !reduce) {
+        const c = getComputedStyle(phone);
+        phone.style.boxSizing = 'border-box';
+        phone.style.overflow = 'hidden';
+        phone.style.animation = 'none';
+        const h = phone.offsetHeight;
+        const anim = phone.animate([
+          { height: '0px', paddingTop: '0px', paddingBottom: '0px', marginTop: '0px', opacity: 0 },
+          { height: h + 'px', paddingTop: c.paddingTop, paddingBottom: c.paddingBottom, marginTop: c.marginTop, opacity: 1 }
+        ], { duration: 450, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' });
+        const done = () => { phone.style.boxSizing = ''; phone.style.overflow = ''; phone.style.animation = ''; };
+        anim.onfinish = done;
+        anim.oncancel = done;
+        setTimeout(done, 700); // dự phòng nếu trình duyệt tạm dừng animation
+      }
+
+      // Đưa thẻ lên gần header để thấy minh họa bên dưới
       const header = document.querySelector('.header');
       const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
-      const startTop = anchor.getBoundingClientRect().top;
-      // Cuộn xuống: thẻ bước mới lướt lên gần header. Cuộn lên: thẻ bước trước đứng yên.
-      const targetTop = goingForward ? Math.min(startTop, headerBottom + 12) : startTop;
-
-      // Bản sao tĩnh của minh họa cũ để thu lại tại chỗ
-      const ghost = phone.cloneNode(true);
-      ghost.removeAttribute('id');
-      ghost.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
-      ghost.classList.remove('reveal', 'in-view');
-      ghost.setAttribute('aria-hidden', 'true');
-      const box = (el) => {
-        const c = getComputedStyle(el);
-        return { h: el.offsetHeight, mt: parseFloat(c.marginTop), mb: parseFloat(c.marginBottom), pt: parseFloat(c.paddingTop), pb: parseFloat(c.paddingBottom), bt: parseFloat(c.borderTopWidth), bb: parseFloat(c.borderBottomWidth) };
-      };
-      const old = box(phone);
-      // Khoảng cách giữa các phần tử trong danh sách bước (flex gap), cũng thu/mở dần để không giật khi gỡ bản sao
-      const gap = parseFloat(getComputedStyle(phone.parentElement).rowGap) || 0;
-      phone.before(ghost);
-
-      selectJourneyStep(nextIndex, true);
-      const next = box(phone);
-
-      const prep = (el) => {
-        el.style.boxSizing = 'border-box';
-        el.style.overflow = 'hidden';
-        el.style.animation = 'none';
-      };
-      prep(ghost);
-      prep(phone);
-      const apply = (el, b, k) => {
-        el.style.height = b.h * k + 'px';
-        el.style.marginTop = b.mt * k + 'px';
-        el.style.marginBottom = b.mb * k + 'px';
-        el.style.paddingTop = b.pt * k + 'px';
-        el.style.paddingBottom = b.pb * k + 'px';
-        el.style.borderTopWidth = b.bt * k + 'px';
-        el.style.borderBottomWidth = b.bb * k + 'px';
-        el.style.opacity = String(k);
-      };
-      const frame = (e) => {
-        apply(ghost, old, 1 - e);
-        ghost.style.marginBottom = old.mb * (1 - e) - gap * e + 'px';
-        apply(phone, next, e);
-        phone.style.marginTop = next.mt * e - gap * (1 - e) + 'px';
-        const desired = startTop + (targetTop - startTop) * e;
-        const actual = anchor.getBoundingClientRect().top;
-        if (Math.abs(actual - desired) > 0.5) window.scrollTo({ top: window.scrollY + actual - desired, behavior: 'instant' });
-      };
-
-      journeyAnimating = true;
-      frame(0);
-      const t0 = performance.now();
-      const tick = (now) => {
-        const t = Math.min(1, (now - t0) / JOURNEY_ANIM_MS);
-        frame(easeInOut(t));
-        if (t < 1) { requestAnimationFrame(tick); return; }
-        ghost.remove();
-        ['boxSizing', 'overflow', 'animation', 'height', 'marginTop', 'marginBottom', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth', 'opacity'].forEach((p) => { phone.style[p] = ''; });
-        journeyAnimating = false;
-        journeyScrollLock = Date.now() + 250;
-      };
-      requestAnimationFrame(tick);
+      const target = window.scrollY + card.getBoundingClientRect().top - headerBottom - 12;
+      if (Math.abs(target - window.scrollY) > 4) window.scrollTo({ top: target, behavior: reduce ? 'instant' : 'smooth' });
     }
-
-    let journeyScrollTicking = false;
-    function onJourneyScroll() {
-      journeyScrollTicking = false;
-      if (window.innerWidth > 960 || journeyAnimating || Date.now() < journeyScrollLock) return;
-      const btns = document.querySelectorAll('.step-item-btn');
-      const phone = document.querySelector('#journeyPhoneContainer .journey-device');
-      const header = document.querySelector('.header');
-      if (!phone || !btns.length) return;
-      const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
-      const k = currentJourneyIndex;
-      if (k < btns.length - 1 && phone.getBoundingClientRect().bottom < Math.max(headerBottom + 24, window.innerHeight * 0.45)) {
-        changeJourneyStepByScroll(k + 1);
-      } else if (k > 0 && btns[k].getBoundingClientRect().top > window.innerHeight * 0.85) {
-        changeJourneyStepByScroll(k - 1);
-      }
-    }
-    window.addEventListener('scroll', () => {
-      if (!journeyScrollTicking) {
-        journeyScrollTicking = true;
-        requestAnimationFrame(onJourneyScroll);
-      }
-    }, { passive: true });
 
     // Step 6 Star Rating interactive demo
     let currentRating = 5;
