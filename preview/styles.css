@@ -78,3 +78,86 @@
   .news-body h3 { font-size:18px; }
   .eyebrow { font-size:12px; letter-spacing:1.3px; }
 }
+
+/* Photographic scenes and practical information for the first care visit. */
+.hero-photo { height:470px; }
+.hero-photo:after { display:none; }
+.hero-photo > img { width:100%; height:100%; object-fit:cover; object-position:center; border-radius:24px; }
+.photo-caption { bottom:22px; left:22px; right:22px; width:auto; max-width:330px; padding:20px; background:rgba(255,255,255,.95); }
+.photo-caption strong { display:block; font-size:23px; line-height:1.3; margin:10px 0; color:var(--teal); }
+.photo-caption > span:last-child { display:block; font-size:14px; color:var(--muted); }
+.about-photo { padding:0; display:block; min-height:0; height:360px; overflow:hidden; }
+.about-photo img { width:100%; height:100%; object-fit:cover; }
+.about-photo .about-message { position:absolute; bottom:20px; left:20px; padding:16px 20px; background:rgba(255,255,255,.94); border-radius:12px; font-size:23px; text-align:left; }
+.news-image { height:210px; }
+.news-image img, .service-image img { width:100%; height:100%; object-fit:cover; }
+.service-image { height:165px; margin:-24px -24px 22px; overflow:hidden; border-radius:14px 14px 0 0; }
+.service-card { overflow:hidden; }
+.service-card h3 { font-size:19px; }
+.staff-photo { margin:0; padding:0; overflow:hidden; }
+.staff-photo > img { display:block; width:100%; height:370px; object-fit:cover; }
+.staff-photo figcaption { padding:24px; }
+.staff-photo figcaption strong { display:block; font-size:23px; line-height:1.4; color:var(--teal); }
+.staff-photo figcaption span { display:block; margin-top:10px; font-size:16px; color:var(--muted); }
+.modal-service-photo { display:block; width:100%; height:190px; object-fit:cover; border-radius:12px; margin:24px 0 22px; }
+.scope-section { background:var(--sand); }
+.scope-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+.scope-card { background:white; border:1px solid var(--line); border-radius:18px; padding:30px; }
+.scope-label { color:var(--teal); font-size:14px; }
+.scope-card h3 { font-size:23px; margin:10px 0 18px; }
+.scope-card ul { margin:0; padding-left:22px; display:grid; gap:14px; font-size:16px; color:var(--muted); line-height:1.8; }
+.scope-card li::marker { color:var(--teal); }
+.scope-boundary { background:#fffaf4; border-color:#e9d8c8; }
+.scope-boundary .scope-label, .scope-boundary li::marker { color:#8b5a3f; }
+.scope-note { font-size:16px; margin-top:24px; color:var(--muted); max-width:840px; }
+.faq-layout { display:grid; grid-template-columns:.85fr 1.4fr; gap:70px; }
+.faq-copy h2 { font-size:36px; }
+.faq-copy p { margin-top:20px; font-size:16px; }
+.faq-copy .text-link { margin-top:22px; }
+.faq-list { border-top:1px solid var(--line); }
+.faq-list details { border-bottom:1px solid var(--line); padding:0 4px; }
+.faq-list summary { display:flex; align-items:center; justify-content:space-between; gap:24px; list-style:none; cursor:pointer; padding:23px 0; font-size:18px; line-height:1.5; color:var(--navy); }
+.faq-list summary::-webkit-details-marker { display:none; }
+.faq-list summary::after { content:'+'; color:var(--teal); font-size:26px; flex-shrink:0; }
+.faq-list details[open] summary::after { content:'−'; }
+.faq-list p { font-size:16px; padding:0 32px 24px 0; line-height:1.85; }
+.faq-list p a { color:var(--teal); text-decoration:underline; text-underline-offset:3px; }
+.faq-list summary:focus-visible { outline:2px solid var(--teal); outline-offset:4px; border-radius:4px; }
+.image-credit { display:inline-block; margin-top:6px; font-size:12px; }
+#faq, #care-scope { scroll-margin-top:100px; }
+.contact-section { padding:0 0 65px; scroll-margin-top:100px; }
+.contact-panel { display:grid; grid-template-columns:1.2fr 1fr; gap:50px; padding:38px; border:1px solid var(--line); border-radius:18px; }
+.contact-panel h2 { font-size:30px; }
+.contact-panel p { margin-top:16px; font-size:16px; }
+.contact-links { display:grid; align-content:center; gap:16px; }
+.contact-links a { display:block; padding:18px 22px; border-radius:12px; background:var(--pale); overflow-wrap:anywhere; }
+.contact-links a:hover { background:#e5efe7; }
+.contact-links span { display:block; color:var(--muted); font-size:14px; margin-bottom:5px; }
+.contact-links strong { display:block; color:var(--teal); font-size:21px; }
+.footer-links { flex-wrap:wrap; }
+@media(max-width:1000px) {
+  .hero-photo { height:420px; }
+  .faq-layout { gap:35px; }
+  .service-image { height:210px; }
+}
+@media(max-width:760px) {
+  .hero-photo { max-width:520px; height:360px; }
+  .photo-caption { bottom:16px; left:16px; right:16px; max-width:280px; padding:16px; }
+  .photo-caption strong { font-size:21px; }
+  .photo-caption .mini-label { font-size:11px; }
+  .about-photo { height:300px; }
+  .about-photo .about-message { font-size:20px; left:16px; bottom:16px; }
+  .news-image { height:210px; min-height:0; }
+  .service-image { height:220px; margin-bottom:22px; }
+  .staff-photo > img { height:300px; }
+  .staff-photo figcaption { padding:22px; }
+  .scope-grid, .faq-layout { grid-template-columns:1fr; gap:22px; }
+  .scope-card { padding:24px; }
+  .scope-card h3 { font-size:21px; }
+  .faq-copy h2 { font-size:30px; }
+  .faq-list summary { font-size:17px; gap:16px; }
+  .contact-section { padding-bottom:40px; }
+  .contact-panel { grid-template-columns:1fr; gap:24px; padding:24px; }
+  .contact-panel h2 { font-size:25px; }
+  .contact-links strong { font-size:20px; }
+}

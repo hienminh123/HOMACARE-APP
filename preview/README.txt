@@ -2,8 +2,10 @@ HOMACARE — NỀN TẢNG CHĂM SÓC
 
 Folder này là website để tải lên Netlify. Mở website qua HTTPS hoặc máy chủ localhost.
 index.html: trang chủ và popup chọn vai trò.
+Trang chủ có ảnh minh họa tạo bằng AI, phạm vi ca Ân cần, câu hỏi thường gặp và thông tin liên hệ HomaCare.
 auth.html: đăng ký, đăng nhập, xác nhận email và khôi phục mật khẩu.
 family.html: hồ sơ người thân, đặt ca, xem nhật ký và đánh giá.
+Khi đặt ca Ân cần, gia đình xem lại thông tin và giá trước khi xác nhận gửi yêu cầu.
 caregiver.html: lịch được phân công, bắt đầu ca, ghi nhận hoạt động và gửi nhật ký.
 coordinator.html: tiếp nhận yêu cầu, phân công chuyên viên và theo dõi ca.
 

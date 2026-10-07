@@ -1,5 +1,20 @@
 # HOMACARE — trạng thái tiếp tục
 
+## Phiên triển khai mới — checkpoint 07/10/2026
+
+- Người dùng bắt đầu phiên mới, coi các audit và kế hoạch trước đó là ngữ cảnh cũ. Không đọc hoặc dùng AUDIT-HOMACARE-2026-10-07.md hay audit-assets/ trừ khi người dùng yêu cầu. Mã nguồn trên đĩa là nguồn sự thật.
+- Yêu cầu hiện tại: thêm FAQ và phạm vi ca Ân cần; thêm bước xem lại yêu cầu trước khi gửi; tạo ảnh chân thực bằng AI thay các minh họa lớn. Tham khảo trang bCare người cao tuổi của bTaskee, không sao chép nội dung hoặc cam kết nhân sự.
+- Đã sửa preview/index.html: 7 FAQ; phạm vi hỗ trợ sinh hoạt và công việc cần chuyên môn y tế; liên hệ tel:0338031425 và mailto:homacare@gmail.com. Người dùng yêu cầu hiển thị email trực tiếp, không ghi "email dự kiến".
+- Đã tạo 5 ảnh bằng công cụ image_gen tích hợp: companion, meal, walk, family, caregiver. JPEG 1200x800 tại preview/assets/photos/, tổng khoảng 0,9 MB. Thay hero, giới thiệu, ảnh Góc sức khỏe, 4 dịch vụ/popup và khu chuyên viên. Có ghi nguồn AI ở footer. Prompt đầy đủ và đường dẫn lưu trong IMAGE-ASSETS.md. Giữ icon thao tác và logo.
+- Đã sửa preview/workspace.js: form đặt ca có bước Thông tin ca → Xác nhận; bản xem lại có người thân, khu vực hiện có trong hồ sơ, ngày, giờ18–22, gói, ghi chú và giá320.000đ. Chỉ RPC khi bấm Xác nhận & gửi yêu cầu; quay lại giữ dữ liệu. Không thay schema/backend, không thêm địa chỉ mới hoặc thanh toán.
+- Style mới nằm trong preview/styles.css và preview/account.css. Đã chạy node backend/build-pages.cjs, JS syntax và git diff --check đạt. 28 kiểm tra database PGlite đạt trong phiên này.
+- Browser fixture đã xác nhận: trước xem lại2 ca, sau xem lại vẫn2, sau xác nhận3; quay lại giữ ngày/ghi chú, chỉnh ngày và ghi chú phản ánh đúng ở bản xem lại. Chuỗi <b> trong ghi chú được escape. Không tạo dữ liệu hoặc tài khoản Supabase thật.
+- Kiểm tra mobile qua iframe cùng nguồn (viewport override của IAB không áp dụng): trang chủ320/390px không tràn ngang; form xác nhận390px hiển thị theo cột, có cuộn dọc. Screenshot tại C:/Users/phamh/.codex/visualizations/2026/10/07/01a1149f-0daa-77d2-942d-d59cc869e604/homacare-mobile-preview.jpg. Hai file harness tạm đã xóa khỏi preview.
+- Phiên tiếp tục sau reset: đã kiểm tra trực quan ở màn 390px các ảnh dịch vụ, FAQ, phạm vi ca và liên hệ; không tràn ngang. Đã xem diff của các file thuộc phần việc này và cập nhật preview/README.txt. preview/landing.html là công việc Antigravity riêng của người dùng, để nguyên.
+- Hoàn tất kiểm tra ở phiên tiếp tục: 28 kiểm tra PGlite đạt; `node --check preview/workspace.js` và `git diff --check` đạt; ảnh tải và hiển thị trên trình duyệt; màn 390px không tràn ngang. Đã đóng các tab và máy chủ fixture của phiên kiểm tra. Chưa commit/push/deploy.
+- Trạng thái Git: các file sửa cho tính năng gồm CONTINUE-HOMACARE.md, preview/README.txt, preview/account.css, preview/index.html, preview/styles.css, preview/workspace.js; file mới IMAGE-ASSETS.md và preview/assets/photos/. preview/landing.html là việc Antigravity riêng của người dùng, không chỉnh sửa.
+- Giới hạn 5 giờ đã reset trước phiên tiếp tục. Không dùng reset credit.
+
 Cập nhật 06/10/2026 (Asia/Saigon). Người dùng đã yêu cầu tiếp tục công việc sau lần dừng; yêu cầu tài khoản hiện đã được triển khai trên máy.
 
 ## Yêu cầu và phạm vi

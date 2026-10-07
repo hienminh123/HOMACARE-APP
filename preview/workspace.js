@@ -3,7 +3,7 @@
   if (!role) return;
   const auth = window.HomaAuth, ui = window.HomaUI;
   const main = document.getElementById('workspace-main'), access = document.getElementById('access-state'), view = document.getElementById('workspace-view'), modals = document.getElementById('workspace-modals');
-  const state = { profile: null, relatives: [], visits: [], staff: [], selected: null, filter: 'all', busy: false };
+  const state = { profile: null, relatives: [], visits: [], staff: [], selected: null, filter: 'all', busy: false, bookingRequest: null };
   const statuses = { pending: 'Chờ phân công', assigned: 'Đã phân công', in_progress: 'Đang chăm sóc', completed: 'Hoàn thành' };
   const taskLabels = ['Hỗ trợ bữa tối', 'Đồng hành vận động nhẹ', 'Trò chuyện & nhắc lịch sinh hoạt', 'Kiểm tra an toàn trước khi kết thúc'];
   const esc = text => String(text ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -40,7 +40,26 @@
     if(role==='coordinator') state.staff=await query(client.from('profiles').select('id,full_name').eq('role','caregiver').order('full_name'));
     render();
   }
+  function bookingForm() {
+    return `<ol class="booking-steps" aria-label="Các bước đặt ca"><li aria-current="step"><span>1</span>Thông tin ca</li><li><span>2</span>Xác nhận</li></ol><form id="booking-form" data-step="details"><div data-booking-details><div class="field"><label for="booking-relative">Người thân</label><select id="booking-relative" name="relative_id" required>${state.relatives.map(r=>`<option value="${r.id}">${esc(r.relationship)} · ${esc(r.full_name)}</option>`).join('')}</select></div><div class="field"><label for="booking-date">Ngày chăm sóc</label><input id="booking-date" name="care_date" type="date" min="${today()}" value="${today()}" required></div><div class="field"><label for="booking-note">Điều bạn muốn chuyên viên lưu ý</label><textarea id="booking-note" name="care_note" maxlength="2000" placeholder="Thói quen, sở thích hoặc hỗ trợ gia đình mong muốn trong ca"></textarea></div></div><section class="booking-review" data-booking-review hidden tabindex="-1" aria-label="Thông tin yêu cầu chăm sóc"></section><div class="booking-buttons"><button class="btn secondary" type="button" data-action="edit-booking" hidden>Quay lại chỉnh sửa</button><button class="btn" type="submit">Xem lại yêu cầu</button></div><p class="tiny-note">Điều phối viên sẽ tiếp nhận và phân công chuyên viên sau khi bạn gửi yêu cầu. Bạn chưa cần thanh toán tại bước này.</p></form>`;
+  }
+  function setBookingStep(form, request = null) {
+    const reviewing = Boolean(request), person = request && state.relatives.find(r=>r.id===request.relative_id);
+    if (reviewing && !person) { ui.notify('Hãy chọn người thân trước khi tiếp tục.'); return; }
+    state.bookingRequest = request;
+    form.dataset.step = reviewing ? 'review' : 'details';
+    form.querySelector('[data-booking-details]').hidden = reviewing;
+    const review = form.querySelector('[data-booking-review]'); review.hidden = !reviewing;
+    if (reviewing) review.innerHTML = `<p class="booking-review-intro">Kiểm tra thông tin trước khi gửi cho điều phối viên.</p><dl class="booking-summary"><div><dt>Người được chăm sóc</dt><dd>${esc(person.relationship)} · ${esc(person.full_name)}</dd></div><div><dt>Khu vực chăm sóc</dt><dd>${esc(person.area)}</dd></div><div><dt>Ngày chăm sóc</dt><dd>${dateText(request.care_date)}</dd></div><div><dt>Khung giờ</dt><dd>18:00–22:00 · 4 giờ</dd></div><div><dt>Gói dịch vụ</dt><dd>Ân cần · Hỗ trợ sinh hoạt tại nhà</dd></div><div><dt>Lưu ý cho chuyên viên</dt><dd>${esc(request.care_note.trim() || 'Không có lưu ý thêm.')}</dd></div><div class="booking-price"><dt>Giá dịch vụ</dt><dd>320.000đ / buổi</dd></div></dl><p class="booking-price-note">Mức giá đề xuất cho giai đoạn thử nghiệm. Yêu cầu gửi đi sẽ ở trạng thái chờ phân công.</p>`;
+    form.querySelector('[data-action="edit-booking"]').hidden = !reviewing;
+    form.querySelector('button[type="submit"]').textContent = reviewing ? 'Xác nhận & gửi yêu cầu' : 'Xem lại yêu cầu';
+    const steps = form.closest('.modal').querySelectorAll('.booking-steps li');
+    steps.forEach((step,index)=> { if(index === (reviewing ? 1 : 0)) step.setAttribute('aria-current','step'); else step.removeAttribute('aria-current'); });
+    const message = form.closest('.modal').querySelector('[data-form-message]'); message.textContent=''; message.className='form-message';
+    if(reviewing) review.focus(); else form.querySelector('#booking-relative').focus();
+  }
   function renderFamily() {
+    state.bookingRequest = null;
     const person=state.relatives[0], next=state.visits.find(v=>v.status!=='completed'), reports=state.visits.filter(v=>v.status==='completed').sort((a,b)=>new Date(b.completed_at)-new Date(a.completed_at));
     const latest=reports[0];
     const personCard=person?`<section class="panel senior-panel"><div class="senior-info"><div><div class="eyebrow">NGƯỜI THÂN CỦA BẠN</div><h2>${esc(person.relationship)} · ${esc(person.full_name)}</h2><p>${person.age} tuổi · ${esc(person.area)}</p></div><span class="avatar">${initials(person.full_name)}</span></div><div class="senior-details"><div><span>Thói quen & mong muốn</span><strong>${esc(person.preferences || 'Chưa ghi nhận thêm')}</strong></div></div><div class="relative-actions"><button class="btn secondary small" data-modal="relative-modal">Thêm người thân</button></div>${state.relatives.length>1?`<p class="tiny-note">Bạn đang chăm lo cho ${state.relatives.length} người thân. Chọn hồ sơ khi đặt ca.</p>`:''}</section>`:`<section class="panel">${empty('Bắt đầu từ người thân của bạn.','Thêm một vài thông tin để chúng tôi sắp xếp sự đồng hành phù hợp.','<button class="btn" data-modal="relative-modal">Thêm người thân</button>')}</section>`;
@@ -49,7 +68,7 @@
     const timeline=next || latest;
     const moments=timeline?[[timeline.created_at,'Gia đình gửi yêu cầu'],[timeline.assigned_at,'Điều phối viên phân công'],[timeline.started_at,'Chuyên viên bắt đầu ca'],[timeline.completed_at,'Nhật ký gửi đến gia đình']].filter(x=>x[0]):[];
     view.innerHTML=heading('Cùng chăm lo cho những người thân yêu.')+`<div class="dashboard-grid">${personCard}${schedule}${report}<section class="panel subtle"><div class="panel-title"><h2>Mọi bước đều rõ ràng</h2><span data-icon="shield"></span></div>${moments.length?`<div class="timeline">${moments.map(([date,title])=>`<div class="timeline-item"><strong>${title}</strong><small>${timeText(date)}</small></div>`).join('')}</div>`:empty('Một hành trình có người đồng hành.','Yêu cầu → Phân công → Chăm sóc → Nhật ký. Bạn theo dõi từng bước ngay tại đây.')}<div class="warning-note">Nhật ký ghi nhận sinh hoạt. HomaCare không đưa ra chẩn đoán hoặc quyết định điều trị.</div></section></div><section class="booking-banner"><div><h3>Thêm một buổi đồng hành bên người thân.</h3><p>Lựa chọn lịch phù hợp, HomaCare giúp bạn sắp xếp.</p></div><button class="btn small" data-action="book">Đặt ca Ân cần <span data-icon="arrow"></span></button></section>`;
-    modals.innerHTML=modal('relative-modal','Thấu hiểu người thân của bạn.',`<p>Những thông tin cơ bản giúp chuyên viên đồng hành phù hợp hơn.</p><form id="relative-form"><div class="field"><label for="relative-name">Họ và tên người thân</label><input id="relative-name" name="full_name" required minlength="2" maxlength="100" autocomplete="off"></div><div class="field-row"><div class="field"><label for="relative-relationship">Mối quan hệ với bạn</label><select id="relative-relationship" name="relationship"><option>Mẹ</option><option>Bố</option><option>Ông</option><option>Bà</option><option>Người thân</option></select></div><div class="field"><label for="relative-age">Tuổi</label><input id="relative-age" name="age" type="number" required min="18" max="120" inputmode="numeric"></div></div><div class="field"><label for="relative-area">Khu vực chăm sóc</label><input id="relative-area" name="area" required minlength="2" maxlength="200" placeholder="Quận/huyện, tỉnh/thành phố"></div><div class="field"><label for="relative-preferences">Thói quen & mong muốn</label><textarea id="relative-preferences" name="preferences" maxlength="2000" placeholder="Người thân thích làm gì? Có điều gì cần lưu ý?"></textarea></div><button class="btn" type="submit">Lưu người thân</button></form>`)+modal('booking-modal','Đặt một ca Ân cần.',`<p>4 giờ đồng hành tại nhà · 18:00–22:00<br>Giá dịch vụ: 320.000đ/buổi</p><form id="booking-form"><div class="field"><label for="booking-relative">Người thân</label><select id="booking-relative" name="relative_id" required>${state.relatives.map(r=>`<option value="${r.id}">${esc(r.relationship)} · ${esc(r.full_name)}</option>`).join('')}</select></div><div class="field"><label for="booking-date">Ngày chăm sóc</label><input id="booking-date" name="care_date" type="date" min="${today()}" value="${today()}" required></div><div class="field"><label for="booking-note">Điều bạn muốn chuyên viên lưu ý</label><textarea id="booking-note" name="care_note" maxlength="2000"></textarea></div><button class="btn" type="submit">Gửi yêu cầu chăm sóc</button><p class="tiny-note">Điều phối viên sẽ tiếp nhận và phân công chuyên viên. Bạn chưa cần thanh toán tại bước này.</p></form>`,'Bắt đầu lộ trình');
+    modals.innerHTML=modal('relative-modal','Thấu hiểu người thân của bạn.',`<p>Những thông tin cơ bản giúp chuyên viên đồng hành phù hợp hơn.</p><form id="relative-form"><div class="field"><label for="relative-name">Họ và tên người thân</label><input id="relative-name" name="full_name" required minlength="2" maxlength="100" autocomplete="off"></div><div class="field-row"><div class="field"><label for="relative-relationship">Mối quan hệ với bạn</label><select id="relative-relationship" name="relationship"><option>Mẹ</option><option>Bố</option><option>Ông</option><option>Bà</option><option>Người thân</option></select></div><div class="field"><label for="relative-age">Tuổi</label><input id="relative-age" name="age" type="number" required min="18" max="120" inputmode="numeric"></div></div><div class="field"><label for="relative-area">Khu vực chăm sóc</label><input id="relative-area" name="area" required minlength="2" maxlength="200" placeholder="Quận/huyện, tỉnh/thành phố"></div><div class="field"><label for="relative-preferences">Thói quen & mong muốn</label><textarea id="relative-preferences" name="preferences" maxlength="2000" placeholder="Người thân thích làm gì? Có điều gì cần lưu ý?"></textarea></div><button class="btn" type="submit">Lưu người thân</button></form>`)+modal('booking-modal','Đặt một ca Ân cần.','<p>4 giờ đồng hành tại nhà · 18:00–22:00<br>Giá dịch vụ: 320.000đ/buổi</p>'+bookingForm(),'Bắt đầu lộ trình');
   }
   function renderCaregiver() {
     const openVisits=state.visits.filter(v=>v.status!=='completed');
@@ -76,7 +95,8 @@
   document.addEventListener('click', async e => {
     const button=e.target.closest('[data-action]'); if(!button || !state.profile) return;
     const action=button.dataset.action, id=button.dataset.id;
-    if(action==='book') { ui.open(state.relatives.length?'booking-modal':'relative-modal'); if(!state.relatives.length) ui.notify('Thêm người thân trước khi đặt ca nhé.'); }
+    if(action==='book') { if(state.relatives.length) setBookingStep(document.getElementById('booking-form')); ui.open(state.relatives.length?'booking-modal':'relative-modal'); if(!state.relatives.length) ui.notify('Thêm người thân trước khi đặt ca nhé.'); }
+    if(action==='edit-booking' && !state.busy) setBookingStep(button.closest('form'));
     if(action==='refresh') await act(async()=>{ui.close(); await load(); ui.notify('Đã cập nhật lịch chăm sóc.');});
     if(action==='choose-visit') { state.selected=id; render(); }
     if(action==='filter') { state.filter=button.dataset.filter; render(); }
@@ -99,10 +119,11 @@
   document.addEventListener('submit', async e=>{
     const form=e.target; if(!['relative-form','booking-form','report-form','assign-form'].includes(form.id)) return;
     e.preventDefault(); if(state.busy) return;
+    if(form.id==='booking-form' && form.dataset.step!=='review') { if(form.reportValidity()) setBookingStep(form,Object.fromEntries(new FormData(form))); return; }
     state.busy=true; const button=form.querySelector('button[type="submit"]'); const text=button.textContent; button.disabled=true; button.textContent='Đang lưu…';
     const message=form.closest('.modal')?.querySelector('[data-form-message]') || form.querySelector('[data-form-message]'); if(message){message.className='form-message';message.textContent='';}
     try {
-      const fields=Object.fromEntries(new FormData(form));
+      const fields=form.id==='booking-form' ? state.bookingRequest : Object.fromEntries(new FormData(form));
       if(form.id==='relative-form') { if(fields.full_name.trim().length<2 || fields.area.trim().length<2) throw new Error('invalid_form'); await query(auth.client.from('relatives').insert({family_id:state.profile.id,full_name:fields.full_name.trim(),relationship:fields.relationship,age:Number(fields.age),area:fields.area.trim(),preferences:fields.preferences.trim()})); }
       if(form.id==='booking-form') await query(auth.client.rpc('book_homa_visit',{p_relative_id:fields.relative_id,p_care_date:fields.care_date,p_note:fields.care_note.trim()}));
       if(form.id==='assign-form') await query(auth.client.rpc('assign_homa_visit',{p_visit_id:fields.visit_id,p_caregiver_id:fields.caregiver_id}));

@@ -43,6 +43,28 @@
 
 .account-story > p, .account-card > p { font-size:16px; }
 
+.booking-steps { display:flex; gap:20px; padding:0; margin:24px 0; list-style:none; }
+.booking-steps li { display:flex; align-items:center; gap:9px; font-size:14px; color:var(--muted); }
+.booking-steps li span { display:grid; place-items:center; width:28px; height:28px; border-radius:50%; background:#f0f4ef; }
+.booking-steps li[aria-current] { color:var(--teal); }
+.booking-steps li[aria-current] span { background:var(--teal); color:white; }
+.booking-review { outline:none; }
+.booking-review-intro { font-size:16px; margin-bottom:18px; }
+.booking-summary { margin:0; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+.booking-summary > div { display:grid; grid-template-columns:1fr 1.35fr; gap:16px; padding:14px 16px; border-bottom:1px solid var(--line); }
+.booking-summary > div:last-child { border-bottom:0; }
+.booking-summary dt { font-size:14px; color:var(--muted); }
+.booking-summary dd { margin:0; font-size:16px; color:var(--navy); white-space:pre-wrap; overflow-wrap:anywhere; }
+.booking-summary .booking-price { background:#edf5ef; }
+.booking-price dd { color:var(--teal); font-size:19px; }
+.booking-price-note { margin:14px 0 22px; font-size:14px; line-height:1.7; color:var(--muted); }
+.booking-buttons { display:grid; gap:12px; margin-top:22px; }
+.booking-buttons .btn { width:100%; }
+@media(max-width:480px) {
+  .booking-steps { gap:16px; }
+  .booking-summary > div { grid-template-columns:1fr; gap:5px; padding:12px 14px; }
+}
+
 @media (max-width:360px) {
   .home-account-actions .btn { max-width:128px; white-space:normal; line-height:1.35; }
 }
