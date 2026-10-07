@@ -3568,8 +3568,7 @@
 
       <div class="footer-bottom">
         <div>
-          HomaCare · Dự án sinh viên Đại học Kinh tế Quốc dân · © 2026 HomaCare.<br>
-          <span style="font-size:0.8rem; color:var(--text-light);">Hình ảnh minh họa được tạo bằng AI.</span>
+          HomaCare · Dự án sinh viên Đại học Kinh tế Quốc dân · © 2026 HomaCare.
         </div>
         <div>
           Liên hệ: <b>0338 031 425</b> · <b>homacare@gmail.com</b>
@@ -3768,10 +3767,19 @@
       const btns = document.querySelectorAll('.step-item-btn');
       const anchor = btns[nextIndex];
       const before = anchor.getBoundingClientRect().top;
+      const goingForward = nextIndex > currentJourneyIndex;
       selectJourneyStep(nextIndex, true);
       // Giữ nguyên vị trí bước mới trên màn hình khi minh họa phía trên được gỡ đi
       const shift = anchor.getBoundingClientRect().top - before;
       if (shift) window.scrollTo({ top: window.scrollY + shift, behavior: 'instant' });
+      // Cuộn xuống: đưa thẻ hướng dẫn của bước mới lên sát dưới header, minh họa trượt xuống ngay bên dưới
+      if (goingForward) {
+        const header = document.querySelector('.header');
+        const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+        const target = window.scrollY + anchor.getBoundingClientRect().top - headerBottom - 12;
+        journeyScrollLock = Date.now() + 700;
+        window.scrollTo({ top: target, behavior: 'smooth' });
+      }
     }
 
     let journeyScrollTicking = false;
