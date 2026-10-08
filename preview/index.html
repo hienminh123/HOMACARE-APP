@@ -2279,8 +2279,9 @@
         display: none;
       }
 
+      /* Đã có dòng hướng dẫn phía trên nên bỏ nút trên từng thẻ */
       .step-item-btn .mobile-step-toggle-hint {
-        white-space: nowrap;
+        display: none;
       }
     }
 
@@ -3924,6 +3925,9 @@
         document.querySelectorAll('.step-item-btn')[stepIndex].classList.remove('active');
         return;
       }
+      // Giữ thẻ vừa bấm đứng yên: nếu minh họa đang mở ở phía trên bị gỡ đi thì bù lại ngay, không tự cuộn xuống
+      const tapped = document.querySelectorAll('.step-item-btn')[stepIndex];
+      const tappedTop = tapped ? tapped.getBoundingClientRect().top : 0;
       if (phone) phone.classList.remove('demo-closed');
       currentJourneyIndex = stepIndex;
       const stepBtns = document.querySelectorAll('.step-item-btn');
@@ -3950,9 +3954,8 @@
         const activeBtn = stepBtns[stepIndex];
         if (phoneContainer && activeBtn) {
           activeBtn.after(phoneContainer);
-          setTimeout(() => {
-            activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }, 40);
+          const shift = activeBtn.getBoundingClientRect().top - tappedTop;
+          if (shift) window.scrollTo({ top: window.scrollY + shift, behavior: 'instant' });
         }
       }
     }
