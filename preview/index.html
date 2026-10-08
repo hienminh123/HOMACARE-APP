@@ -1989,7 +1989,7 @@
         border: 1.5px solid rgba(15, 76, 70, 0.16);
         border-radius: var(--radius-lg);
         box-shadow: inset 0 2px 6px rgba(15, 76, 70, 0.04);
-        animation: slideDownDemo 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        animation: slideDownDemo 0.5s cubic-bezier(0.22, 1, 0.36, 1);
       }
 
       @keyframes slideDownDemo {
@@ -2145,8 +2145,8 @@
        ===================================================================== */
     .reveal {
       opacity: 0;
-      translate: 0 28px;
-      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), translate 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      translate: 0 36px;
+      transition: opacity 1.1s cubic-bezier(0.22, 1, 0.36, 1), translate 1.1s cubic-bezier(0.22, 1, 0.36, 1);
       transition-delay: var(--reveal-delay, 0ms);
     }
 
@@ -3918,8 +3918,9 @@
       const phone = document.getElementById('journeyPhoneContainer');
       const isMobile = window.innerWidth <= 960;
       // Điện thoại (accordion): bấm lại bước đang mở thì đóng minh họa
+      if (isMobile && phone && phone.dataset.closing) return;
       if (isMobile && phone && stepIndex === currentJourneyIndex && !phone.classList.contains('demo-closed')) {
-        phone.classList.add('demo-closed');
+        closeJourneyDemo(phone);
         const hint = document.querySelectorAll('.step-item-btn')[stepIndex].querySelector('.mobile-step-toggle-hint');
         if (hint) hint.innerText = 'Bấm để xem minh họa ▾';
         document.querySelectorAll('.step-item-btn')[stepIndex].classList.remove('active');
@@ -3958,6 +3959,34 @@
           if (shift) window.scrollTo({ top: window.scrollY + shift, behavior: 'instant' });
         }
       }
+    }
+
+    // Thu minh họa lại trong 0,5 giây (nội dung bên dưới trôi lên theo), xong mới ẩn hẳn
+    function closeJourneyDemo(phone) {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce || !phone.animate) { phone.classList.add('demo-closed'); return; }
+      const c = getComputedStyle(phone);
+      const gap = parseFloat(getComputedStyle(phone.parentElement).rowGap) || 0;
+      phone.dataset.closing = '1';
+      phone.style.boxSizing = 'border-box';
+      phone.style.overflow = 'hidden';
+      const from = { height: phone.offsetHeight + 'px', paddingTop: c.paddingTop, paddingBottom: c.paddingBottom,
+        borderTopWidth: c.borderTopWidth, borderBottomWidth: c.borderBottomWidth, marginTop: c.marginTop, marginBottom: c.marginBottom, opacity: 1 };
+      const to = { height: '0px', paddingTop: '0px', paddingBottom: '0px', borderTopWidth: '0px', borderBottomWidth: '0px',
+        marginTop: '0px', marginBottom: -gap + 'px', opacity: 0 };
+      const anim = phone.animate([from, to], { duration: 500, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' });
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        phone.classList.add('demo-closed');
+        anim.cancel();
+        phone.style.boxSizing = '';
+        phone.style.overflow = '';
+        delete phone.dataset.closing;
+      };
+      anim.onfinish = finish;
+      setTimeout(finish, 800); // dự phòng nếu trình duyệt tạm dừng animation
     }
 
     function syncJourneyLayout() {
@@ -4052,7 +4081,7 @@
         // Phần chữ đầu trang hiện ngay; tab và điện thoại minh họa của hero vẫn có hiệu ứng khi cuộn tới
         if (el.closest('.hero-content')) return;
         const siblings = [...el.parentElement.children].filter((c) => targetSet.has(c));
-        el.style.setProperty('--reveal-delay', Math.min(siblings.indexOf(el), 4) * 80 + 'ms');
+        el.style.setProperty('--reveal-delay', Math.min(siblings.indexOf(el), 4) * 140 + 'ms');
         el.classList.add('reveal');
         if (!heroPart2.includes(el)) revealObserver.observe(el);
       });
