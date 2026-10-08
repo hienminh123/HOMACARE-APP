@@ -2254,26 +2254,7 @@
       }
     }
 
-    @keyframes demoEnter {
-      from { opacity: 0; transform: translateY(-14px); }
-      to { opacity: 1; transform: none; }
-    }
-
     @media (max-width: 960px) {
-      .journey-phone-container {
-        animation: none;
-      }
-
-      .journey-phone-container.demo-enter {
-        animation: demoEnter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .journey-phone-container.demo-enter {
-          animation: none;
-        }
-      }
-
       .journey-tap-hint {
         display: flex;
       }
@@ -2288,10 +2269,6 @@
       }
     }
 
-    /* Tự bù vị trí cuộn bằng JS khi minh họa đổi bước, tắt cơ chế tự động của trình duyệt để không bị bù hai lần */
-    .journey-section {
-      overflow-anchor: none;
-    }
 
     /* Mục 4: thứ tự "Về HomaCare" trước "Dõi theo từ xa" chỉ trên điện thoại */
     .intro-order {
@@ -3922,12 +3899,6 @@
 
     let currentJourneyIndex = 0;
     function selectJourneyStep(stepIndex) {
-      // Điện thoại: minh họa trượt xuống ngay dưới thẻ vừa bấm
-      if (window.innerWidth <= 960) { openJourneyStepMobile(stepIndex); return; }
-      applyJourneyStep(stepIndex);
-    }
-
-    function applyJourneyStep(stepIndex) {
       currentJourneyIndex = stepIndex;
       const stepBtns = document.querySelectorAll('.step-item-btn');
       stepBtns.forEach((btn, i) => {
@@ -3951,7 +3922,12 @@
       if (window.innerWidth <= 960) {
         const phoneContainer = document.getElementById('journeyPhoneContainer');
         const activeBtn = stepBtns[stepIndex];
-        if (phoneContainer && activeBtn) activeBtn.after(phoneContainer);
+        if (phoneContainer && activeBtn) {
+          activeBtn.after(phoneContainer);
+          setTimeout(() => {
+            activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 40);
+        }
       }
     }
 
@@ -3976,78 +3952,6 @@
 
     window.addEventListener('resize', syncJourneyLayout);
     syncJourneyLayout();
-
-    // Điện thoại: bấm sang bước khác thì chạy 2 nhịp nối tiếp, không tự cuộn trang:
-    //   1) minh họa đang mở thu lại (thẻ bên dưới tự trôi lên theo)
-    //   2) minh họa của bước vừa bấm mở ra ngay dưới thẻ đó
-    const DEMO_CLOSE_MS = 350;
-    const DEMO_OPEN_MS = 500;
-    const DEMO_EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
-    let journeyDemoBusy = false;
-
-    function demoBox(el) {
-      const c = getComputedStyle(el);
-      const gap = parseFloat(getComputedStyle(el.parentElement).rowGap) || 0;
-      return {
-        open: { height: el.offsetHeight + 'px', paddingTop: c.paddingTop, paddingBottom: c.paddingBottom,
-          borderTopWidth: c.borderTopWidth, borderBottomWidth: c.borderBottomWidth,
-          marginTop: c.marginTop, marginBottom: c.marginBottom, opacity: 1 },
-        // Thu về 0 kể cả khoảng cách của danh sách (gap) để lúc gỡ ra không bị nhảy
-        closed: { height: '0px', paddingTop: '0px', paddingBottom: '0px', borderTopWidth: '0px', borderBottomWidth: '0px',
-          marginTop: '0px', marginBottom: -gap + 'px', opacity: 0 }
-      };
-    }
-
-    function openJourneyStepMobile(stepIndex) {
-      const btns = document.querySelectorAll('.step-item-btn');
-      const card = btns[stepIndex];
-      const phone = document.getElementById('journeyPhoneContainer');
-      if (!card || !phone || journeyDemoBusy) return;
-      if (stepIndex === currentJourneyIndex && phone.previousElementSibling === card) return;
-
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reduce || !phone.animate) {
-        const before = card.getBoundingClientRect().top;
-        applyJourneyStep(stepIndex);
-        const shift = card.getBoundingClientRect().top - before;
-        if (shift) window.scrollTo({ top: window.scrollY + shift, behavior: 'instant' });
-        return;
-      }
-
-      journeyDemoBusy = true;
-      // Phản hồi ngay trên thẻ vừa bấm
-      btns.forEach((btn, i) => btn.classList.toggle('active', i === stepIndex));
-      phone.style.boxSizing = 'border-box';
-      phone.style.overflow = 'hidden';
-
-      const finish = () => {
-        phone.style.boxSizing = '';
-        phone.style.overflow = '';
-        journeyDemoBusy = false;
-      };
-
-      // Nhịp 1: thu minh họa đang mở
-      const closing = phone.animate([demoBox(phone).open, demoBox(phone).closed],
-        { duration: DEMO_CLOSE_MS, easing: DEMO_EASE, fill: 'forwards' });
-      closing.onfinish = () => {
-        // Nhịp 2: chuyển minh họa xuống dưới thẻ mới và mở ra
-        applyJourneyStep(stepIndex);
-        closing.cancel();
-        const box = demoBox(phone);
-        const opening = phone.animate([box.closed, box.open], { duration: DEMO_OPEN_MS, easing: DEMO_EASE });
-        opening.onfinish = finish;
-        opening.oncancel = finish;
-      };
-      closing.oncancel = () => { if (journeyDemoBusy && phone.previousElementSibling !== card) applyJourneyStep(stepIndex); finish(); };
-      // Dự phòng nếu trình duyệt tạm dừng animation (ví dụ chuyển tab giữa chừng)
-      setTimeout(() => {
-        if (!journeyDemoBusy) return;
-        closing.cancel();
-        if (phone.previousElementSibling !== card) applyJourneyStep(stepIndex);
-        phone.getAnimations().forEach((an) => an.cancel());
-        finish();
-      }, DEMO_CLOSE_MS + DEMO_OPEN_MS + 400);
-    }
 
     // Step 6 Star Rating interactive demo
     let currentRating = 5;
