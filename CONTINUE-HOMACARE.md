@@ -1,5 +1,52 @@
 # HOMACARE — trạng thái tiếp tục
 
+## TRẠNG THÁI HIỆN TẠI — 08/10/2026 (đọc phần này trước)
+
+Phần này thay thế mọi thông tin về hosting/Netlify ở các mục lịch sử bên dưới.
+
+### Hosting và triển khai
+- Website chính: **https://homacare-demo.pages.dev** (Cloudflare Pages, project `homacare-demo`, nối GitHub `hienminh123/HOMACARE-APP`, nhánh `main`, build command trống, output directory `preview`). Push lên `main` là Cloudflare tự deploy, miễn phí.
+- Netlify (`demo-homacare.netlify.app`) đã **Unlink repository**: không còn tự deploy, không tốn credit; bản cũ vẫn mở được. Gói Free Netlify còn khoảng 27 credit (mỗi production deploy 15 credit).
+- Worker thử nghiệm `homacare-app.minh30d.workers.dev` có thể đã bị người dùng xóa; không dùng.
+- `preview/config.js` → `siteUrl: 'https://homacare-demo.pages.dev/'`.
+- Supabase URL Configuration: Site URL `https://homacare-demo.pages.dev/auth.html`; Redirect URLs có `https://homacare-demo.pages.dev/**` (Cloudflare tự bỏ đuôi .html: `auth.html` → `/auth`, giữ query).
+- Supabase: người dùng được hướng dẫn **tắt Confirm email** để người test đăng ký được (SMTP mặc định chỉ gửi cho thành viên project). Khi test xong cần bật lại hoặc cấu hình Custom SMTP. Quên mật khẩu vẫn cần email.
+- `preview/_redirects`: `/landing-v4.html / 301` (Cloudflare). `netlify.toml` giữ lại, không còn dùng.
+- Người dùng tự commit/push bằng GitHub Desktop; Claude không commit trừ khi được yêu cầu.
+
+### Cấu trúc trang
+- `preview/index.html` = trang chủ mới (landing v4: nền bản 2 + bento/demo tương tác từ bản 3). Không nhận diện phiên đăng nhập (nút Đăng nhập/Đăng ký mở popup vai trò; auth.html tự chuyển nếu đã có phiên).
+- `preview/home-classic.html` = trang chủ cũ (Góc sức khỏe, nhận diện phiên). `backend/build-pages.cjs` giờ đọc/ghi `home-classic.html`, **không đụng `index.html`**. Menu chuyên viên trỏ `index.html#roles`.
+- `landing.html`, `landing-v2.html`, `landing-v3.html` vẫn còn trong repo (bản so sánh cũ, chưa xóa).
+- Ảnh đã nén: `assets/app-icon-h.png` 256px (~49 KB), `assets/logo.png` 256px (~25 KB), `apple-touch-icon.png` 180px, thêm `assets/app-icon-512.png` (chỉ dùng trong manifest).
+- Font: preload Cal Sans + `font-display: block` (index.html, styles.css, builder) để hết nháy font.
+
+### Quyết định giao diện đã chốt (index.html)
+- Header: nền trắng trên mobile, nút "Đăng nhập / Đăng ký" teal bo 10px (cả desktop).
+- Hero mobile: tiêu đề "Sự quan tâm vẫn ở gần." một dòng (clamp theo vw, nowrap); phần chữ chiếm gần trọn màn hình đầu (min-height 100svh − 64px − 110px); 3 tab + điện thoại minh họa chỉ hiện khi bắt đầu cuộn (≥8px). Bỏ dòng ✓ trust line; 3 tab một hàng, không icon; vuốt ngang ảnh điện thoại để chuyển màn.
+- Mobile: "Về HomaCare" lên trước "Dõi theo từ xa" (wrapper `.intro-order`), ẩn đoạn văn thứ 3 và ảnh story; 4 giá trị cốt lõi 2×2; ẩn intro + 4 thẻ dịch vụ, thay bằng tiêu đề "Chăm sóc theo buổi tại nhà".
+- 3 thẻ "Dõi theo từ xa" đều nền teal (`value-card-featured`).
+- Bảng giá: desktop hiện đủ 3 gói (Chăm chút 600–800k, Thân tình 2,8tr, nhãn "Đang phát triển · Chưa mở đặt lịch"); mobile chỉ Ân cần đầy đủ, 2 gói kia rút gọn (tên + "Đang phát triển").
+- Hiệu ứng hiện dần khi cuộn (`.reveal`, IntersectionObserver): 1,1s, trượt 36px, trễ 140ms giữa thẻ cạnh nhau.
+- Desktop: màn hình minh họa "Cách sử dụng" sticky top 96px (thiết bị cao clamp 460–640px, steps-list padding-bottom 300px); ảnh story "Về HomaCare" sticky top 96px.
+- Footer gọn: logo + khẩu hiệu, 4–5 link (mobile ẩn "Liên hệ"), dòng © + tel/mail bấm được. Đã bỏ dòng "Hình ảnh minh họa được tạo bằng AI".
+- Chỉnh chữ: "tin&nbsp;cậy" và đoạn bento max-width 720px; tiêu đề FAQ "Những điều bạn muốn biết trước buổi đồng hành."
+
+### "Cách sử dụng" trên mobile — trạng thái chốt và các kiểu ĐÃ BỊ TỪ CHỐI
+- **Hiện tại (commit ddec09b, khôi phục lại)**: một khung minh họa dùng chung, bấm bước nào thì mở dưới bước đó (slideDownDemo 0,5s), bấm lại bước đang mở thì thu lại trong 0,5s (`closeJourneyDemo`). Không tự cuộn; khi minh họa phía trên bị gỡ thì bù scroll ngay để thẻ vừa bấm đứng yên. Có dòng "👆 Chạm vào từng bước để xem màn hình minh họa"; ẩn nhãn phụ và nút trên từng thẻ.
+- Người dùng đã thử và **không muốn**: tự chuyển bước sau 10 giây; đổi bước theo cuộn (scroll-driven); trang tự cuộn/kéo thẻ lên header khi mở; hiệu ứng đóng-rồi-mở 2 nhịp; accordion kiểu FAQ với 6 khung riêng (commit 9901353, đã revert). Đừng đề xuất lại các kiểu này trừ khi được hỏi.
+- Lưu ý kiểm thử: browser pane chạy ẩn → rAF/WAAPI/IntersectionObserver không chạy; phải tua `animation.currentTime` hoặc gọi hàm trực tiếp để đo, và tự tắt `scroll-behavior: smooth` khi đo vị trí.
+
+### Việc còn để ngỏ
+- Thử trên iPhone thật các hiệu ứng mobile sau mỗi lần push.
+- Xóa hoặc giữ landing.html / landing-v2 / landing-v3.
+- Bật lại Confirm email hoặc cấu hình Custom SMTP sau đợt test.
+- README/SUPABASE-SETUP đã cập nhật sang Cloudflare.
+
+---
+
+## Lịch sử (thông tin Netlify bên dưới đã lỗi thời)
+
 ## Phiên triển khai mới — checkpoint 07/10/2026
 
 - Người dùng bắt đầu phiên mới, coi các audit và kế hoạch trước đó là ngữ cảnh cũ. Không đọc hoặc dùng AUDIT-HOMACARE-2026-10-07.md hay audit-assets/ trừ khi người dùng yêu cầu. Mã nguồn trên đĩa là nguồn sự thật.
