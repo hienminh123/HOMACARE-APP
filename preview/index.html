@@ -2223,7 +2223,8 @@
     }
 
     .services-mobile-heading,
-    .journey-tap-hint {
+    .journey-tap-hint,
+    .step-demo-panel {
       display: none;
     }
 
@@ -2269,9 +2270,47 @@
         display: flex;
       }
 
-      /* Accordion: minh họa đóng khi bấm lại bước đang mở */
-      .journey-phone-container.demo-closed {
+      /* Accordion giống phần Câu hỏi thường gặp: mỗi bước có khung minh họa riêng */
+      #journeyPhoneContainer {
         display: none;
+      }
+
+      .step-demo-panel {
+        display: block;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        margin-top: -14px; /* bù khoảng cách của danh sách khi đang đóng */
+        transition: max-height 0.5s ease, opacity 0.4s ease, margin-top 0.4s ease;
+      }
+
+      .step-demo-panel.open {
+        max-height: 1100px;
+        opacity: 1;
+        margin-top: 0;
+      }
+
+      .step-demo-panel .journey-phone-container {
+        animation: none;
+        margin: 0;
+      }
+
+      /* Mũi tên xoay như phần Câu hỏi thường gặp */
+      .step-item-btn::after {
+        content: '';
+        flex-shrink: 0;
+        align-self: center;
+        width: 9px;
+        height: 9px;
+        margin-left: 4px;
+        border-right: 2.5px solid var(--navy);
+        border-bottom: 2.5px solid var(--navy);
+        transform: rotate(45deg) translateY(-3px);
+        transition: transform 0.3s ease;
+      }
+
+      .step-item-btn.active::after {
+        transform: rotate(-135deg) translateY(-3px);
       }
 
       /* Thẻ bước trên điện thoại: chỉ giữ nút xem minh họa cho gọn */
@@ -3267,9 +3306,9 @@
                 <div id="interactiveStars"
                   style="text-align:center; font-size:28px; color:#F59E0B; margin:10px 0; letter-spacing:4px; cursor:pointer;"
                   title="Bấm để thử chọn số sao">
-                  <span onclick="setRating(1)">★</span><span onclick="setRating(2)">★</span><span
-                    onclick="setRating(3)">★</span><span onclick="setRating(4)">★</span><span
-                    onclick="setRating(5)">★</span>
+                  <span onclick="setRating(1, this)">★</span><span onclick="setRating(2, this)">★</span><span
+                    onclick="setRating(3, this)">★</span><span onclick="setRating(4, this)">★</span><span
+                    onclick="setRating(5, this)">★</span>
                 </div>
                 <p id="ratingFeedback"
                   style="font-size:12px; text-align:center; color:var(--text-muted); line-height:1.45;">
@@ -3914,98 +3953,59 @@
     ];
 
     let currentJourneyIndex = 0;
-    function selectJourneyStep(stepIndex) {
-      const phone = document.getElementById('journeyPhoneContainer');
-      const isMobile = window.innerWidth <= 960;
-      // Điện thoại (accordion): bấm lại bước đang mở thì đóng minh họa
-      if (isMobile && phone && phone.dataset.closing) return;
-      if (isMobile && phone && stepIndex === currentJourneyIndex && !phone.classList.contains('demo-closed')) {
-        closeJourneyDemo(phone);
-        const hint = document.querySelectorAll('.step-item-btn')[stepIndex].querySelector('.mobile-step-toggle-hint');
-        if (hint) hint.innerText = 'Bấm để xem minh họa ▾';
-        document.querySelectorAll('.step-item-btn')[stepIndex].classList.remove('active');
-        return;
-      }
-      // Giữ thẻ vừa bấm đứng yên: nếu minh họa đang mở ở phía trên bị gỡ đi thì bù lại ngay, không tự cuộn xuống
-      const tapped = document.querySelectorAll('.step-item-btn')[stepIndex];
-      const tappedTop = tapped ? tapped.getBoundingClientRect().top : 0;
-      if (phone) phone.classList.remove('demo-closed');
+    // Desktop: cập nhật màn hình minh họa cố định bên phải
+    function showDesktopJourneyStep(stepIndex) {
       currentJourneyIndex = stepIndex;
-      const stepBtns = document.querySelectorAll('.step-item-btn');
-      stepBtns.forEach((btn, i) => {
-        btn.classList.toggle('active', i === stepIndex);
-        const hint = btn.querySelector('.mobile-step-toggle-hint');
-        if (hint) {
-          hint.innerText = (i === stepIndex) ? 'Đang xem minh họa ▴' : 'Bấm để xem minh họa ▾';
-        }
-      });
-
-      document.querySelectorAll('.step-screen').forEach((screen, i) => {
+      document.querySelectorAll('#journeyPhoneContainer .step-screen').forEach((screen, i) => {
         screen.style.display = (i === stepIndex) ? 'flex' : 'none';
       });
-
       const insightEl = document.getElementById('stepInsightText');
-      if (insightEl && stepInsights[stepIndex]) {
-        insightEl.innerText = stepInsights[stepIndex];
-      }
-
-      // Mobile inline placement: move phone container right below active step
-      if (window.innerWidth <= 960) {
-        const phoneContainer = document.getElementById('journeyPhoneContainer');
-        const activeBtn = stepBtns[stepIndex];
-        if (phoneContainer && activeBtn) {
-          activeBtn.after(phoneContainer);
-          const shift = activeBtn.getBoundingClientRect().top - tappedTop;
-          if (shift) window.scrollTo({ top: window.scrollY + shift, behavior: 'instant' });
-        }
-      }
+      if (insightEl && stepInsights[stepIndex]) insightEl.innerText = stepInsights[stepIndex];
     }
 
-    // Thu minh họa lại trong 0,5 giây (nội dung bên dưới trôi lên theo), xong mới ẩn hẳn
-    function closeJourneyDemo(phone) {
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reduce || !phone.animate) { phone.classList.add('demo-closed'); return; }
-      const c = getComputedStyle(phone);
-      const gap = parseFloat(getComputedStyle(phone.parentElement).rowGap) || 0;
-      phone.dataset.closing = '1';
-      phone.style.boxSizing = 'border-box';
-      phone.style.overflow = 'hidden';
-      const from = { height: phone.offsetHeight + 'px', paddingTop: c.paddingTop, paddingBottom: c.paddingBottom,
-        borderTopWidth: c.borderTopWidth, borderBottomWidth: c.borderBottomWidth, marginTop: c.marginTop, marginBottom: c.marginBottom, opacity: 1 };
-      const to = { height: '0px', paddingTop: '0px', paddingBottom: '0px', borderTopWidth: '0px', borderBottomWidth: '0px',
-        marginTop: '0px', marginBottom: -gap + 'px', opacity: 0 };
-      const anim = phone.animate([from, to], { duration: 500, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' });
-      let done = false;
-      const finish = () => {
-        if (done) return;
-        done = true;
-        phone.classList.add('demo-closed');
-        anim.cancel();
-        phone.style.boxSizing = '';
-        phone.style.overflow = '';
-        delete phone.dataset.closing;
-      };
-      anim.onfinish = finish;
-      setTimeout(finish, 800); // dự phòng nếu trình duyệt tạm dừng animation
+    // Điện thoại: mỗi bước có khung minh họa riêng ngay bên dưới, mở/đóng giống phần Câu hỏi thường gặp
+    function buildJourneyPanels() {
+      const btns = document.querySelectorAll('.step-item-btn');
+      const phone = document.getElementById('journeyPhoneContainer');
+      if (!phone || document.querySelector('.step-demo-panel')) return;
+      btns.forEach((btn, i) => {
+        const copy = phone.cloneNode(true);
+        copy.removeAttribute('id');
+        copy.classList.remove('reveal', 'in-view');
+        copy.style.removeProperty('--reveal-delay');
+        copy.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+        copy.querySelectorAll('.step-screen').forEach((screen, k) => { screen.style.display = (k === i) ? 'flex' : 'none'; });
+        const insight = copy.querySelector('.step-insight-card p');
+        if (insight && stepInsights[i]) insight.textContent = stepInsights[i];
+        const panel = document.createElement('div');
+        panel.className = 'step-demo-panel' + (i === 0 ? ' open' : '');
+        panel.appendChild(copy);
+        btn.after(panel);
+        btn.classList.toggle('active', i === 0);
+      });
+    }
+
+    function selectJourneyStep(stepIndex) {
+      const btns = document.querySelectorAll('.step-item-btn');
+      if (window.innerWidth <= 960) {
+        buildJourneyPanels();
+        const panels = document.querySelectorAll('.step-demo-panel');
+        const panel = panels[stepIndex];
+        const wasOpen = panel && panel.classList.contains('open');
+        panels.forEach((p) => p.classList.remove('open'));
+        btns.forEach((btn) => btn.classList.remove('active'));
+        if (panel && !wasOpen) {
+          panel.classList.add('open');
+          btns[stepIndex].classList.add('active');
+        }
+      } else {
+        btns.forEach((btn, i) => btn.classList.toggle('active', i === stepIndex));
+      }
+      showDesktopJourneyStep(stepIndex);
     }
 
     function syncJourneyLayout() {
-      const isMobile = window.innerWidth <= 960;
-      const phoneContainer = document.getElementById('journeyPhoneContainer');
-      const stepsList = document.getElementById('stepsList');
-      const journeySplit = document.querySelector('.journey-split');
-      if (!phoneContainer || !stepsList || !journeySplit) return;
-
-      if (isMobile) {
-        const activeBtn = stepsList.querySelector('.step-item-btn.active') || stepsList.querySelector('.step-item-btn');
-        if (activeBtn && phoneContainer.previousElementSibling !== activeBtn) {
-          activeBtn.after(phoneContainer);
-        }
-      } else {
-        if (phoneContainer.parentElement !== journeySplit) {
-          journeySplit.appendChild(phoneContainer);
-        }
-      }
+      if (window.innerWidth <= 960) buildJourneyPanels();
     }
 
     window.addEventListener('resize', syncJourneyLayout);
@@ -4013,15 +4013,15 @@
 
     // Step 6 Star Rating interactive demo
     let currentRating = 5;
-    function setRating(stars) {
+    function setRating(stars, el) {
       currentRating = stars;
-      const starContainer = document.getElementById('interactiveStars');
+      const starContainer = el ? el.parentElement : document.getElementById('interactiveStars');
       if (!starContainer) return;
       const spanStars = starContainer.querySelectorAll('span');
       spanStars.forEach((s, idx) => {
         s.style.color = (idx < stars) ? '#F59E0B' : '#CBD5E1';
       });
-      const fb = document.getElementById('ratingFeedback');
+      const fb = starContainer.nextElementSibling;
       if (fb) {
         fb.innerText = `Bạn đã chọn ${stars}/5 sao (minh họa).`;
       }
@@ -4079,7 +4079,7 @@
       }
       revealTargets.forEach((el) => {
         // Phần chữ đầu trang hiện ngay; tab và điện thoại minh họa của hero vẫn có hiệu ứng khi cuộn tới
-        if (el.closest('.hero-content')) return;
+        if (el.closest('.hero-content') || el.closest('.step-demo-panel')) return;
         const siblings = [...el.parentElement.children].filter((c) => targetSet.has(c));
         el.style.setProperty('--reveal-delay', Math.min(siblings.indexOf(el), 4) * 140 + 'ms');
         el.classList.add('reveal');
