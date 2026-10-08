@@ -2259,6 +2259,11 @@
         display: flex;
       }
 
+      /* Accordion: minh họa đóng khi bấm lại bước đang mở */
+      .journey-phone-container.demo-closed {
+        display: none;
+      }
+
       /* Thẻ bước trên điện thoại: chỉ giữ nút xem minh họa cho gọn */
       .step-item-btn .step-feature-badge {
         display: none;
@@ -3899,6 +3904,17 @@
 
     let currentJourneyIndex = 0;
     function selectJourneyStep(stepIndex) {
+      const phone = document.getElementById('journeyPhoneContainer');
+      const isMobile = window.innerWidth <= 960;
+      // Điện thoại (accordion): bấm lại bước đang mở thì đóng minh họa
+      if (isMobile && phone && stepIndex === currentJourneyIndex && !phone.classList.contains('demo-closed')) {
+        phone.classList.add('demo-closed');
+        const hint = document.querySelectorAll('.step-item-btn')[stepIndex].querySelector('.mobile-step-toggle-hint');
+        if (hint) hint.innerText = 'Bấm để xem minh họa ▾';
+        document.querySelectorAll('.step-item-btn')[stepIndex].classList.remove('active');
+        return;
+      }
+      if (phone) phone.classList.remove('demo-closed');
       currentJourneyIndex = stepIndex;
       const stepBtns = document.querySelectorAll('.step-item-btn');
       stepBtns.forEach((btn, i) => {
