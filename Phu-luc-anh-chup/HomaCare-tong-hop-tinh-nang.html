@@ -34,11 +34,12 @@ h1 { font-size:34px; line-height:1.25; margin:4px 0 14px; }
 .hero h2 { color:#fff; font-size:22px; margin:22px 0 0; padding:0; border:0; }
 .hero .big { font:44px/1.1 'Cal Sans', sans-serif; margin:4px 0 18px; }
 .hero .pill { display:inline-block; white-space:nowrap; background:var(--apricot); color:#fff; padding:8px 18px; border-radius:999px; font:17px 'Cal Sans', sans-serif; }
-.hero-phones { display:flex; justify-content:center; align-items:flex-end; gap:16px; padding:44px 24px 0; position:relative; z-index:1; }
-.hero-phones .phone { width:176px; border:6px solid #0B2F2B; border-bottom:0; box-shadow:0 -6px 30px rgba(0,0,0,.25); }
-.hero-phones .phone img { aspect-ratio:390/640; }
-.phone { flex:none; container-type:inline-size; background:var(--sb); border:5px solid var(--navy); border-bottom:0; border-radius:26px 26px 0 0; overflow:hidden; box-shadow:0 10px 30px rgba(27,42,65,.18); }
-.phone img { display:block; width:100%; object-fit:cover; object-position:top; }
+.hero-phones { display:flex; justify-content:center; align-items:center; gap:16px; padding:30px 24px; position:relative; z-index:1; }
+.hero-phones .phone { width:176px; border:6px solid #0B2F2B; box-shadow:0 12px 34px rgba(0,0,0,.3); }
+
+.phone { flex:none; position:relative; container-type:inline-size; background:var(--sb); border:5px solid var(--navy); border-radius:30px; overflow:hidden; box-shadow:0 10px 30px rgba(27,42,65,.18); }
+.phone img { display:block; width:100%; height:auto; }
+.phone::after { content:''; position:absolute; left:50%; bottom:2.2cqw; transform:translateX(-50%); width:34cqw; height:1.3cqw; border-radius:99px; background:rgba(0,0,0,.55); }
 .sb { position:relative; height:12.5cqw; display:flex; align-items:center; justify-content:space-between; padding:0 6.5cqw 0 10cqw; color:var(--sbt); font:600 4.3cqw/1 -apple-system, 'Segoe UI', sans-serif; }
 .sb .island { position:absolute; left:50%; top:2.6cqw; transform:translateX(-50%); width:30cqw; height:8.6cqw; background:#000; border-radius:99px; }
 .sb .ic { display:flex; align-items:center; gap:1.4cqw; }
@@ -50,13 +51,13 @@ h2 { font-size:28px; margin:44px 0 6px; padding-bottom:10px; border-bottom:2px s
 h3 { font-size:22px; margin:30px 0 4px; color:var(--teal); }
 h4 { font-size:18px; margin:26px 0 12px; }
 h4 .no { color:var(--apricot); margin-right:4px; }
-.banner { margin:0; border-radius:14px; padding:26px 20px 0; background:linear-gradient(160deg, #E3EFEC 0%, #F6EDE3 100%); overflow:hidden; }
+.banner { margin:0; border-radius:14px; padding:28px 20px; background:linear-gradient(160deg, #E3EFEC 0%, #F6EDE3 100%); overflow:hidden; }
 .banner.sand { background:linear-gradient(160deg, #F6EDE3 0%, #E6EEF3 100%); }
 .phones { display:flex; justify-content:center; align-items:flex-start; gap:18px; }
 .phones .phone { width:30%; max-width:220px; }
-.phones .phone img { aspect-ratio:390/560; }
+
 .phones.n1 .phone { width:46%; max-width:260px; }
-.phones.n1 .phone img { aspect-ratio:390/600; }
+
 .phones.n2 .phone { width:40%; max-width:240px; }
 .caption { text-align:center; font-size:14px; font-style:italic; color:var(--muted); margin:8px 0 14px; }
 .caption span { font-style:normal; color:#9AA1AC; }
@@ -94,9 +95,9 @@ footer { border-top:1px solid var(--line); text-align:center; font-size:13px; co
   .hero-text { padding:26px 22px 10px; }
   .hero .big { font-size:34px; }
   .hero-phones .phone { width:42%; }
-  .banner { padding:16px 10px 0; }
+  .banner { padding:16px 10px; }
   .phones { gap:8px; }
-  .phones .phone { border-width:3px; border-radius:16px 16px 0 0; }
+  .phones .phone { border-width:3px; border-radius:16px; }
   h2 { font-size:23px; } h3 { font-size:20px; }
 }
 @media print { .topbar, aside { display:none; } .wrap { display:block; } .banner { break-inside:avoid; } html { scroll-behavior:auto; } }
