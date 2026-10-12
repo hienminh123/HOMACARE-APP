@@ -107,8 +107,8 @@
     document.querySelector('#account-confirmation').minLength = 8;
     document.querySelectorAll('[data-auth-field]').forEach(field => field.querySelectorAll('input').forEach(input => input.disabled = field.hidden));
     document.querySelector('#auth-role-label').textContent = labels[role];
-    const headings = { signup: 'Bắt đầu sự đồng hành.', login: role === 'coordinator' ? 'Chào người kết nối.' : 'Chào mừng bạn trở lại.', forgot: 'Lấy lại mật khẩu.', recovery: 'Đặt mật khẩu mới.' };
-    const descriptions = { signup: role === 'family' ? 'Tạo tài khoản để sắp xếp chăm sóc và theo dõi nhật ký của người thân.' : 'Tạo tài khoản để nhận lịch chăm sóc và ghi lại từng buổi đồng hành.', login: role === 'coordinator' ? 'Đăng nhập bằng email và mật khẩu của tài khoản điều phối được cấp.' : 'Đăng nhập để tiếp tục hành trình chăm sóc của bạn.', forgot: 'Chúng tôi sẽ gửi đường dẫn đặt lại mật khẩu đến email của bạn.', recovery: 'Chọn mật khẩu mới gồm ít nhất 8 ký tự.' };
+    const headings = { signup: 'Tạo tài khoản mới.', login: role === 'coordinator' ? 'Đăng nhập điều phối.' : 'Chào mừng bạn trở lại.', forgot: 'Lấy lại mật khẩu.', recovery: 'Đặt mật khẩu mới.' };
+    const descriptions = { signup: role === 'family' ? 'Tạo tài khoản để sắp xếp chăm sóc và theo dõi nhật ký của người thân.' : 'Tạo tài khoản để nhận ca được phân công và ghi nhật ký sau mỗi buổi.', login: role === 'coordinator' ? 'Đăng nhập bằng email và mật khẩu của tài khoản điều phối được cấp.' : 'Đăng nhập để xem lịch và nhật ký chăm sóc.', forgot: 'Chúng tôi sẽ gửi đường dẫn đặt lại mật khẩu đến email của bạn.', recovery: 'Chọn mật khẩu mới gồm ít nhất 8 ký tự.' };
     document.querySelector('#auth-title').textContent = headings[mode];
     document.querySelector('#auth-description').textContent = descriptions[mode];
     document.querySelector('#auth-submit').textContent = { signup: 'Tạo tài khoản', login: 'Đăng nhập', forgot: 'Gửi email khôi phục', recovery: 'Lưu mật khẩu mới' }[mode];
