@@ -321,7 +321,7 @@
     }
 
     .brand-name span {
-      color: var(--apricot);
+      color: var(--apricot-ink);
     }
 
     .nav-menu {
@@ -448,7 +448,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 700;
       color: #000;
       z-index: 40;
@@ -509,7 +509,7 @@
     }
 
     .screen-brand-text span {
-      color: var(--apricot);
+      color: var(--apricot-ink);
     }
 
     .screen-body {
@@ -593,9 +593,7 @@
 
     .hero-title em {
       font-style: normal;
-      background: linear-gradient(135deg, var(--primary) 0%, #1c7c72 50%, var(--apricot) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: var(--primary);
     }
 
     .hero-subtitle {
@@ -1036,7 +1034,7 @@
     }
 
     .core-val-card:hover .val-num {
-      color: var(--apricot);
+      color: var(--apricot-ink);
     }
 
     .core-val-card strong {
@@ -1856,7 +1854,7 @@
     }
 
     .bento-act-item span {
-      color: #10B981;
+      color: #0E7A52;
       font-weight: 800;
       flex-shrink: 0;
     }
@@ -1950,7 +1948,7 @@
       padding: 2px 8px;
       border-radius: var(--radius-full);
       background: var(--apricot-subtle);
-      color: var(--apricot-hover);
+      color: var(--apricot-ink);
     }
     /* Right Phone Lab Box */
     .journey-phone-container {
@@ -2435,6 +2433,77 @@
         padding: 9px 5px;
       }
     }
+  
+    /* =====================================================================
+       IMPECCABLE POLISH 12/10: gỡ dấu hiệu AI slop, giữ bố cục đã chốt
+       ===================================================================== */
+    :root {
+      --apricot-ink: #B5502D;
+      --text-muted: #5B6779;
+      --text-light: #64748B;
+      --shadow-glow: 0 10px 24px -8px rgba(181, 80, 45, 0.5);
+    }
+
+    ::selection { background: rgba(15, 76, 70, 0.16); color: var(--navy); }
+    html { scrollbar-color: rgba(15, 76, 70, 0.35) transparent; accent-color: var(--primary); caret-color: var(--primary); }
+    :focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+
+    .ico { width: 1.15em; height: 1.15em; display: inline-block; vertical-align: -0.2em; flex: none; }
+
+    /* Chữ gradient → màu đặc */
+
+    /* Nút cam mơ: chữ navy để đạt tương phản, giữ màu thương hiệu */
+    .btn-apricot { color: var(--navy); box-shadow: 0 6px 18px -6px rgba(181, 80, 45, 0.45); }
+    .btn-apricot:hover { color: var(--navy); }
+    .brand-name span, .screen-brand-text span { color: var(--apricot); }
+    .tag-apricot { color: var(--apricot-ink); }
+    .mini-tag { font-size: 11px; }
+
+    /* Viền dày một cạnh → viền mảnh đều 4 cạnh */
+    .step-item-btn.active { border: 1.5px solid var(--primary); background: #F4F9F8; }
+    .scope-notice-bar { border: 1px solid rgba(15, 76, 70, 0.14); border-left-width: 1px; }
+    .core-val-card { border-top: 1px solid rgba(15, 76, 70, 0.09); }
+    .mini-card { border: 1px solid rgba(15, 76, 70, 0.1); }
+
+    /* Thẻ lồng trong thẻ → đường kẻ mảnh */
+    .value-visual-box, .value-card.value-card-featured .value-visual-box { background: transparent; border: 0; border-top: 1px solid rgba(255, 255, 255, 0.22); border-radius: 0; padding: 14px 0 0; }
+    .bento-activity-tasks { background: transparent; border: 0; padding: 4px 0 0; }
+    .habit-list { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 0.9rem; display: grid; gap: 8px; }
+    .habit-list .ico, .bento-act-item .ico { color: var(--primary); }
+    .bento-role-card { background: transparent; border: 0; border-top: 1px solid var(--border); border-radius: 0; padding: 16px 2px 0; text-align: left; }
+    .bento-role-card:hover { box-shadow: none; border-color: var(--border); }
+    .role-card-icon { color: var(--primary); }
+    .role-card-icon .ico, .val-icon .ico, .svc-icon .ico, .role-opt-icon .ico { width: 24px; height: 24px; }
+
+    /* Lưới thẻ icon + tiêu đề + mô tả → danh sách có đường kẻ */
+    .service-mini-card, .quality-card { background: transparent; border: 0; border-top: 1px solid rgba(15, 76, 70, 0.16); border-radius: 0; padding: 22px 4px 0; box-shadow: none; }
+    .service-mini-card:hover, .quality-card:hover { transform: none; box-shadow: none; }
+    .svc-icon { display: block; margin-bottom: 12px; color: var(--primary); }
+
+    .pkg-status { font-size: 0.85rem; font-weight: 700; color: var(--apricot-ink); margin-top: 4px; }
+    .role-opt-icon { display: flex; color: var(--primary); }
+    .modal-close .ico { width: 18px; height: 18px; vertical-align: middle; }
+    .trust-check { color: var(--primary); }
+    .trust-check .ico { width: 1em; height: 1em; }
+
+    .status-icons { display: flex; align-items: center; gap: 4px; color: currentColor; }
+    .status-icons svg { height: 9px; width: auto; fill: currentColor; }
+  
+    /* Mạch trang mới: "Về HomaCare" (vấn đề) lên trước "Dõi theo từ xa" trên mọi màn hình */
+    .intro-order { display: flex; flex-direction: column; }
+    .intro-order .story-section { order: -1; }
+
+    .roadmap-section { padding: 100px 0; background: #FFFFFF; }
+    .roadmap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; max-width: 960px; margin: 48px auto 44px; }
+    .roadmap-col h3 { font-size: 1.35rem; color: var(--navy); padding-bottom: 14px; border-bottom: 1px solid rgba(15, 76, 70, 0.16); margin-bottom: 6px; }
+    .roadmap-col ul { list-style: none; margin: 0; padding: 0; }
+    .roadmap-col li { display: flex; gap: 12px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid rgba(15, 76, 70, 0.08); font-size: 1rem; line-height: 1.55; color: var(--text); }
+    .roadmap-col li .ico { color: var(--primary); margin-top: 3px; }
+    .roadmap-col + .roadmap-col li .ico { color: var(--apricot-ink); }
+    @media (max-width: 768px) {
+      .roadmap-section { padding: 64px 0; }
+      .roadmap-grid { grid-template-columns: 1fr; gap: 28px; margin: 28px auto 32px; }
+    }
   </style>
 </head>
 
@@ -2474,48 +2543,43 @@
   <section class="hero" id="hero">
     <div class="container">
       <div class="hero-content">
-        <div class="badge-pill">
-          <span>✦</span> Chăm sóc người cao tuổi tại nhà
-        </div>
         <h1 class="hero-title">
           Bạn ở xa.<br>
           <em>Sự quan tâm vẫn ở gần.</em>
         </h1>
         <p class="hero-subtitle">
-          HomaCare kết nối gia đình với chuyên viên chăm sóc tại địa phương, sắp xếp những buổi đồng hành bên người thân
-          và ghi nhận hoạt động sau mỗi ca. Để cha mẹ được hỗ trợ trong ngôi nhà quen thuộc, còn bạn vẫn có thể dõi theo
-          từ xa.
+          Những tối bạn không về kịp, HomaCare sắp xếp một chuyên viên ở gần đến nhà phụ bữa tối, đi dạo và trò chuyện cùng cha mẹ. Hết buổi, bạn nhận nhật ký kể lại buổi hôm đó.
         </p>
         <div class="hero-slogan-pill">
           Gửi trọn quan tâm, vẹn tròn đạo hiếu.
         </div>
         <div class="hero-actions">
           <a href="auth.html?role=family&booking=1" class="btn btn-apricot">
-            Đặt ca Ân cần →
+            Đặt ca chăm sóc →
           </a>
           <a href="#how-it-works" class="btn btn-secondary">
             Xem cách sử dụng
           </a>
         </div>
         <div class="hero-trust-line">
-          <span><b style="color:var(--primary);">✓</b> Hỗ trợ tại nhà</span>
+          <span><span class="trust-check"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Đến tận nhà</span>
           <span>·</span>
-          <span><b style="color:var(--primary);">✓</b> Có điều phối viên</span>
+          <span><span class="trust-check"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Có người điều phối</span>
           <span>·</span>
-          <span><b style="color:var(--primary);">✓</b> Nhật ký sau ca</span>
+          <span><span class="trust-check"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Nhật ký sau mỗi buổi</span>
         </div>
       </div>
 
       <!-- SCREEN SWITCHER TABS -->
       <div class="hero-screen-tabs">
         <button class="screen-tab active" data-screen="0" onclick="switchHeroScreen(0)">
-          <span>📋</span> Lịch chăm sóc
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 11h18m-12 4h2m4 0h2m-8 3h2"/></svg> Lịch chăm sóc
         </button>
         <button class="screen-tab" data-screen="1" onclick="switchHeroScreen(1)">
-          <span>🔍</span> Xem lại yêu cầu
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg> Xem lại yêu cầu
         </button>
         <button class="screen-tab" data-screen="2" onclick="switchHeroScreen(2)">
-          <span>📖</span> Nhật ký chăm sóc
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5c-3-2-6-2-9-1v16c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1Zm0 0v16"/></svg> Nhật ký chăm sóc
         </button>
       </div>
 
@@ -2534,7 +2598,7 @@
           </p>
           <div
             style="margin-top:12px; font-size:0.9rem; font-weight:700; color:var(--primary); border-top:1px dashed var(--border); padding-top:8px;">
-            📍 Bác Trần Văn An (75t)
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Bác Trần Văn An (75t)
           </div>
         </div>
 
@@ -2546,7 +2610,7 @@
           <div class="iphone-device hero-main-device" onclick="openRoleModal()">
             <div class="status-bar">
               <span>9:41</span>
-              <div class="status-icons">●●● 5G 🔋</div>
+              <div class="status-icons" aria-hidden="true"><svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg viewBox="0 0 16 12"><path d="M8 2.2c2.4 0 4.6.9 6.2 2.5l1.3-1.4A10.6 10.6 0 0 0 8 .3 10.6 10.6 0 0 0 .5 3.3l1.3 1.4A8.7 8.7 0 0 1 8 2.2zm0 3.7c1.4 0 2.7.5 3.6 1.4l1.3-1.4A7 7 0 0 0 8 4 7 7 0 0 0 3.1 5.9l1.3 1.4c.9-.9 2.2-1.4 3.6-1.4zm0 3.6c-.6 0-1.1.2-1.4.6L8 11.7l1.4-1.6c-.3-.4-.8-.6-1.4-.6z"/></svg><svg viewBox="0 0 27 12"><rect x=".5" y=".5" width="23" height="11" rx="3" fill="none" stroke="currentColor" opacity=".45"/><rect x="2" y="2" width="20" height="8" rx="1.8"/><rect x="24.6" y="4" width="1.6" height="4" rx=".8" opacity=".45"/></svg></div>
             </div>
             <div class="dynamic-island">
               <div class="island-lens"></div>
@@ -2564,11 +2628,11 @@
               </div>
               <div class="screen-body">
                 <div style="font-size:11px; color:var(--text-muted); text-align:right;">Minh họa giao diện</div>
-                <div class="mini-card" style="border-left: 4px solid var(--primary);">
+                <div class="mini-card">
                   <div style="font-size: 12px; color: var(--text-muted);">Người thân nhận chăm sóc</div>
                   <strong style="font-size: 15px; color: var(--navy); display:block; margin-top:2px;">Bác Trần Văn An
                     (75t)</strong>
-                  <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">📍 Đống Đa, Hà Nội</div>
+                  <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg> Đống Đa, Hà Nội</div>
                 </div>
 
                 <div class="mini-card">
@@ -2612,9 +2676,9 @@
               </div>
               <div class="screen-body">
                 <div style="font-size:11px; color:var(--text-muted); text-align:right;">Minh họa giao diện</div>
-                <div class="mini-card" style="border-left: 4px solid var(--apricot);">
+                <div class="mini-card">
                   <strong style="font-size:15px; color:var(--navy); display:block;">Gói Ân cần · 4 giờ</strong>
-                  <div style="font-size:14px; color:var(--apricot); font-weight:700; margin-top:3px;">320.000đ / buổi
+                  <div style="font-size:14px; color:var(--apricot-ink); font-weight:700; margin-top:3px;">320.000đ / buổi
                   </div>
                   <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Khung giờ: 18:00 – 22:00</div>
                 </div>
@@ -2634,7 +2698,7 @@
                 </div>
 
                 <div
-                  style="background:var(--apricot); color:white; text-align:center; padding:12px; border-radius:12px; font-weight:700; font-size:13px; box-shadow:0 3px 10px rgba(242,140,104,0.3);">
+                  style="background:var(--apricot); color:var(--navy); text-align:center; padding:12px; border-radius:12px; font-weight:700; font-size:13px; box-shadow:0 3px 10px rgba(242,140,104,0.3);">
                   Xác nhận & gửi yêu cầu →
                 </div>
               </div>
@@ -2652,7 +2716,7 @@
               </div>
               <div class="screen-body">
                 <div style="font-size:11px; color:var(--text-muted); text-align:right;">Minh họa giao diện</div>
-                <div class="mini-card" style="border-left: 4px solid #10B981;">
+                <div class="mini-card">
                   <div style="display:flex; justify-content:space-between; align-items:center;">
                     <strong style="font-size:15px; color:var(--navy);">Nhật ký ca gần nhất</strong>
                     <span style="color:#F59E0B; font-size:13px;">★★★★★</span>
@@ -2664,10 +2728,10 @@
                   <strong style="font-size:13.5px; color:var(--navy);">Hoạt động ghi nhận:</strong>
                   <div
                     style="display:flex; flex-direction:column; gap:6px; margin-top:8px; font-size:12.5px; line-height:1.45;">
-                    <div>✓ <b>Bữa tối:</b> Bác dùng cơm ngon miệng</div>
-                    <div>✓ <b>Vận động:</b> Đi dạo 20 phút quanh sân</div>
-                    <div>✓ <b>Trò chuyện:</b> Tâm sự chuyện phố xưa</div>
-                    <div>✓ <b>An toàn:</b> Đã kiểm tra cửa & thiết bị</div>
+                    <div><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> <b>Bữa tối:</b> Bác dùng cơm ngon miệng</div>
+                    <div><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> <b>Vận động:</b> Đi dạo 20 phút quanh sân</div>
+                    <div><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> <b>Trò chuyện:</b> Tâm sự chuyện phố xưa</div>
+                    <div><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> <b>An toàn:</b> Đã kiểm tra cửa & thiết bị</div>
                   </div>
                   <div
                     style="margin-top:10px; background:#F8FAF9; padding:8px 10px; border-radius:8px; font-size:11.5px; border:1px solid rgba(15,76,70,0.06);">
@@ -2694,7 +2758,7 @@
             "Bác dùng bữa ngon miệng, tinh thần vui vẻ. Đã hoàn thành 4 hoạt động và kiểm tra an toàn trước khi ra về."
           </p>
           <div
-            style="margin-top:12px; font-size:0.9rem; font-weight:700; color:var(--apricot); border-top:1px dashed var(--border); padding-top:8px;">
+            style="margin-top:12px; font-size:0.9rem; font-weight:700; color:var(--apricot-ink); border-top:1px dashed var(--border); padding-top:8px;">
             Đánh giá của bạn: <span style="letter-spacing:1px; color:#F59E0B;">★★★★★</span>
           </div>
         </div>
@@ -2716,11 +2780,9 @@
   <section class="values-section" id="values">
     <div class="container">
       <div class="text-center">
-        <span class="section-eyebrow">Dõi theo từ xa</span>
-        <h2 class="section-title">Biết ai đồng hành. Biết ca diễn ra khi nào. Biết những điều cần lưu ý.</h2>
+        <h2 class="section-title">Không phải đoán xem hôm nay cha mẹ thế nào.</h2>
         <p class="section-desc">
-          Sự quan tâm cần những thông tin cụ thể. HomaCare giúp gia đình xem lịch, theo dõi trạng thái và đọc ghi nhận
-          sau buổi chăm sóc trong cùng một không gian.
+          Ai đến nhà, đến lúc nào, hôm nay cha mẹ ăn uống và vận động ra sao: bạn xem được hết trên điện thoại.
         </p>
       </div>
 
@@ -2728,9 +2790,8 @@
         <!-- Card 1 -->
         <div class="value-card value-card-featured">
           <div>
-            <span class="mini-tag tag-teal">Thông tin nhân sự</span>
-            <h3>Biết người đang đồng hành</h3>
-            <p>Xem tên chuyên viên sau khi điều phối viên phân công ca cho người thân.</p>
+            <h3>Ai sẽ đến nhà</h3>
+            <p>Khi điều phối viên phân công, tên chuyên viên hiện ngay trong lịch của bạn.</p>
           </div>
           <div class="value-visual-box">
             <b>Chuyên viên phụ trách:</b> Nguyễn Thanh Trúc<br>
@@ -2741,9 +2802,8 @@
         <!-- Card 2 -->
         <div class="value-card value-card-featured">
           <div>
-            <span class="mini-tag tag-apricot">Trạng thái ca</span>
-            <h3>Biết lịch đã được sắp xếp</h3>
-            <p>Theo dõi ngày, khung giờ và trạng thái từ chờ phân công đến hoàn thành.</p>
+            <h3>Buổi chăm sóc đang ở bước nào</h3>
+            <p>Mỗi ca hiện rõ đang chờ người nhận, đã có người, đang diễn ra hay đã xong.</p>
           </div>
           <div class="value-visual-box">
             <b>Tiến trình 4 bước:</b><br>
@@ -2756,12 +2816,11 @@
         <!-- Card 3 -->
         <div class="value-card value-card-featured">
           <div>
-            <span class="mini-tag tag-green">Báo cáo sau buổi</span>
-            <h3>Biết hôm nay có gì đáng chú ý</h3>
-            <p>Đọc hoạt động, ghi nhận chung và lưu ý cho lần tới sau khi chuyên viên gửi nhật ký.</p>
+            <h3>Hôm nay cha mẹ thế nào</h3>
+            <p>Hết buổi, chuyên viên gửi nhật ký: đã làm gì, cha mẹ vui hay mệt, lần sau cần lưu ý gì.</p>
           </div>
           <div class="value-visual-box">
-            <b>Nhật ký ca gần nhất:</b> Bữa tối ✓ Vận động ✓<br>
+            <b>Nhật ký ca gần nhất:</b> Bữa tối <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> Vận động <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg><br>
             <span style="color:var(--text-muted); font-size:0.8rem;">Ghi nhận: Bác cười nhiều, tinh thần thoải
               mái</span>
           </div>
@@ -2770,7 +2829,7 @@
 
       <div class="text-center" style="margin-top: 40px;">
         <a href="#how-it-works" class="btn btn-secondary">
-          Khám phá không gian gia đình ↓
+          Xem cách đặt một buổi ↓
         </a>
       </div>
     </div>
@@ -2783,32 +2842,26 @@
     <div class="container">
       <div class="story-layout">
         <div class="story-text">
-          <span class="section-eyebrow">Về HomaCare</span>
           <h2>Bắt đầu từ mong muốn được ở bên cha mẹ.</h2>
           <p>
             Có những ngày bạn chỉ kịp gọi về sau giờ làm. Có những điều cha mẹ cần giúp đỡ mà một cuộc gọi chưa thể làm
             thay: một bữa ăn, một buổi đi dạo hay một người ngồi lại lắng nghe.
           </p>
           <p>
-            HomaCare được hình thành từ trăn trở ấy. Chúng tôi phát triển nền tảng kết nối và điều phối chăm sóc người
-            cao tuổi tại nhà, giúp gia đình sắp xếp sự hỗ trợ tại địa phương và theo dõi những buổi đồng hành qua lịch
-            chăm sóc, nhật ký và phản hồi.
+            HomaCare là dự án của một nhóm sinh viên Đại học Kinh tế Quốc dân, bắt đầu từ chính chuyện đó. Chúng tôi tìm người ở gần nhà cha mẹ bạn, sắp lịch cho họ đến, rồi gửi lại cho bạn những gì đã diễn ra trong buổi.
           </p>
           <p class="story-extra">
-            Người cao tuổi được ở trong không gian quen thuộc, giữ những thói quen của mình. Người con có thêm một cách
-            tham gia vào việc chăm sóc, dù khoảng cách khiến việc có mặt thường xuyên trở nên khó khăn.
+            Cha mẹ vẫn ở nhà mình, giữ nếp sinh hoạt của mình. Còn bạn, dù ở xa, vẫn góp tay chăm lo được.
           </p>
 
           <div class="mission-vision-grid">
             <div class="mv-card">
               <strong>Sứ mệnh</strong>
-              <p style="font-size:0.9rem;">Giúp gia đình duy trì sự quan tâm từ xa, đồng thời hỗ trợ người cao tuổi sống
-                tự chủ và có người đồng hành ngay tại nhà.</p>
+              <p style="font-size:0.9rem;">Để người con ở xa vẫn chăm lo được cho cha mẹ, và cha mẹ có người bầu bạn ngay tại nhà mình.</p>
             </div>
             <div class="mv-card">
               <strong>Tầm nhìn</strong>
-              <p style="font-size:0.9rem;">Từng bước xây dựng mạng lưới chăm sóc tại địa phương có quy trình rõ ràng,
-                kết nối gia đình, chuyên viên và điều phối viên.</p>
+              <p style="font-size:0.9rem;">Một mạng lưới chuyên viên ở gần từng khu phố, làm việc theo quy trình rõ ràng, bắt đầu từ một khu vực ở Hà Nội.</p>
             </div>
           </div>
         </div>
@@ -2820,166 +2873,46 @@
 
       <!-- 4 Core Values -->
       <div class="text-center" style="margin-top:20px;">
-        <span class="section-eyebrow">Giá trị cốt lõi</span>
-        <h3 style="font-size: 1.8rem; margin-bottom: 24px;">4 Giá trị định hướng mọi hoạt động của HomaCare</h3>
+        <h3 style="font-size: 1.8rem; margin-bottom: 24px;">Bốn điều HomaCare luôn giữ</h3>
       </div>
       <div class="core-values-grid">
         <div class="core-val-card">
           <div class="val-card-header">
-            <span class="val-icon">🌱</span>
-            <span class="val-num">01</span>
+            <span class="val-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg></span>
           </div>
           <strong>Tận tâm</strong>
-          <p>Lắng nghe nhu cầu của người cao tuổi và gia đình.</p>
+          <p>Hỏi kỹ cha mẹ cần gì, thích gì trước khi bắt tay vào việc.</p>
         </div>
         <div class="core-val-card">
           <div class="val-card-header">
-            <span class="val-icon">🤝</span>
-            <span class="val-num">02</span>
+            <span class="val-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m2-16a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 5v2"/></svg></span>
           </div>
           <strong>Tôn trọng</strong>
-          <p>Đề cao sự đồng ý, thói quen và khả năng tự chủ của người được chăm sóc.</p>
+          <p>Cha mẹ đồng ý mới làm. Giữ thói quen, để cha mẹ tự làm những việc còn tự làm được.</p>
         </div>
         <div class="core-val-card">
           <div class="val-card-header">
-            <span class="val-icon">📋</span>
-            <span class="val-num">03</span>
+            <span class="val-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H5v18h14V8l-5-5Z"/><path d="M14 3v5h5M8 12h8m-8 4h6"/></svg></span>
           </div>
           <strong>Rõ ràng</strong>
-          <p>Minh bạch về nội dung hỗ trợ, lịch và ghi nhận sau ca.</p>
+          <p>Nói trước sẽ làm gì, vào giờ nào, và ghi lại sau mỗi buổi.</p>
         </div>
         <div class="core-val-card">
           <div class="val-card-header">
-            <span class="val-icon">🛡️</span>
-            <span class="val-num">04</span>
+            <span class="val-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4v5c0 5-8 9-8 9s-8-4-8-9V7l8-4Z"/><path d="m8 12 3 3 5-6"/></svg></span>
           </div>
           <strong>Có trách nhiệm</strong>
-          <p>Xác định phạm vi công việc và tiếp nhận phản hồi để cải thiện.</p>
+          <p>Làm đúng phần việc đã thống nhất, nhận góp ý để làm tốt hơn.</p>
         </div>
       </div>
     </div>
   </section>
   </div>
 
-  <!-- =====================================================================
-       05A. TÍNH NĂNG NỔI BẬT (ghép từ bản 3)
-       ===================================================================== -->
-  <section class="bento-section" id="features">
-    <div class="container">
-      <div class="text-center">
-        <span class="section-eyebrow">Công nghệ vì con người</span>
-        <h2 class="section-title">Năng lực công nghệ phục vụ yêu thương</h2>
-        <p class="section-desc" style="max-width: 720px;">
-          Các tính năng thiết thực trên Webapp HomaCare được xây dựng để giảm bớt âu lo cho người ở xa, kết nối gia đình
-          và chuyên viên thành một vòng tròn đồng hành tin&nbsp;cậy.
-        </p>
-      </div>
 
-      <div class="bento-grid">
 
-        <!-- BENTO CARD 1 (COL 2): NHẬT KÝ CHĂM SÓC -->
-        <div class="bento-card col-2">
-          <span class="bento-badge">Tính năng cốt lõi · Minh bạch sau ca</span>
-          <h3>Nhật ký chăm sóc trực quan sau ca</h3>
-          <p>
-            Sau mỗi ca, chuyên viên ghi
-            nhận 4 đầu việc cụ thể và gửi báo cáo để gia đình đọc lại ngay trên điện thoại.
-          </p>
-          <div class="bento-activity-preview">
-            <div class="bento-activity-tasks">
-              <b style="color:var(--primary); font-size:0.95rem; display:block; margin-bottom:8px;">4 Hoạt động được ghi nhận:</b>
-              <div class="bento-activity-list">
-                <div class="bento-act-item"><span>✓</span> Hỗ trợ bữa tối</div>
-                <div class="bento-act-item"><span>✓</span> Đồng hành vận động nhẹ</div>
-                <div class="bento-act-item"><span>✓</span> Trò chuyện & nhắc lịch sinh hoạt</div>
-                <div class="bento-act-item"><span>✓</span> Kiểm tra an toàn trước khi kết thúc</div>
-              </div>
-            </div>
-            <div class="bento-activity-photo">
-              <img src="assets/photos/meal.jpg" alt="Bữa cơm ấm cúng">
-              <div class="bento-photo-badge">
-                Hình minh họa
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <!-- BENTO CARD 2: LIVE STATUS TRACKER -->
-        <div class="bento-card">
-          <span class="bento-badge">Theo dõi trạng thái</span>
-          <h3>Tiến trình ca minh bạch</h3>
-          <p>Biết chính xác yêu cầu đang ở bước nào và ai là người đồng hành.</p>
-          <div class="bento-live-tracker">
-            <div class="live-step-row">
-              <span class="live-step-dot" style="background:#10B981;"></span>
-              <span>1. Chờ phân công</span>
-            </div>
-            <div class="live-step-row">
-              <span class="live-step-dot active"></span>
-              <span style="color:var(--primary);">2. Đã phân công (Nguyễn Thanh Trúc)</span>
-            </div>
-            <div class="live-step-row">
-              <span class="live-step-dot"></span>
-              <span style="color:var(--text-light);">3. Đang chăm sóc tại nhà</span>
-            </div>
-            <div class="live-step-row">
-              <span class="live-step-dot"></span>
-              <span style="color:var(--text-light);">4. Hoàn thành & gửi nhật ký</span>
-            </div>
-          </div>
-        </div>
 
-        <!-- BENTO CARD 3: HỒ SƠ THÓI QUEN CÁ NHÂN HÓA -->
-        <div class="bento-card">
-          <span class="bento-badge">Cá nhân hóa</span>
-          <h3>Hồ sơ thói quen người thân</h3>
-          <p>
-            Mỗi người già có một nếp sống riêng. HomaCare lưu thói quen uống trà, món ăn yêu thích, giờ giấc đi dạo để
-            chuyên viên chăm sóc phù hợp với nếp sống của người thân.
-          </p>
-          <div
-            style="margin-top:16px; background:#FFFFFF; padding:14px; border-radius:12px; border:1px solid var(--border); font-size:0.88rem;">
-            <div>🍵 <b>Thói quen:</b> Thích dùng trà sen sau bữa tối</div>
-            <div style="margin-top:6px;">🚶 <b>Vận động:</b> Đi dạo sân vườn 15-20 phút</div>
-            <div style="margin-top:6px;">📰 <b>Sở thích:</b> Nghe đọc báo thời sự buổi tối</div>
-          </div>
-        </div>
-
-        <!-- BENTO CARD 4 (COL 2): PHÂN QUYỀN 3 VAI TRÒ -->
-        <div class="bento-card col-2">
-          <span class="bento-badge">Hệ sinh thái đồng bộ</span>
-          <h3>3 Không gian làm việc riêng biệt cho 3 bên</h3>
-          <p>
-            Gia đình, Chuyên viên và Điều phối viên có không gian thao tác riêng để cùng đồng hành với thông tin rõ ràng.
-          </p>
-          <div class="bento-roles-grid">
-            <div class="bento-role-card">
-              <span class="role-card-icon">🏡</span>
-              <div class="role-card-text">
-                <b class="role-card-title">Gia đình</b>
-                <span class="role-card-desc">Đặt lịch, xem phân công & đọc nhật ký sau ca.</span>
-              </div>
-            </div>
-            <div class="bento-role-card">
-              <span class="role-card-icon">🤝</span>
-              <div class="role-card-text">
-                <b class="role-card-title">Chuyên viên</b>
-                <span class="role-card-desc">Xem ca được giao, ghi chép 4 hoạt động & báo cáo.</span>
-              </div>
-            </div>
-            <div class="bento-role-card">
-              <span class="role-card-icon">🛡️</span>
-              <div class="role-card-text">
-                <b class="role-card-title">Điều phối</b>
-                <span class="role-card-desc">Tiếp nhận yêu cầu, xếp lịch và hỗ trợ các ca.</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
 
   <!-- =====================================================================
        05. TRẢI NGHIỆM ỨNG DỤNG (6 BƯỚC CỦA GIA ĐÌNH)
@@ -2987,18 +2920,16 @@
   <section class="journey-section" id="how-it-works">
     <div class="container">
       <div class="text-center">
-        <span class="section-eyebrow">Cách sử dụng</span>
         <h2 class="section-title">Từ lịch hẹn đầu tiên đến nhật ký sau ca.</h2>
         <p class="section-desc">
-          Thêm người thân, gửi yêu cầu và dõi theo từng buổi đồng hành. Các thông tin chăm sóc được tập hợp trong không
-          gian gia đình để bạn thuận tiện xem lại. Bấm vào từng bước để xem minh họa màn hình.
+          Sáu bước, từ lúc tạo tài khoản đến lúc đặt buổi tiếp theo. Bấm vào từng bước để xem màn hình tương ứng.
         </p>
       </div>
 
       <div class="journey-split">
         <!-- 6 Clickable Step Buttons -->
         <div class="steps-list" id="stepsList">
-          <p class="journey-tap-hint"><span aria-hidden="true">👆</span> Chạm vào từng bước để xem màn hình minh họa</p>
+          <p class="journey-tap-hint">Chạm vào từng bước để xem màn hình minh họa</p>
 
           <div class="step-item-btn active" onclick="selectJourneyStep(0)">
             <span class="step-num">1</span>
@@ -3010,8 +2941,7 @@
                   <span class="mobile-step-toggle-hint">Đang xem minh họa ▴</span>
                 </div>
               </div>
-              <p>Bắt đầu bằng tài khoản của bạn. Chọn vai trò Gia đình, đăng ký và xác nhận email để vào không gian chăm
-                sóc.</p>
+              <p>Chọn vai trò Gia đình, đăng ký bằng email của bạn rồi xác nhận qua thư HomaCare gửi.</p>
             </div>
           </div>
 
@@ -3025,8 +2955,7 @@
                   <span class="mobile-step-toggle-hint">Bấm để xem minh họa ▾</span>
                 </div>
               </div>
-              <p>Cho HomaCare biết người thân cần được đồng hành như thế nào. Lưu thông tin cơ bản, khu vực chăm sóc,
-                thói quen và mong muốn.</p>
+              <p>Ghi tên, tuổi, khu vực của cha mẹ, cùng những thói quen và mong muốn chuyên viên nên biết.</p>
             </div>
           </div>
 
@@ -3040,8 +2969,7 @@
                   <span class="mobile-step-toggle-hint">Bấm để xem minh họa ▾</span>
                 </div>
               </div>
-              <p>Chọn người thân, ngày chăm sóc và những điều cần lưu ý. Xem lại thông tin, thời lượng và giá
-                (320.000đ/buổi) trước khi gửi yêu cầu.</p>
+              <p>Chọn ngày và ghi điều cần lưu ý. Trước khi gửi, bạn xem lại giờ, thời lượng và giá 320.000đ/buổi.</p>
             </div>
           </div>
 
@@ -3055,8 +2983,7 @@
                   <span class="mobile-step-toggle-hint">Bấm để xem minh họa ▾</span>
                 </div>
               </div>
-              <p>Xem yêu cầu đang ở bước nào (Chờ phân công → Đã phân công → Đang chăm sóc → Hoàn thành). Tên chuyên
-                viên sẽ xuất hiện trong lịch.</p>
+              <p>Ca đi từ Chờ phân công → Đã phân công → Đang chăm sóc → Hoàn thành. Có người nhận là tên chuyên viên hiện trong lịch.</p>
             </div>
           </div>
 
@@ -3070,8 +2997,7 @@
                   <span class="mobile-step-toggle-hint">Bấm để xem minh họa ▾</span>
                 </div>
               </div>
-              <p>Hiểu thêm về buổi đồng hành của người thân. Đọc các hoạt động đã ghi nhận, những điều cần lưu ý và mong
-                muốn cho lần tiếp theo.</p>
+              <p>Đọc 4 việc chuyên viên đã làm, vài dòng về buổi hôm đó và điều cần lưu ý cho lần sau.</p>
             </div>
           </div>
 
@@ -3085,8 +3011,7 @@
                   <span class="mobile-step-toggle-hint">Bấm để xem minh họa ▾</span>
                 </div>
               </div>
-              <p>Chia sẻ đánh giá từ 1 đến 5 sao của bạn sau ca. Khi cần thêm một buổi đồng hành, tạo yêu cầu mới ngay
-                trong không gian gia đình.</p>
+              <p>Chấm từ 1 đến 5 sao cho buổi vừa xong. Cần thêm buổi thì đặt tiếp ngay trong app.</p>
             </div>
           </div>
 
@@ -3094,11 +3019,11 @@
 
         <!-- Phone Mockup Displaying Selected Step (+ insight card, inline on mobile) -->
         <div class="journey-phone-container" id="journeyPhoneContainer">
-          <div class="mobile-demo-banner"><span>📱 Minh họa màn hình của bước này</span></div>
+          <div class="mobile-demo-banner"><span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18h2"/></svg> Minh họa màn hình của bước này</span></div>
           <div class="iphone-device journey-device">
             <div class="status-bar">
               <span>9:41</span>
-              <div class="status-icons">●●● 5G 🔋</div>
+              <div class="status-icons" aria-hidden="true"><svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg viewBox="0 0 16 12"><path d="M8 2.2c2.4 0 4.6.9 6.2 2.5l1.3-1.4A10.6 10.6 0 0 0 8 .3 10.6 10.6 0 0 0 .5 3.3l1.3 1.4A8.7 8.7 0 0 1 8 2.2zm0 3.7c1.4 0 2.7.5 3.6 1.4l1.3-1.4A7 7 0 0 0 8 4 7 7 0 0 0 3.1 5.9l1.3 1.4c.9-.9 2.2-1.4 3.6-1.4zm0 3.6c-.6 0-1.1.2-1.4.6L8 11.7l1.4-1.6c-.3-.4-.8-.6-1.4-.6z"/></svg><svg viewBox="0 0 27 12"><rect x=".5" y=".5" width="23" height="11" rx="3" fill="none" stroke="currentColor" opacity=".45"/><rect x="2" y="2" width="20" height="8" rx="1.8"/><rect x="24.6" y="4" width="1.6" height="4" rx=".8" opacity=".45"/></svg></div>
             </div>
             <div class="dynamic-island">
               <div class="island-lens"></div>
@@ -3180,21 +3105,21 @@
               </div>
               <div class="screen-body">
                 <div>
-                  <span class="mini-tag tag-apricot">Đặt ca Ân cần</span>
+                  <span class="mini-tag tag-apricot">Đặt ca chăm sóc</span>
                   <strong style="font-size:15px; color:var(--navy); display:block; margin-top:4px;">Xem lại yêu cầu ca
                     chăm sóc</strong>
                 </div>
                 <div class="mini-card"
                   style="font-size:12.5px; display:flex; flex-direction:column; gap:6px; line-height:1.45;">
                   <div><b>Khung giờ:</b> 18:00 – 22:00 (4 giờ)</div>
-                  <div><b>Giá buổi:</b> <span style="color:var(--apricot); font-weight:700;">320.000đ</span></div>
+                  <div><b>Giá buổi:</b> <span style="color:var(--apricot-ink); font-weight:700;">320.000đ</span></div>
                   <div><b>Lưu ý:</b> Hỗ trợ bữa tối & đi dạo 20p</div>
                 </div>
                 <p style="font-size:11.5px; color:var(--text-muted); line-height:1.45;">
                   Bạn chưa cần thanh toán tại bước này. Điều phối viên sẽ tiếp nhận và sắp xếp chuyên viên.
                 </p>
                 <div
-                  style="margin-top:auto; background:var(--apricot); color:white; padding:12px; border-radius:12px; text-align:center; font-weight:700; font-size:13px; box-shadow:0 3px 10px rgba(242,140,104,0.3);">
+                  style="margin-top:auto; background:var(--apricot); color:var(--navy); padding:12px; border-radius:12px; text-align:center; font-weight:700; font-size:13px; box-shadow:0 3px 10px rgba(242,140,104,0.3);">
                   Xác nhận & gửi yêu cầu
                 </div>
               </div>
@@ -3217,9 +3142,9 @@
                     cầu</strong>
                 </div>
                 <div class="mini-card" style="font-size:12.5px; display:flex; flex-direction:column; gap:8px;">
-                  <div style="color:var(--primary); font-weight:700;">✓ Chờ phân công</div>
-                  <div style="color:var(--primary); font-weight:700;">✓ Đã phân công: Nguyễn Thanh Trúc</div>
-                  <div style="color:#10B981; font-weight:700;">● Đang chăm sóc tại nhà</div>
+                  <div style="color:var(--primary); font-weight:700;"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> Chờ phân công</div>
+                  <div style="color:var(--primary); font-weight:700;"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> Đã phân công: Nguyễn Thanh Trúc</div>
+                  <div style="color:#0E7A52; font-weight:700;">● Đang chăm sóc tại nhà</div>
                   <div style="color:var(--text-light);">○ Hoàn thành & gửi nhật ký</div>
                 </div>
                 <div
@@ -3247,10 +3172,10 @@
                 </div>
                 <div class="mini-card"
                   style="font-size:12.5px; display:flex; flex-direction:column; gap:6px; line-height:1.45;">
-                  <div>✓ <b>Bữa tối:</b> Ăn ngon miệng</div>
-                  <div>✓ <b>Vận động:</b> Đi dạo sân vườn 20p</div>
-                  <div>✓ <b>Trò chuyện:</b> Nghe đọc báo thời sự</div>
-                  <div>✓ <b>An toàn:</b> Kiểm tra cửa & điện nước</div>
+                  <div><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> <b>Bữa tối:</b> Ăn ngon miệng</div>
+                  <div><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> <b>Vận động:</b> Đi dạo sân vườn 20p</div>
+                  <div><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> <b>Trò chuyện:</b> Nghe đọc báo thời sự</div>
+                  <div><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> <b>An toàn:</b> Kiểm tra cửa & điện nước</div>
                 </div>
                 <div
                   style="background:#F8FAF9; padding:8px 10px; border-radius:8px; font-size:11.5px; border:1px solid rgba(15,76,70,0.06);">
@@ -3291,8 +3216,8 @@
                   Đánh giá của bạn giúp HomaCare nâng cao chất lượng đồng hành.
                 </p>
                 <div
-                  style="margin-top:auto; background:var(--apricot); color:white; padding:12px; border-radius:12px; text-align:center; font-weight:700; font-size:13px; box-shadow:0 3px 10px rgba(242,140,104,0.3);">
-                  + Đặt ca Ân cần cho buổi tiếp theo
+                  style="margin-top:auto; background:var(--apricot); color:var(--navy); padding:12px; border-radius:12px; text-align:center; font-weight:700; font-size:13px; box-shadow:0 3px 10px rgba(242,140,104,0.3);">
+                  + Đặt ca chăm sóc cho buổi tiếp theo
                 </div>
               </div>
               <div class="screen-bottom-bar"></div>
@@ -3303,7 +3228,7 @@
           <div class="step-insight-card" id="stepInsightCard">
             <b>Điều bạn nên biết ở bước này:</b>
             <p id="stepInsightText">
-              Mỗi vai trò có không gian riêng. Quyền xem dữ liệu được kiểm tra trên máy chủ, không chỉ dựa vào giao diện.
+              Tài khoản gia đình chỉ xem được hồ sơ và lịch của chính gia đình mình. Quyền này được kiểm tra trên máy chủ.
             </p>
           </div>
         </div>
@@ -3318,45 +3243,222 @@
   </section>
 
   <!-- =====================================================================
+       05A. TÍNH NĂNG NỔI BẬT (ghép từ bản 3)
+       ===================================================================== -->
+  <section class="bento-section" id="features">
+    <div class="container">
+      <div class="text-center">
+        <h2 class="section-title">Mọi buổi chăm sóc, gói gọn trong điện thoại của bạn</h2>
+        <p class="section-desc" style="max-width: 720px;">
+          Lịch, người đến, nhật ký và thói quen của cha mẹ nằm cùng một chỗ. Mỗi người vào đúng phần việc của mình.
+        </p>
+      </div>
+
+      <div class="bento-grid">
+
+        <!-- BENTO CARD 1 (COL 2): NHẬT KÝ CHĂM SÓC -->
+        <div class="bento-card col-2">
+          <h3>Nhật ký sau mỗi buổi</h3>
+          <p>
+            Chuyên viên đánh dấu 4 việc đã làm và viết vài dòng về buổi hôm đó. Bạn đọc ngay trên điện thoại.
+          </p>
+          <div class="bento-activity-preview">
+            <div class="bento-activity-tasks">
+              <b style="color:var(--primary); font-size:0.95rem; display:block; margin-bottom:8px;">4 việc trong mỗi buổi:</b>
+              <div class="bento-activity-list">
+                <div class="bento-act-item"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> Hỗ trợ bữa tối</div>
+                <div class="bento-act-item"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> Đồng hành vận động nhẹ</div>
+                <div class="bento-act-item"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> Trò chuyện & nhắc lịch sinh hoạt</div>
+                <div class="bento-act-item"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> Kiểm tra an toàn trước khi kết thúc</div>
+              </div>
+            </div>
+            <div class="bento-activity-photo">
+              <img src="assets/photos/meal.jpg" alt="Bữa cơm ấm cúng">
+              <div class="bento-photo-badge">
+                Hình minh họa
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BENTO CARD 2: LIVE STATUS TRACKER -->
+        <div class="bento-card">
+          <h3>Biết ca đang ở bước nào</h3>
+          <p>Từ lúc gửi yêu cầu đến lúc nhận nhật ký, bạn thấy ca đang ở đâu và ai nhận.</p>
+          <div class="bento-live-tracker">
+            <div class="live-step-row">
+              <span class="live-step-dot" style="background:#10B981;"></span>
+              <span>1. Chờ phân công</span>
+            </div>
+            <div class="live-step-row">
+              <span class="live-step-dot active"></span>
+              <span style="color:var(--primary);">2. Đã phân công (Nguyễn Thanh Trúc)</span>
+            </div>
+            <div class="live-step-row">
+              <span class="live-step-dot"></span>
+              <span style="color:var(--text-light);">3. Đang chăm sóc tại nhà</span>
+            </div>
+            <div class="live-step-row">
+              <span class="live-step-dot"></span>
+              <span style="color:var(--text-light);">4. Hoàn thành & gửi nhật ký</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- BENTO CARD 3: HỒ SƠ THÓI QUEN CÁ NHÂN HÓA -->
+        <div class="bento-card">
+          <h3>Hồ sơ thói quen người thân</h3>
+          <p>
+            Cha mẹ thích trà sen sau bữa tối hay đi dạo lúc mấy giờ? Bạn ghi một lần, chuyên viên đọc trước mỗi buổi.
+          </p>
+          <div class="habit-list">
+            <div><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h13v5a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6V9Z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17M8 3c0 1.5 1.5 1.5 1.5 3M12 3c0 1.5 1.5 1.5 1.5 3"/></svg> <b>Thói quen:</b> Thích dùng trà sen sau bữa tối</div>
+            <div><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="14" cy="4" r="2"/><path d="m7 12 4-5 4 2 3 4m-7-6-1 7 4 3 1 5m-5-8-4 8"/></svg> <b>Vận động:</b> Đi dạo sân vườn 15-20 phút</div>
+            <div><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h13v14H6a2 2 0 0 1-2-2V5Z"/><path d="M17 9h3v8a2 2 0 0 1-2 2M8 9h5M8 13h5M8 16h3"/></svg> <b>Sở thích:</b> Nghe đọc báo thời sự buổi tối</div>
+          </div>
+        </div>
+
+        <!-- BENTO CARD 4 (COL 2): PHÂN QUYỀN 3 VAI TRÒ -->
+        <div class="bento-card col-2">
+          <h3>Mỗi người một màn hình riêng</h3>
+          <p>
+            Gia đình, chuyên viên và điều phối viên đăng nhập vào phần của mình và chỉ thấy đúng việc của mình.
+          </p>
+          <div class="bento-roles-grid">
+            <div class="bento-role-card">
+              <span class="role-card-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3V10Z"/><path d="M9 20v-7h6v7"/></svg></span>
+              <div class="role-card-text">
+                <b class="role-card-title">Gia đình</b>
+                <span class="role-card-desc">Đặt lịch, xem phân công & đọc nhật ký sau ca.</span>
+              </div>
+            </div>
+            <div class="bento-role-card">
+              <span class="role-card-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m2-16a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 5v2"/></svg></span>
+              <div class="role-card-text">
+                <b class="role-card-title">Chuyên viên</b>
+                <span class="role-card-desc">Xem ca được giao, ghi chép 4 hoạt động & báo cáo.</span>
+              </div>
+            </div>
+            <div class="bento-role-card">
+              <span class="role-card-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4v5c0 5-8 9-8 9s-8-4-8-9V7l8-4Z"/><path d="m8 12 3 3 5-6"/></svg></span>
+              <div class="role-card-text">
+                <b class="role-card-title">Điều phối</b>
+                <span class="role-card-desc">Tiếp nhận yêu cầu, xếp lịch và hỗ trợ các ca.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       07. BA BÊN CÙNG ĐỒNG HÀNH
+       ===================================================================== -->
+  <section class="roles-section" id="roles">
+    <div class="container">
+      <div class="text-center">
+        <h2 class="section-title">Ai làm việc gì trong một buổi chăm sóc</h2>
+        <p class="section-desc">
+          Gia đình đặt lịch, điều phối viên tìm người, chuyên viên đến nhà và ghi nhật ký.
+        </p>
+      </div>
+
+      <!-- 3 Role Tabs -->
+      <div class="role-tabs">
+        <button class="role-tab-btn active" onclick="switchRoleCard(0)">Gia đình</button>
+        <button class="role-tab-btn" onclick="switchRoleCard(1)">Chuyên viên chăm sóc</button>
+        <button class="role-tab-btn" onclick="switchRoleCard(2)">Điều phối viên</button>
+      </div>
+
+      <!-- Role Display 1: Gia đình -->
+      <div class="role-card-display" id="role-display-0">
+        <h3 style="font-size: 1.5rem; margin: 10px 0 6px;">Đặt lịch và dõi theo cha mẹ.</h3>
+        <p style="font-size: 1rem; margin-bottom: 20px;">
+          Thêm hồ sơ cha mẹ, gửi yêu cầu, xem ai được phân công, đọc nhật ký và chấm sao sau mỗi buổi.
+        </p>
+        <div
+          style="background:#FFFFFF; border-radius:12px; padding:18px; border:1px solid var(--border); margin-bottom:24px;">
+          <b>Thao tác có trong app:</b> Thêm người thân → Gửi yêu cầu → Xem lịch và phân công → Đọc nhật ký gần nhất →
+          Đánh giá ca.
+        </div>
+        <a href="auth.html?role=family" class="btn btn-primary">
+          Vào không gian gia đình →
+        </a>
+      </div>
+
+      <!-- Role Display 2: Chuyên viên -->
+      <div class="role-card-display" id="role-display-1" style="display:none;">
+        <h3 style="font-size: 1.5rem; margin: 10px 0 6px;">Nhận ca và ghi lại buổi chăm sóc.</h3>
+        <p style="font-size: 1rem; margin-bottom: 20px;">
+          Xem ca được giao, đọc lưu ý về người thân, bấm bắt đầu khi đến nơi, đánh dấu 4 việc và gửi nhật ký.
+        </p>
+        <div
+          style="background:#FFFFFF; border-radius:12px; padding:18px; border:1px solid var(--border); margin-bottom:24px;">
+          <b>Bốn hoạt động chuyên viên ghi nhận:</b> Hỗ trợ bữa tối · Đồng hành vận động nhẹ · Trò chuyện & nhắc lịch
+          sinh hoạt · Kiểm tra an toàn trước khi kết thúc.
+        </div>
+        <a href="auth.html?role=caregiver" class="btn btn-primary">
+          Vào không gian chuyên viên →
+        </a>
+      </div>
+
+      <!-- Role Display 3: Điều phối viên -->
+      <div class="role-card-display" id="role-display-2" style="display:none;">
+        <h3 style="font-size: 1.5rem; margin: 10px 0 6px;">Nhận yêu cầu và tìm người phù hợp.</h3>
+        <p style="font-size: 1rem; margin-bottom: 20px;">
+          Xem các ca đang chờ, chọn chuyên viên còn trống lịch và theo dõi ca cho đến khi xong.
+        </p>
+        <div
+          style="background:#FFFFFF; border-radius:12px; padding:18px; border:1px solid var(--border); margin-bottom:24px;">
+          <b>Thao tác có trong app:</b> Xem danh sách ca → Lọc Chờ phân công → Chọn chuyên viên trống lịch → Xác nhận
+          phân công → Theo dõi tiến độ ca.
+        </div>
+        <a href="auth.html?role=coordinator" class="btn btn-secondary">
+          Đăng nhập điều phối →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
        06. DỊCH VỤ VÀ GÓI CHĂM SÓC
        ===================================================================== -->
   <section class="services-section" id="services">
     <div class="container">
       <div class="text-center services-intro">
-        <span class="section-eyebrow">Đồng hành tại nhà</span>
         <h2 class="section-title">Quan tâm từ những sinh hoạt mỗi ngày.</h2>
         <p class="section-desc">
-          Một người lắng nghe, một bữa ăn được hỗ trợ, một buổi vận động nhẹ phù hợp. HomaCare tập trung vào sự đồng
-          hành và hỗ trợ sinh hoạt của người cao tuổi tại nhà.
+          Chuyên viên không làm thay bác sĩ. Họ ở bên cha mẹ trong những việc thường ngày.
         </p>
       </div>
 
       <!-- 4 Service Highlights -->
       <div class="services-4grid">
         <div class="service-mini-card">
-          <div style="font-size:1.8rem; margin-bottom:8px;">💬</div>
+          <span class="svc-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/></svg></span>
           <strong>Trò chuyện và đồng hành</strong>
-          <p>Lắng nghe, đọc sách và cùng tham gia hoạt động quen thuộc theo sở thích của người thân.</p>
+          <p>Nói chuyện, đọc báo, đọc sách hay chơi cờ, tùy cha mẹ thích gì.</p>
         </div>
         <div class="service-mini-card">
-          <div style="font-size:1.8rem; margin-bottom:8px;">🍲</div>
+          <span class="svc-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3v6c0 3 4 3 4 0V3M7 3v18M19 3c-4 2-4 8 0 9v9M19 3v9"/></svg></span>
           <strong>Bữa ăn và sinh hoạt</strong>
-          <p>Hỗ trợ chuẩn bị hoặc dùng bữa, sinh hoạt cá nhân cơ bản theo nhu cầu đã thống nhất.</p>
+          <p>Phụ chuẩn bị bữa, cùng ăn và giúp những việc sinh hoạt cơ bản đã thống nhất trước.</p>
         </div>
         <div class="service-mini-card">
-          <div style="font-size:1.8rem; margin-bottom:8px;">🚶</div>
+          <span class="svc-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="14" cy="4" r="2"/><path d="m7 12 4-5 4 2 3 4m-7-6-1 7 4 3 1 5m-5-8-4 8"/></svg></span>
           <strong>Vận động nhẹ</strong>
-          <p>Đồng hành khi đi bộ và hỗ trợ di chuyển trong sinh hoạt, phù hợp với khả năng của người cao tuổi.</p>
+          <p>Đi bộ cùng cha mẹ, đỡ khi đi lại trong nhà, vừa sức với từng người.</p>
         </div>
         <div class="service-mini-card">
-          <div style="font-size:1.8rem; margin-bottom:8px;">📋</div>
+          <span class="svc-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H5v18h14V8l-5-5Z"/><path d="M14 3v5h5M8 12h8m-8 4h6"/></svg></span>
           <strong>Nhắc lịch và ghi nhận</strong>
-          <p>Nhắc lịch sinh hoạt, ghi lại các hoạt động và gửi nhật ký để gia đình theo dõi sau ca.</p>
+          <p>Nhắc giờ sinh hoạt, ghi lại việc đã làm và gửi nhật ký cho gia đình.</p>
         </div>
       </div>
 
       <div class="text-center services-mobile-heading">
-        <span class="section-eyebrow">Gói dịch vụ</span>
         <h2 class="section-title">Chăm sóc theo buổi tại nhà</h2>
       </div>
 
@@ -3366,7 +3468,6 @@
         <!-- GÓI NỔI BẬT: ÂN CẦN -->
         <div class="package-card featured">
           <div>
-            <span class="mini-tag tag-teal">Chăm sóc theo buổi</span>
             <h3 style="font-size: 1.8rem; margin-top: 8px;">Gói Ân cần</h3>
             <p style="font-size: 0.95rem; font-weight: 600; color: var(--navy); margin-top: 2px;">
               Một buổi tối có người đồng hành
@@ -3385,7 +3486,7 @@
 
           <div style="margin-top: 24px;">
             <a href="auth.html?role=family&booking=1" class="btn btn-apricot" style="width: 100%;">
-              Đặt ca Ân cần →
+              Đặt ca chăm sóc →
             </a>
             <p style="font-size: 0.78rem; text-align: center; color: var(--text-muted); margin-top: 8px;">
               Giá đề xuất cho giai đoạn thử nghiệm. Bạn được xem lại thông tin trước khi gửi yêu cầu.
@@ -3396,8 +3497,8 @@
         <!-- GÓI 2: CHĂM CHÚT (bản đầy đủ, chỉ hiện trên desktop) -->
         <div class="package-card package-detailed">
           <div>
-            <span class="mini-tag tag-apricot">Đang phát triển · Chưa mở đặt lịch trong app</span>
             <h3 style="font-size: 1.6rem; margin-top: 8px;">Gói Chăm chút</h3>
+            <p class="pkg-status">Đang phát triển · Chưa mở đặt lịch trong app</p>
             <p style="font-size: 0.9rem; margin-top: 4px;">
               Thêm thời gian hỗ trợ người thân trong các sinh hoạt ban ngày.
             </p>
@@ -3422,8 +3523,8 @@
         <!-- GÓI 3: THÂN TÌNH (bản đầy đủ, chỉ hiện trên desktop) -->
         <div class="package-card package-detailed">
           <div>
-            <span class="mini-tag tag-teal">Đang phát triển · Chưa mở đặt lịch trong app</span>
             <h3 style="font-size: 1.6rem; margin-top: 8px;">Gói Thân tình</h3>
+            <p class="pkg-status">Đang phát triển · Chưa mở đặt lịch trong app</p>
             <p style="font-size: 0.9rem; margin-top: 4px;">
               Định hướng đồng hành định kỳ để gia đình chủ động sắp xếp trong tháng.
             </p>
@@ -3447,15 +3548,15 @@
 
         <!-- GÓI 2: CHĂM CHÚT (bản rút gọn, chỉ hiện trên điện thoại) -->
         <div class="package-card package-upcoming">
-          <span class="mini-tag tag-apricot">Đang phát triển</span>
           <h3 style="font-size: 1.6rem; margin-top: 8px;">Gói Chăm chút</h3>
+          <p class="pkg-status">Đang phát triển</p>
           <p>Thông tin chi tiết sẽ được cập nhật khi gói sẵn sàng.</p>
         </div>
 
         <!-- GÓI 3: THÂN TÌNH (bản rút gọn, chỉ hiện trên điện thoại) -->
         <div class="package-card package-upcoming">
-          <span class="mini-tag tag-teal">Đang phát triển</span>
           <h3 style="font-size: 1.6rem; margin-top: 8px;">Gói Thân tình</h3>
+          <p class="pkg-status">Đang phát triển</p>
           <p>Thông tin chi tiết sẽ được cập nhật khi gói sẵn sàng.</p>
         </div>
 
@@ -3470,119 +3571,72 @@
   </section>
 
   <!-- =====================================================================
-       07. BA BÊN CÙNG ĐỒNG HÀNH
+       08. ĐỊNH HƯỚNG CHẤT LƯỢNG
        ===================================================================== -->
-  <section class="roles-section" id="roles">
+  <section class="quality-section">
     <div class="container">
       <div class="text-center">
-        <span class="section-eyebrow">Một hành trình kết nối</span>
-        <h2 class="section-title">Gia đình gửi gắm. Chuyên viên đồng hành. Điều phối viên sắp xếp.</h2>
+        <h2 class="section-title">Người đến nhà bạn là ai?</h2>
         <p class="section-desc">
-          Mỗi bên có một vai trò rõ ràng để yêu cầu chăm sóc được tiếp nhận, thực hiện và ghi nhận sau ca.
+          Đội ngũ chuyên viên đang trong giai đoạn xây dựng. Đây là cách HomaCare dự kiến chọn và hỗ trợ những người sẽ đến nhà cha mẹ bạn.
         </p>
       </div>
 
-      <!-- 3 Role Tabs -->
-      <div class="role-tabs">
-        <button class="role-tab-btn active" onclick="switchRoleCard(0)">Gia đình</button>
-        <button class="role-tab-btn" onclick="switchRoleCard(1)">Chuyên viên chăm sóc</button>
-        <button class="role-tab-btn" onclick="switchRoleCard(2)">Điều phối viên</button>
-      </div>
-
-      <!-- Role Display 1: Gia đình -->
-      <div class="role-card-display" id="role-display-0">
-        <span class="mini-tag tag-teal">Vai trò gia đình</span>
-        <h3 style="font-size: 1.5rem; margin: 10px 0 6px;">Chủ động sắp xếp và dõi theo người thân.</h3>
-        <p style="font-size: 1rem; margin-bottom: 20px;">
-          Gia đình có thể thêm hồ sơ người thân, gửi yêu cầu, theo dõi lịch và phân công, đọc nhật ký gần nhất và đánh
-          giá ca sau khi hoàn thành.
-        </p>
-        <div
-          style="background:#FFFFFF; border-radius:12px; padding:18px; border:1px solid var(--border); margin-bottom:24px;">
-          <b>Thao tác có trong app:</b> Thêm người thân → Gửi yêu cầu → Xem lịch và phân công → Đọc nhật ký gần nhất →
-          Đánh giá ca.
+      <div class="quality-grid">
+        <div class="quality-card">
+          <strong>Tuyển chọn phù hợp</strong>
+          <p>Dự kiến kiểm tra thông tin, kinh nghiệm và độ phù hợp với việc chăm sóc tại nhà trước khi nhận.</p>
         </div>
-        <a href="auth.html?role=family" class="btn btn-primary">
-          Vào không gian gia đình →
-        </a>
+        <div class="quality-card">
+          <strong>Đào tạo căn bản</strong>
+          <p>Dự kiến chương trình 30 giờ về giao tiếp, hỗ trợ sinh hoạt, vận động an toàn và nhận biết tình huống cần hỗ
+            trợ.</p>
+        </div>
+        <div class="quality-card">
+          <strong>Có đầu mối điều phối</strong>
+          <p>Mỗi ca đều có điều phối viên theo dõi, nên gia đình luôn biết cần hỏi ai.</p>
+        </div>
       </div>
 
-      <!-- Role Display 2: Chuyên viên -->
-      <div class="role-card-display" id="role-display-1" style="display:none;">
-        <span class="mini-tag tag-apricot">Vai trò chuyên viên</span>
-        <h3 style="font-size: 1.5rem; margin: 10px 0 6px;">Biết lịch được phân công, ghi lại từng buổi đồng hành.</h3>
-        <p style="font-size: 1rem; margin-bottom: 20px;">
-          Chuyên viên xem ca được phân công, đọc lưu ý của người thân, bắt đầu ca, ghi nhận 4 hoạt động và gửi báo cáo
-          nhật ký sau ca.
-        </p>
-        <div
-          style="background:#FFFFFF; border-radius:12px; padding:18px; border:1px solid var(--border); margin-bottom:24px;">
-          <b>Bốn hoạt động chuyên viên ghi nhận:</b> Hỗ trợ bữa tối · Đồng hành vận động nhẹ · Trò chuyện & nhắc lịch
-          sinh hoạt · Kiểm tra an toàn trước khi kết thúc.
-        </div>
-        <a href="auth.html?role=caregiver" class="btn btn-primary">
-          Vào không gian chuyên viên →
-        </a>
-      </div>
-
-      <!-- Role Display 3: Điều phối viên -->
-      <div class="role-card-display" id="role-display-2" style="display:none;">
-        <span class="mini-tag tag-teal">Vai trò điều phối viên</span>
-        <h3 style="font-size: 1.5rem; margin: 10px 0 6px;">Tiếp nhận yêu cầu và kết nối người đồng hành.</h3>
-        <p style="font-size: 1rem; margin-bottom: 20px;">
-          Điều phối viên tiếp nhận yêu cầu ca, kiểm tra lịch trống của chuyên viên, phân công ca và giám sát tiến trình
-          cho đến khi hoàn thành.
-        </p>
-        <div
-          style="background:#FFFFFF; border-radius:12px; padding:18px; border:1px solid var(--border); margin-bottom:24px;">
-          <b>Thao tác có trong app:</b> Xem danh sách ca → Lọc Chờ phân công → Chọn chuyên viên trống lịch → Xác nhận
-          phân công → Theo dõi tiến độ ca.
-        </div>
-        <a href="auth.html?role=coordinator" class="btn btn-secondary">
-          Đăng nhập điều phối →
+      <div class="text-center">
+        <a href="#contact" class="btn btn-secondary">
+          Hỏi thêm về đội ngũ →
         </a>
       </div>
     </div>
   </section>
 
   <!-- =====================================================================
-       08. ĐỊNH HƯỚNG CHẤT LƯỢNG
+       08B. LỘ TRÌNH: ĐÃ LÀM ĐƯỢC VÀ BƯỚC TIẾP THEO
        ===================================================================== -->
-  <section class="quality-section">
+  <section class="roadmap-section" id="roadmap">
     <div class="container">
       <div class="text-center">
-        <span class="section-eyebrow">Con người và quy trình</span>
-        <h2 class="section-title">Lắng nghe người thân. Rõ ràng từng bước chăm sóc.</h2>
+        <h2 class="section-title">Đã làm được gì, tiếp theo là gì.</h2>
         <p class="section-desc">
-          HomaCare hướng tới xây dựng đội ngũ biết lắng nghe, tôn trọng thói quen cá nhân và làm việc trong phạm vi hỗ
-          trợ đã thống nhất. Chúng tôi từng bước hoàn thiện quy trình tuyển chọn, đào tạo và tiếp nhận phản hồi để nâng
-          cao chất lượng đồng hành.
+          HomaCare đang ở giai đoạn sản phẩm mẫu. Đây là những gì đã chạy được và kế hoạch cho giai đoạn thử nghiệm.
         </p>
       </div>
-
-      <div class="quality-grid">
-        <div class="quality-card">
-          <span class="mini-tag tag-teal" style="margin-bottom:8px;">Tiêu chuẩn nhân sự</span>
-          <strong>Tuyển chọn phù hợp</strong>
-          <p>Định hướng kiểm tra thông tin, kinh nghiệm và mức độ phù hợp với công việc chăm sóc tại nhà.</p>
+      <div class="roadmap-grid">
+        <div class="roadmap-col">
+          <h3>Đã có</h3>
+          <ul>
+            <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg><span>Webapp chạy thật với 3 không gian riêng cho gia đình, chuyên viên và điều phối viên.</span></li>
+            <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg><span>Đặt được gói Ân cần, theo dõi 4 trạng thái ca, đọc nhật ký và chấm sao sau mỗi buổi.</span></li>
+            <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg><span>Quyền xem dữ liệu được kiểm tra trên máy chủ, có 28 bài kiểm thử tự động.</span></li>
+          </ul>
         </div>
-        <div class="quality-card">
-          <span class="mini-tag tag-apricot" style="margin-bottom:8px;">Nghiệp vụ căn bản</span>
-          <strong>Đào tạo căn bản</strong>
-          <p>Dự kiến chương trình 30 giờ về giao tiếp, hỗ trợ sinh hoạt, vận động an toàn và nhận biết tình huống cần hỗ
-            trợ.</p>
-        </div>
-        <div class="quality-card">
-          <span class="mini-tag tag-green" style="margin-bottom:8px;">Đầu mối hỗ trợ</span>
-          <strong>Có đầu mối điều phối</strong>
-          <p>Yêu cầu được tiếp nhận, ca được phân công và thông tin sau ca được ghi nhận để gia đình theo dõi.</p>
+        <div class="roadmap-col">
+          <h3>Tiếp theo</h3>
+          <ul>
+            <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>Thử nghiệm với gia đình và chuyên viên thật tại một khu vực ở Hà Nội.</span></li>
+            <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>Tuyển chọn chuyên viên, xây dựng chương trình đào tạo căn bản 30 giờ.</span></li>
+            <li><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>Mở đặt gói Chăm chút và Thân tình, thêm thanh toán trực tuyến và thông báo.</span></li>
+          </ul>
         </div>
       </div>
-
       <div class="text-center">
-        <a href="#contact" class="btn btn-secondary">
-          Trao đổi nhu cầu của gia đình →
-        </a>
+        <a href="auth.html?role=family" class="btn btn-primary">Dùng thử bản demo →</a>
       </div>
     </div>
   </section>
@@ -3593,7 +3647,6 @@
   <section class="faq-section" id="faq">
     <div class="container">
       <div class="text-center">
-        <span class="section-eyebrow">Câu hỏi thường gặp</span>
         <h2 class="section-title">Những điều bạn muốn biết trước buổi đồng hành.</h2>
       </div>
 
@@ -3607,9 +3660,7 @@
             </svg>
           </div>
           <div class="faq-answer">
-            HomaCare hướng tới gia đình có người cao tuổi cần thêm sự đồng hành hoặc hỗ trợ một phần sinh hoạt tại nhà,
-            trong khi người thân khó có mặt thường xuyên. Gia đình nên trao đổi nhu cầu cụ thể để xác định sự phù hợp
-            trước ca đầu tiên.
+            Gia đình có cha mẹ lớn tuổi cần thêm người bầu bạn hoặc giúp một phần việc sinh hoạt, trong khi con cái không ở gần. Trước ca đầu tiên, bạn nên trao đổi với HomaCare để xem có phù hợp không.
           </div>
         </div>
 
@@ -3720,8 +3771,7 @@
             </svg>
           </div>
           <div class="faq-answer">
-            HomaCare được định hướng thử nghiệm tại một khu vực ở Hà Nội và từng bước mở rộng. Bạn hãy cung cấp khu vực
-            chăm sóc khi liên hệ để đội ngũ xác nhận khả năng sắp xếp trước khi sử dụng dịch vụ.
+            Giai đoạn đầu, HomaCare dự kiến thử nghiệm ở một khu vực tại Hà Nội. Khi liên hệ, bạn cho biết địa chỉ của cha mẹ để chúng tôi xác nhận có sắp xếp được không.
           </div>
         </div>
       </div>
@@ -3736,20 +3786,19 @@
 
       <!-- Contact Box -->
       <div class="contact-box">
-        <span class="section-eyebrow">Trao đổi nhu cầu</span>
         <h2 style="font-size: clamp(2rem, 3.5vw, 2.8rem); margin-bottom: 12px;">
           Cùng trao đổi điều người thân đang cần.
         </h2>
         <p style="font-size: 1.05rem; max-width: 600px; margin: 0 auto;">
-          Chia sẻ khu vực, thói quen và mong muốn của gia đình. HomaCare sẽ cùng bạn trao đổi về buổi đồng hành phù hợp.
+          Kể cho chúng tôi nghe cha mẹ ở đâu, thích gì, cần giúp gì. HomaCare sẽ gợi ý buổi đồng hành phù hợp.
         </p>
 
         <div class="contact-buttons-row">
           <a href="tel:0338031425" class="btn btn-primary">
-            📞 Gọi HomaCare: 0338 031 425
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 3 4 5-2 3a16 16 0 0 0 6 6l3-2 5 4c-2 5-8 3-13-2S1 5 5 3Z"/></svg> Gọi HomaCare: 0338 031 425
           </a>
           <a href="mailto:homacare@gmail.com" class="btn btn-secondary">
-            ✉️ Gửi email: homacare@gmail.com
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg> Gửi email: homacare@gmail.com
           </a>
         </div>
       </div>
@@ -3758,11 +3807,11 @@
       <div class="final-cta-banner">
         <h2>Gửi trọn quan tâm, vẹn tròn đạo hiếu.</h2>
         <p>
-          Bắt đầu bằng việc thêm người thân và gửi yêu cầu cho một buổi đồng hành tại nhà.
+          Thêm hồ sơ cha mẹ và đặt buổi đồng hành đầu tiên.
         </p>
         <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
           <a href="auth.html?role=family&booking=1" class="btn btn-apricot">
-            Đặt ca Ân cần →
+            Đặt ca chăm sóc →
           </a>
           <a href="auth.html?role=family" class="btn btn-secondary">
             Mở ứng dụng HomaCare
@@ -3810,13 +3859,12 @@
        ===================================================================== -->
   <div class="modal-backdrop" id="roleModal" onclick="handleBackdropClick(event)">
     <div class="modal-card">
-      <button class="modal-close" onclick="closeRoleModal()">✕</button>
-      <span class="section-eyebrow">Chào mừng bạn đến với HomaCare</span>
+      <button class="modal-close" onclick="closeRoleModal()" aria-label="Đóng"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
       <h3 style="font-size: 1.5rem; margin-bottom: 6px;">Bạn đến với vai trò nào?</h3>
       <p style="font-size: 0.92rem; margin-bottom: 20px;">Chọn không gian làm việc phù hợp với bạn trên Webapp:</p>
 
       <a href="auth.html?role=family" class="role-option-card">
-        <span style="font-size: 1.6rem;">🏡</span>
+        <span class="role-opt-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3V10Z"/><path d="M9 20v-7h6v7"/></svg></span>
         <div>
           <strong style="font-size: 1.05rem; color: var(--navy); display:block;">Không gian Gia đình</strong>
           <small style="color: var(--text-muted); font-size: 0.84rem;">Sắp xếp chăm sóc và dõi theo người thân.</small>
@@ -3824,7 +3872,7 @@
       </a>
 
       <a href="auth.html?role=caregiver" class="role-option-card">
-        <span style="font-size: 1.6rem;">🤝</span>
+        <span class="role-opt-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m2-16a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 5v2"/></svg></span>
         <div>
           <strong style="font-size: 1.05rem; color: var(--navy); display:block;">Không gian Chuyên viên chăm
             sóc</strong>
@@ -3834,7 +3882,7 @@
       </a>
 
       <a href="auth.html?role=coordinator" class="role-option-card">
-        <span style="font-size: 1.6rem;">🛡️</span>
+        <span class="role-opt-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4v5c0 5-8 9-8 9s-8-4-8-9V7l8-4Z"/><path d="m8 12 3 3 5-6"/></svg></span>
         <div>
           <strong style="font-size: 1.05rem; color: var(--navy); display:block;">Không gian Điều phối viên</strong>
           <small style="color: var(--text-muted); font-size: 0.84rem;">Tiếp nhận yêu cầu và sắp xếp người đồng
@@ -3920,7 +3968,7 @@
 
     // Section 5: 6 Steps Journey Selector & Insight Updater
     const stepInsights = [
-      "Mỗi vai trò có không gian riêng. Quyền xem dữ liệu được kiểm tra trên máy chủ, không chỉ dựa vào giao diện.",
+      "Tài khoản gia đình chỉ xem được hồ sơ và lịch của chính gia đình mình. Quyền này được kiểm tra trên máy chủ.",
       "Thói quen và mong muốn được lưu trong hồ sơ người thân để chuyên viên đọc trước khi đến nhà.",
       "Giá 320.000đ/buổi hiển thị ngay ở bước xem lại. Bạn chưa cần thanh toán khi gửi yêu cầu.",
       "Lịch hiển thị trạng thái ca và tên chuyên viên sau khi được phân công. Bấm Cập nhật để tải thông tin mới nhất.",
