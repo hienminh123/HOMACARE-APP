@@ -115,7 +115,7 @@
   - Đã xóa `lora-*.woff2`, `Lora-OFL.txt`, `@font-face` Lora và preload Lora; trang nhẹ hơn khoảng 47 KB.
   - DESIGN.md lên v1.3.
 - Đã kiểm tra: build sạch, bản build chỉ còn font Nunito + Cal Sans; mọi kịch bản (gia đình, chuyên viên/điều phối, demo hai tab) vẫn đạt; không tràn ngang ở 375/1280; không lỗi console.
-- homacaredemo.pages.dev **chưa** có bản v1.3 cho tới khi người dùng tải lại `web/dist`.
+- homacaredemo.pages.dev đã có bản v1.3 (build từ GitHub sau khi push).
 
 ### Việc tiếp theo — Giai đoạn 6 · Kiểm thử toàn bộ
 - Chạy lại mọi kịch bản (`giai-doan-*` trong thư mục ghi chú chung có script) ở 375/768/1280, bàn phím, trình đọc màn hình (nhãn), giảm chuyển động; trang giới thiệu, đăng nhập, `/demo/`, ba không gian.
@@ -132,11 +132,19 @@
   - Output directory: `dist`
   - `NODE_VERSION` = 22
 - Thao tác thật trên địa chỉ đó vẫn ghi vào cùng Supabase. Muốn thử không ghi gì thì dùng `/demo/`.
-- **Đã làm (13/10, người dùng tự thao tác):** project Pages **`homacaredemo`** (không gạch ngang, khác `homacare-demo` đang chạy), tạo bằng **Direct Upload** thư mục `web/dist` của commit `aa10fa7` (giai đoạn 5).
-  - Địa chỉ: **https://homacaredemo.pages.dev**
-  - Cập nhật: build lại → project → Create deployment → kéo lại `web/dist`. Project Direct Upload không chuyển sang nối GitHub được; muốn tự deploy khi push thì tạo project khác.
+- **Đã làm (13/10, người dùng tự thao tác):** project Pages **`homacaredemo`** (không gạch ngang, khác `homacare-demo` đang chạy). Địa chỉ: **https://homacaredemo.pages.dev**
+  - Lúc đầu tải tay `web/dist` (Direct Upload, bản `aa10fa7`).
+  - Sau đó người dùng **nối GitHub** `hienminh123/HOMACARE-APP`, nhánh production **`thiet-ke-lai`**. Build configuration:
+    - Framework preset: Astro
+    - Build command: `npm run build`
+    - Output: `dist`
+    - Root directory: `web`
+    - Biến `NODE_VERSION` = `22`
+  - Bản build đầu tiên từ GitHub thiếu cấu hình nên phục vụ nguyên repo (trang 404, file `backend/`, `CONTINUE-HOMACARE.md` mở được; repo vốn công khai nên không lộ thêm). Đã sửa cấu hình.
+  - **Từ giờ mỗi lần push `thiet-ke-lai` là Cloudflare tự build** (khoảng 40 giây). `main` / homacare-demo.pages.dev không bị ảnh hưởng.
+  - Người dùng cho push lúc ~19:05 ngày 13/10: `00a716d..5a773b7` (giai đoạn 5 + v1.3).
   - (Trước đó người dùng thử tạo nhầm một Worker `icy-disk-0031` rồi đã xóa.)
-  - **Đã kiểm tra trên địa chỉ thật:**
+  - **Đã kiểm tra trên địa chỉ thật** (lần đầu với bản tải tay; làm lại với bản build từ GitHub `5a773b7`, cùng kết quả, chỉ còn font Nunito + Cal Sans):
     - Mọi trang trả 200; 404 riêng; `/family.html?booking=1` → 308 `/family?booking=1` rồi JS chuyển `/app/gia-dinh/` giữ tham số; `_redirects` chạy.
     - Font Lora/Nunito/Cal Sans nạp đủ; không tràn ngang ở 375/1280; không lỗi console.
     - Kịch bản demo hai tab đạt như trên máy, 0 yêu cầu tới Supabase.
