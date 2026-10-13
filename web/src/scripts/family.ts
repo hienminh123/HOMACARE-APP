@@ -2,76 +2,12 @@
 // Gọi đúng bảng/RPC như preview/workspace.js qua src/lib/visits.ts; quyền vẫn do RLS/RPC kiểm tra.
 import type { Context } from './workspace';
 import { esc, icon, initials } from '../lib/html';
+import { $, toast, sheet, close, refocus, setError, clearErrors, formError, busy, syncCounters } from './forms';
 import { PACKAGE, addRelative, bookVisit, rateVisit, dayLabel, issue, today, type Relative } from '../lib/visits';
 
 let ctx: Context | null = null;
 /** Mỗi lần vẽ lại không gian, trang gọi hàm này để thao tác dùng dữ liệu mới nhất. */
 export function setContext(next: Context) { ctx = next; }
-
-const $ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => root.querySelector<T>(sel);
-const toast = (text: string, opts: { tone?: string; title?: string } = {}) => window.HC?.toast(text, opts);
-const sheet = (id: string) => document.getElementById(id) as HTMLDialogElement;
-/** Đóng sheet; Promise xong khi sheet đóng hẳn, để focus đặt sau đó không bị closeSheet ghi đè. */
-const close = (id: string) => window.HC.closeSheet(sheet(id));
-
-/** Sau khi vẽ lại, nút vừa bấm đã bị thay: đưa focus tới phần tử đầu tiên tìm thấy trong giao diện mới. */
-function refocus(...selectors: string[]) {
-  for (const sel of selectors) {
-    const el = $<HTMLElement>(sel);
-    if (!el) continue;
-    if (!el.matches('a[href], button, input, select, textarea, [tabindex]')) el.tabIndex = -1;
-    el.focus();
-    return;
-  }
-}
-
-/* ---------- Lỗi đặt cạnh ô nhập ---------- */
-function setError(field: HTMLElement, message: string | null) {
-  const id = field.id;
-  let box = document.getElementById(`${id}-error`);
-  if (!message) {
-    field.removeAttribute('aria-invalid');
-    box?.remove();
-    const rest = (field.getAttribute('aria-describedby') || '').split(' ').filter(x => x && x !== `${id}-error`);
-    if (rest.length) field.setAttribute('aria-describedby', rest.join(' ')); else field.removeAttribute('aria-describedby');
-    return;
-  }
-  if (!box) {
-    box = document.createElement('span');
-    box.className = 'hc-error';
-    box.id = `${id}-error`;
-    (field.closest('.hc-field') || field.parentElement)!.appendChild(box);
-  }
-  box.innerHTML = `${icon('alert')}${esc(message)}`;
-  field.setAttribute('aria-invalid', 'true');
-  const described = new Set((field.getAttribute('aria-describedby') || '').split(' ').filter(Boolean));
-  described.add(`${id}-error`);
-  field.setAttribute('aria-describedby', [...described].join(' '));
-}
-function formError(form: HTMLElement, message: string | null) {
-  const box = $<HTMLElement>('[data-form-error]', form);
-  if (!box) return;
-  box.hidden = !message;
-  box.textContent = message || '';
-}
-function busy(button: HTMLButtonElement | null, on: boolean) {
-  if (!button) return;
-  button.disabled = on;
-  if (on) button.setAttribute('aria-busy', 'true'); else button.removeAttribute('aria-busy');
-}
-
-/* ---------- Đếm ký tự cho textarea ---------- */
-document.addEventListener('input', e => {
-  const t = e.target as HTMLTextAreaElement;
-  if (!t.matches?.('textarea[maxlength]')) return;
-  const counter = document.querySelector<HTMLElement>(`[data-counter-for="${t.id}"]`);
-  if (counter) counter.textContent = `${t.value.length}/${t.maxLength}`;
-  if (t.getAttribute('aria-invalid')) setError(t, null);
-});
-document.addEventListener('input', e => {
-  const t = e.target as HTMLInputElement;
-  if (t.matches?.('#relative-form input, #relative-form select') && t.getAttribute('aria-invalid')) setError(t, null);
-});
 
 /* ======================================================================
    Thêm người thân
@@ -82,9 +18,8 @@ export function openRelative({ thenBook = false, opener = null as Element | null
   bookAfterRelative = thenBook;
   const form = $<HTMLFormElement>('#relative-form')!;
   form.reset();
-  form.querySelectorAll<HTMLElement>('[aria-invalid]').forEach(f => setError(f, null));
-  formError(form, null);
-  form.querySelectorAll<HTMLTextAreaElement>('textarea[maxlength]').forEach(t => t.dispatchEvent(new Event('input', { bubbles: true })));
+  clearErrors(form);
+  syncCounters(form);
   window.HC.openSheet('relative-sheet', opener);
   setTimeout(() => $<HTMLInputElement>('#relative-name')?.focus(), 50);
 }
@@ -198,7 +133,7 @@ export function openBooking(opener: Element | null = null) {
   select.innerHTML = ctx.data.relatives.map(r => `<option value="${esc(r.id)}">${esc(r.relationship)} · ${esc(r.full_name)}</option>`).join('');
   $<HTMLElement>('[data-relative-field]')!.hidden = ctx.data.relatives.length < 2;
   renderDays(select.value);
-  $<HTMLTextAreaElement>('#booking-note')!.dispatchEvent(new Event('input', { bubbles: true }));
+  syncCounters(form);
   setStep('details');
   window.HC.openSheet('booking-sheet', opener);
 }

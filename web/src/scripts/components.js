@@ -2,7 +2,8 @@
    HomaCare Components · hành vi · v1.0 (bản Astro)
    Chép từ preview/ds/components.js. Khác biệt: trạng thái ca, icon và esc lấy từ
    src/lib (dùng chung với component .astro), sprite icon ở /icons.svg; đánh giá sao
-   nhận thêm phím Home/End (giai đoạn 3).
+   nhận thêm phím Home/End, closeSheet trả Promise (giai đoạn 3); nhiều tab dùng chung
+   một panel không còn làm panel bị ẩn (giai đoạn 4).
    Nạp một lần trong layout; đặt window.HC giống bản gốc:
      HC.STATUS, HC.ORDER, HC.icon(), HC.pill(), HC.timeline()
      HC.toast(text, opts?)  hiện thông báo ngắn
@@ -98,14 +99,18 @@ import { STATUS, ORDER, pill, timeline } from '../lib/status';
   function initTabs(list) {
     if (list._hc) return; list._hc = true;
     const tabs = [...list.querySelectorAll('[role="tab"]')];
+    const panelOf = t => t.getAttribute('aria-controls') && document.getElementById(t.getAttribute('aria-controls'));
     const select = (tab, focus) => {
       tabs.forEach(t => {
         const on = t === tab;
         t.setAttribute('aria-selected', String(on));
         t.tabIndex = on ? 0 : -1;
-        const panel = t.getAttribute('aria-controls') && document.getElementById(t.getAttribute('aria-controls'));
-        if (panel) panel.hidden = !on;
       });
+      // Ẩn panel của tab khác trước rồi mới hiện panel của tab được chọn: nhiều tab có thể dùng chung
+      // một panel (tab lọc danh sách ở trang điều phối), khi đó panel luôn hiện
+      tabs.forEach(t => { const p = panelOf(t); if (p && t !== tab) p.hidden = true; });
+      const panel = panelOf(tab);
+      if (panel) panel.hidden = false;
       if (focus) tab.focus();
       list.dispatchEvent(new CustomEvent('hc:tabchange', { bubbles: true, detail: { tab, value: tab.dataset.value } }));
     };

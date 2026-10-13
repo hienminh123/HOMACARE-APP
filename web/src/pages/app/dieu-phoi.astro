@@ -1,90 +1,72 @@
 ---
-// Không gian điều phối (thay coordinator.html). Giai đoạn 2: khung + dữ liệu thật ở chế độ xem,
-// lọc theo trạng thái và xem chi tiết ca trong Sheet. Phân công dựng lại ở giai đoạn 4.
+// Không gian điều phối (thay coordinator.html). Giai đoạn 4: lọc ca theo trạng thái, xem chi tiết và
+// phân công chuyên viên ngay trong Sheet; danh sách chuyên viên kèm số ca đang nhận.
 import AppLayout from '../../layouts/AppLayout.astro';
 import Sheet from '../../components/hc/Sheet.astro';
+import Button from '../../components/hc/Button.astro';
 const nav = [
   { href: '#yeu-cau', label: 'Danh sách ca', icon: 'inbox' },
   { href: '#chuyen-vien', label: 'Chuyên viên', icon: 'users' },
   { href: '#tai-khoan', label: 'Tài khoản', icon: 'user' },
 ];
 ---
-<AppLayout role="coordinator" title="Không gian điều phối" nav={nav} notice="Khung app mới (giai đoạn 2): đang hiển thị dữ liệu thật ở chế độ xem. Các thao tác như bắt đầu ca, ghi nhật ký, phân công sẽ được dựng lại ở giai đoạn 4.">
+<AppLayout role="coordinator" title="Không gian điều phối" nav={nav}>
   <Sheet id="visit-detail" title="Chi tiết ca" description="Thông tin ca, tiến trình và nhật ký nếu đã có.">
     <div data-detail-body class="hc-stack" style="--stack-gap: var(--space-4)"></div>
+    <Fragment slot="foot">
+      <Button variant="secondary" data-hc-close data-detail-close>Đóng</Button>
+      <Button type="submit" form="assign-form" data-assign-submit icon="user-check" hidden>Phân công</Button>
+    </Fragment>
   </Sheet>
 
   <script>
     import { boot, accountSection } from '../../scripts/workspace';
-    import { empty, visitRow, person, careLog, times, relativeName } from '../../scripts/render';
+    import { empty, visitRow, person } from '../../scripts/render';
+    import { setContext, filter, load } from '../../scripts/coordinator';
     import { esc } from '../../lib/html';
-    import { ORDER, STATUS, pill, timeline } from '../../lib/status';
-    import { caregiverOf, dayLabel, familyOf, relativeOf, PACKAGE, type Visit } from '../../lib/visits';
+    import { ORDER, STATUS } from '../../lib/status';
 
-    let visits: Visit[] = [];
-
-    boot('coordinator', ({ profile, data }) => {
-      visits = data.visits;
+    boot('coordinator', ctx => {
+      setContext(ctx);
+      const { profile, data } = ctx;
+      const visits = data.visits;
       const counts = Object.fromEntries(ORDER.map(s => [s, visits.filter(v => v.status === s).length]));
       const tabs = [['all', 'Tất cả', visits.length], ...ORDER.map(s => [s, STATUS[s].label, counts[s]])]
-        .map(([value, label, count], i) => `<button class="hc-tab" role="tab" type="button" data-value="${value}" aria-selected="${i === 0}" aria-controls="visit-list">${label}<span class="hc-tab__count">${count}</span></button>`).join('');
-      const rows = visits.map(v => `<div data-row-status="${v.status}">${visitRow(v, `<button class="hc-btn hc-btn--quiet hc-btn--sm" type="button" data-detail="${esc(v.id)}">${v.status === 'completed' ? 'Nhật ký' : 'Xem ca'}</button>`)}</div>`).join('');
+        .map(([value, label, count]) => `<button class="hc-tab" role="tab" type="button" data-value="${value}" aria-selected="${value === filter}" aria-controls="visit-list">${label}<span class="hc-tab__count">${count}</span></button>`).join('');
+      // Việc cần làm lên trước: chờ phân công → đang chăm sóc → đã phân công (theo ngày), ca đã xong mới nhất ở cuối
+      const rank = { pending: 0, in_progress: 1, assigned: 2, completed: 3 } as const;
+      const ordered = [...visits].sort((a, b) => rank[a.status] - rank[b.status]
+        || (a.status === 'completed' ? b.care_date.localeCompare(a.care_date) : a.care_date.localeCompare(b.care_date)));
+      const rows = ordered.map(v => {
+        const button = v.status === 'pending'
+          ? `<button class="hc-btn hc-btn--sm" type="button" data-detail="${esc(v.id)}">Phân công</button>`
+          : `<button class="hc-btn hc-btn--quiet hc-btn--sm" type="button" data-detail="${esc(v.id)}">${v.status === 'completed' ? 'Nhật ký' : 'Xem ca'}</button>`;
+        return `<div data-row-status="${v.status}"${filter === 'all' || filter === v.status ? '' : ' hidden'}>${visitRow(v, button)}</div>`;
+      }).join('');
+      const pending = counts.pending || 0;
+      // Vẽ sẵn theo bộ lọc đang chọn để sau khi phân công/cập nhật danh sách không nhảy về Tất cả
+      const shown = visits.filter(v => filter === 'all' || filter === v.status).length;
       return `
         <div class="app-greeting">
           <h1>Chào ${esc(profile.full_name)}</h1>
-          <p>Các yêu cầu đang chờ và tiến độ từng ca.</p>
+          <p>${pending ? `Có ${pending} yêu cầu đang chờ phân công chuyên viên.` : 'Không còn yêu cầu nào chờ phân công.'}</p>
         </div>
         <section class="app-section" id="yeu-cau" aria-labelledby="list-title">
           <div class="app-section__head"><h2 id="list-title">Danh sách ca chăm sóc</h2></div>
           <div class="hc-tabs" role="tablist" aria-label="Lọc theo trạng thái" style="margin-bottom:var(--space-4)">${tabs}</div>
           <div id="visit-list" role="tabpanel" aria-labelledby="list-title">
             ${visits.length ? `<div class="hc-card hc-card--flush">${rows}</div>` : ''}
-            <div data-list-empty ${visits.length ? 'hidden' : ''}>${empty('inbox', 'Chưa có ca trong danh sách này', 'Yêu cầu mới từ gia đình sẽ hiện ở đây.', true)}</div>
+            <div data-list-empty ${shown ? 'hidden' : ''}>${empty('inbox', 'Chưa có ca trong danh sách này', 'Yêu cầu mới từ gia đình sẽ hiện ở đây.', true)}</div>
           </div>
         </section>
         <section class="app-section" id="chuyen-vien" aria-labelledby="staff-title">
           <div class="app-section__head"><h2 id="staff-title">Chuyên viên chăm sóc</h2><span class="hc-pill hc-pill--plain">${data.staff.length}</span></div>
           ${data.staff.length
-            ? `<ul class="app-list app-list--2">${data.staff.map(p => `<li class="hc-card">${person(p.full_name, 'Tài khoản chuyên viên chăm sóc', 'caregiver')}</li>`).join('')}</ul>`
+            ? `<ul class="app-list app-list--2">${data.staff.map(p => { const n = load(p.id); return `<li class="hc-card">${person(p.full_name, n ? `Đang nhận ${n} ca chưa hoàn thành` : 'Chưa nhận ca nào', 'caregiver')}</li>`; }).join('')}</ul>`
             : empty('users', 'Chưa có chuyên viên', 'Chuyên viên cần tạo tài khoản trước khi được phân công.', true)}
-          <p class="hc-hint" style="margin-top:var(--space-3)">Với nhu cầu vượt phạm vi hỗ trợ sinh hoạt, trao đổi cùng gia đình để kết nối đơn vị chuyên môn phù hợp.</p>
+          <p class="hc-hint app-note">Với nhu cầu vượt phạm vi hỗ trợ sinh hoạt, trao đổi cùng gia đình để kết nối đơn vị chuyên môn phù hợp.</p>
         </section>
         ${accountSection(profile, 'Điều phối viên')}`;
-    });
-
-    // Lọc theo tab (sự kiện hc:tabchange từ components.js)
-    document.addEventListener('hc:tabchange', e => {
-      const value = (e as CustomEvent).detail.value as string;
-      let shown = 0;
-      document.querySelectorAll<HTMLElement>('#visit-list [data-row-status]').forEach(row => {
-        row.hidden = value !== 'all' && row.dataset.rowStatus !== value;
-        if (!row.hidden) shown++;
-      });
-      const emptyBox = document.querySelector<HTMLElement>('[data-list-empty]');
-      if (emptyBox) emptyBox.hidden = shown > 0;
-    });
-
-    // Chi tiết ca
-    document.addEventListener('click', e => {
-      const button = (e.target as Element).closest<HTMLButtonElement>('[data-detail]');
-      if (!button) return;
-      const v = visits.find(x => x.id === button.dataset.detail);
-      const body = document.querySelector<HTMLElement>('[data-detail-body]');
-      if (!v || !body) return;
-      const r = relativeOf(v), cg = caregiverOf(v), fam = familyOf(v);
-      body.innerHTML = `
-        <div class="hc-card__head">${person(r?.full_name || 'Người thân', `${r?.age ? r.age + ' tuổi · ' : ''}${r?.area || ''}`, 'relative')}${pill(v.status)}</div>
-        <dl class="app-dl">
-          <div><dt>Ngày</dt><dd>${esc(dayLabel(v.care_date))}</dd></div>
-          <div><dt>Khung giờ</dt><dd>${PACKAGE.hours} · Gói ${PACKAGE.name}</dd></div>
-          <div><dt>Gia đình</dt><dd>${esc(fam?.full_name || '')}</dd></div>
-          <div><dt>Người thân</dt><dd>${esc(relativeName(r))}</dd></div>
-          <div><dt>Chuyên viên</dt><dd>${esc(cg?.full_name || 'Chưa phân công')}</dd></div>
-        </dl>
-        ${timeline(v.status, { vertical: true, times: times(v) })}
-        <div class="hc-visit__note"><strong>Lưu ý của gia đình</strong>${esc(v.care_note || 'Chưa có lưu ý thêm')}</div>
-        ${v.status === 'completed' ? careLog(v) : ''}`;
-      window.HC.openSheet('visit-detail', button);
     });
   </script>
 </AppLayout>

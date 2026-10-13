@@ -40,7 +40,7 @@ html { scroll-padding-top: 80px; }
 .app-dl dd { margin: 0; font-weight: var(--weight-medium); text-align: right; }
 
 /* Hàng điều phối được bọc để lọc theo trạng thái: giữ đường chia giữa các hàng */
-[data-row-status] + [data-row-status] .hc-visit-row { border-top: 1px solid var(--color-divider); }
+[data-row-status]:not([hidden]) ~ [data-row-status]:not([hidden]) .hc-visit-row { border-top: 1px solid var(--color-divider); }
 
 /* ---------- Không gian gia đình (giai đoạn 3) ---------- */
 
@@ -65,8 +65,8 @@ html { scroll-padding-top: 80px; }
 .app-package { display: grid; gap: var(--space-2); justify-items: start; padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-surface-sunken); }
 
 /* Chọn ngày: hàng thẻ ngày cuộn ngang, hiển thị dd/mm bất kể ngôn ngữ của máy */
-.app-days-field { border: 0; padding: 0; margin: 0; min-width: 0; }
-.app-days-field legend { padding: 0; margin-bottom: 6px; }
+.app-days-field, .app-fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.app-days-field legend, .app-fieldset legend { padding: 0; margin-bottom: 6px; }
 .app-days {
   display: flex; gap: var(--space-2); overflow-x: auto; scroll-snap-type: x proximity;
   margin-inline: calc(-1 * var(--space-5)); padding: var(--space-1) var(--space-5) var(--space-2);
@@ -95,3 +95,22 @@ html { scroll-padding-top: 80px; }
 
 /* Đánh giá sao trong nhật ký */
 .app-rate { display: grid; gap: var(--space-3); justify-items: start; padding-top: var(--space-3); border-top: 1px solid var(--color-divider); }
+
+/* ---------- Không gian chuyên viên và điều phối (giai đoạn 4) ---------- */
+
+/* Nút thao tác cuối thẻ ca: rộng hết thẻ, trong tầm ngón cái; câu gợi ý ngay dưới nút */
+.app-visit-actions { display: grid; gap: var(--space-2); padding-top: var(--space-4); border-top: 1px solid var(--color-divider); }
+@media (min-width: 900px) { .app-visit-actions .hc-btn--block { width: auto; justify-self: start; } }
+
+/* Dòng báo đã mở lại bản nháp nhật ký */
+.app-draft-note {
+  display: flex; gap: var(--space-2); align-items: flex-start;
+  padding: var(--space-3) var(--space-4); border-radius: var(--radius-md);
+  background: var(--color-info-subtle); font-size: var(--text-sm);
+}
+.app-draft-note .hc-icon { color: var(--color-info); margin-top: 1px; flex: none; }
+.app-mood-hint { margin-top: var(--space-2); }
+
+/* Chọn chuyên viên khi phân công: mỗi dòng là một radio .hc-check có avatar */
+.app-staff-option .hc-check__text { grid-template-columns: auto 1fr; align-items: center; column-gap: var(--space-3); }
+.app-staff-option .hc-avatar { grid-row: span 2; }

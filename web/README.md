@@ -45,7 +45,8 @@ web/
     ├── components/site/    # header, footer, "Cách sử dụng" của trang giới thiệu
     ├── layouts/            # BaseLayout (meta + design system), AppLayout (khung ba không gian)
     ├── lib/                # config, supabase, auth, visits (truy vấn + RPC), status, html, fixture
-    ├── scripts/            # components.js (window.HC), workspace.ts (khởi động app), render.ts
+    ├── scripts/            # components.js (window.HC), workspace.ts (khởi động app), render.ts, forms.ts (lỗi cạnh ô, sheet, focus),
+    │                       # family.ts / caregiver.ts / coordinator.ts (thao tác ghi của từng không gian)
     └── pages/              # index, 404, app/…
 ```
 

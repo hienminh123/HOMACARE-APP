@@ -1,40 +1,125 @@
 ---
-// Không gian chuyên viên (thay caregiver.html). Giai đoạn 2: khung + dữ liệu thật ở chế độ xem.
+// Không gian chuyên viên (thay caregiver.html). Giai đoạn 4: ưu tiên điện thoại, đủ vòng một ca:
+// xem ca được giao → bắt đầu ca (xác nhận) → ghi nhật ký 2 bước → hoàn thành → xem lại nhật ký đã gửi.
 import AppLayout from '../../layouts/AppLayout.astro';
+import Sheet from '../../components/hc/Sheet.astro';
+import Field from '../../components/hc/Field.astro';
+import Input from '../../components/hc/Input.astro';
+import Textarea from '../../components/hc/Textarea.astro';
+import Check from '../../components/hc/Check.astro';
+import Button from '../../components/hc/Button.astro';
+import Icon from '../../components/hc/Icon.astro';
+import { MOODS, TASKS } from '../../lib/visits';
 const nav = [
   { href: '#ca-duoc-giao', label: 'Ca được giao', icon: 'calendar' },
   { href: '#da-xong', label: 'Đã xong', icon: 'check-circle' },
   { href: '#tai-khoan', label: 'Tài khoản', icon: 'user' },
 ];
 ---
-<AppLayout role="caregiver" title="Ca chăm sóc của tôi" nav={nav} notice="Khung app mới (giai đoạn 2): đang hiển thị dữ liệu thật ở chế độ xem. Các thao tác như bắt đầu ca, ghi nhật ký, phân công sẽ được dựng lại ở giai đoạn 4.">
+<AppLayout role="caregiver" title="Ca chăm sóc của tôi" nav={nav}>
+  <!-- Bắt đầu ca: không hoàn tác được nên hỏi lại một lần -->
+  <Sheet id="start-sheet" title="Bắt đầu ca chăm sóc?" description="Gia đình được báo ngay khi ca bắt đầu.">
+    <div data-start-body class="hc-stack" style="--stack-gap: var(--space-4)"></div>
+    <Fragment slot="foot">
+      <Button variant="secondary" data-hc-close>Chưa bắt đầu</Button>
+      <Button data-start-confirm icon="play">Bắt đầu ca</Button>
+    </Fragment>
+  </Sheet>
+
+  <!-- Nhật ký sau ca: bước 1 Ghi nhận → bước 2 Xem lại. Chỉ gọi RPC ở bước 2. -->
+  <Sheet id="report-sheet" title="Nhật ký sau ca" description="Bước 1 trên 2 · Ghi lại buổi chăm sóc vừa xong.">
+    <form id="report-form" class="hc-stack" novalidate data-step="details" style="--stack-gap: var(--space-5)">
+      <div data-step="details" class="hc-stack" style="--stack-gap: var(--space-5)">
+        <div data-report-who></div>
+        <p class="app-draft-note" data-draft-note hidden><Icon name="edit" /><span>Đã mở lại bản nháp bạn ghi trên máy này.</span></p>
+        <fieldset class="hc-field app-fieldset" id="report-tasks" aria-describedby="report-tasks-hint">
+          <legend class="hc-label">Hoạt động đã làm</legend>
+          <span class="hc-hint" id="report-tasks-hint">Đánh dấu đủ 4 hoạt động của gói Ân cần.</span>
+          <div class="hc-stack" style="--stack-gap: var(--space-2)">
+            {TASKS.map(t => <Check name="task" label={t.label} />)}
+          </div>
+        </fieldset>
+        <fieldset class="hc-field app-fieldset" id="report-mood">
+          <legend class="hc-label">Ghi nhận chung</legend>
+          <div class="hc-stack" style="--stack-gap: var(--space-2)">
+            {MOODS.map((m, i) => <Check type="radio" name="mood" value={m} label={m} checked={i === 0} />)}
+          </div>
+          <span class="hc-hint app-mood-hint" data-mood-hint hidden>Cần hỗ trợ gấp thì gọi điều phối viên <a href="tel:0338031425">0338 031 425</a> ngay, không chờ đọc nhật ký.</span>
+        </fieldset>
+        <Field label="Nhật ký gửi gia đình" for="report-text" hint="Ghi việc đã làm, bữa ăn, vận động, tâm trạng của người thân. Chỉ ghi điều bạn thấy, không ghi chẩn đoán hay lời khuyên điều trị.">
+          <Textarea id="report-text" name="report_text" maxlength="4000" rows="5" placeholder="Ví dụ: Bác ăn hết bát cháo cá, đi bộ hai vòng sân, kể chuyện hồi dạy học." aria-describedby="report-text-hint" />
+          <span class="hc-counter" data-counter-for="report-text"></span>
+        </Field>
+        <Field label="Lời nhắn cho lần tới" for="report-next" optional>
+          <Input id="report-next" name="next_note" maxlength="2000" autocomplete="off" placeholder="Ví dụ: Mang bàn cờ tướng." />
+        </Field>
+      </div>
+      <section data-step="review" class="hc-stack" tabindex="-1" aria-label="Xem lại nhật ký trước khi gửi" style="--stack-gap: var(--space-4)" hidden></section>
+      <p class="app-form-error" data-form-error role="alert" hidden></p>
+    </form>
+    <Fragment slot="foot">
+      <Button variant="secondary" data-report-back>Để sau</Button>
+      <Button type="submit" form="report-form" data-report-submit>Xem lại nhật ký</Button>
+    </Fragment>
+  </Sheet>
+
+  <!-- Xem nhật ký đã gửi (chỉ đọc) -->
+  <Sheet id="log-sheet" title="Nhật ký đã gửi" description="Gia đình đang thấy nhật ký này.">
+    <div data-log-body></div>
+  </Sheet>
+
   <script>
     import { boot, accountSection } from '../../scripts/workspace';
     import { empty, caregiverVisit, visitRow } from '../../scripts/render';
-    import { esc } from '../../lib/html';
-    import { today } from '../../lib/visits';
+    import { setContext, readDraft } from '../../scripts/caregiver';
+    import { esc, icon } from '../../lib/html';
+    import { dayLabel, timeText, today, type Visit } from '../../lib/visits';
 
-    boot('caregiver', ({ profile, data }) => {
-      const open = data.visits.filter(v => v.status !== 'completed');
-      const completed = data.visits.filter(v => v.status === 'completed').reverse();
+    /** Nút theo trạng thái: chỉ bắt đầu ca từ ngày chăm sóc trở đi; ca đang làm thì ghi nhật ký. */
+    function action(v: Visit, now: string): string {
+      if (v.status === 'in_progress') {
+        const draft = readDraft(v.id) ? ' · có bản nháp chưa gửi' : '';
+        return `<button class="hc-btn hc-btn--lg hc-btn--block" type="button" data-action="report">${icon('edit')}Ghi nhật ký và hoàn thành ca</button>
+          <p class="hc-hint" data-started>Đang chăm sóc từ ${esc(timeText(v.started_at).split(' · ')[0])}${draft}.</p>`;
+      }
+      if (v.care_date <= now) return `<button class="hc-btn hc-btn--lg hc-btn--block" type="button" data-action="start">${icon('play')}Bắt đầu ca</button>
+        <p class="hc-hint">Bấm khi bạn đã đến nơi.</p>`;
+      return `<p class="hc-hint">Nút Bắt đầu ca hiện vào ${esc(dayLabel(v.care_date))}.</p>`;
+    }
+
+    boot('caregiver', ctx => {
+      setContext(ctx);
+      const { profile, data } = ctx;
       const now = today();
+      const open = data.visits.filter(v => v.status !== 'completed');
+      // Ca đang làm lên đầu, rồi tới ca cần làm (hôm nay hoặc ngày trước chưa xong), cuối cùng ca sắp tới
+      const due = open.filter(v => v.care_date <= now).sort((a, b) => +(b.status === 'in_progress') - +(a.status === 'in_progress'));
+      const upcoming = open.filter(v => v.care_date > now);
+      const completed = data.visits.filter(v => v.status === 'completed').reverse();
+      const label = (v: Visit) => v.status === 'in_progress' ? 'Đang chăm sóc' : v.care_date === now ? 'Ca hôm nay' : 'Ca ngày trước, chưa xong';
       return `
         <div class="app-greeting" id="ca-duoc-giao">
           <h1>Chào ${esc(profile.full_name)}</h1>
-          <p>Đây là các ca được giao cho bạn.</p>
+          <p>Hôm nay ${esc(dayLabel(now))}. ${due.length ? `Bạn có ${due.length} ca cần làm.` : 'Bạn không có ca nào cần làm hôm nay.'}</p>
         </div>
         <section class="app-section" aria-labelledby="open-title">
-          <div class="app-section__head"><h2 id="open-title">Ca được giao</h2><span class="hc-pill hc-pill--plain">${open.length} ca</span></div>
-          ${open.length
-            ? `<ul class="app-list app-list--2">${open.map(v => `<li>${caregiverVisit(v, v.care_date === now ? 'Ca hôm nay' : 'Ca sắp tới')}</li>`).join('')}</ul>`
-            : empty('inbox', 'Chưa có ca được phân công', 'Khi điều phối viên giao ca, ca sẽ hiện ở đây.')}
+          <div class="app-section__head"><h2 id="open-title">Cần làm</h2><span class="hc-pill hc-pill--plain">${due.length} ca</span></div>
+          ${due.length
+            ? `<ul class="app-list app-list--2">${due.map(v => `<li>${caregiverVisit(v, label(v), action(v, now))}</li>`).join('')}</ul>`
+            : empty('inbox', 'Không có ca nào hôm nay', 'Ca được điều phối viên giao cho bạn sẽ hiện ở đây vào đúng ngày chăm sóc.', true)}
+        </section>
+        <section class="app-section" aria-labelledby="next-title">
+          <div class="app-section__head"><h2 id="next-title">Sắp tới</h2><span class="hc-pill hc-pill--plain">${upcoming.length} ca</span></div>
+          ${upcoming.length
+            ? `<ul class="app-list app-list--2">${upcoming.map(v => `<li>${caregiverVisit(v, 'Ca sắp tới', action(v, now))}</li>`).join('')}</ul>`
+            : empty('calendar', 'Chưa có ca sắp tới', 'Khi điều phối viên giao ca mới, ca sẽ hiện ở đây.', true)}
         </section>
         <section class="app-section" id="da-xong" aria-labelledby="done-title">
-          <div class="app-section__head"><h2 id="done-title">Ca đã hoàn thành</h2><span class="hc-pill hc-pill--plain">${completed.length} ca</span></div>
+          <div class="app-section__head"><h2 id="done-title" tabindex="-1">Ca đã hoàn thành</h2><span class="hc-pill hc-pill--plain">${completed.length} ca</span></div>
           ${completed.length
-            ? `<div class="hc-card hc-card--flush">${completed.map(v => visitRow(v, '')).join('')}</div>`
+            ? `<div class="hc-card hc-card--flush">${completed.map(v => visitRow(v, `<button class="hc-btn hc-btn--quiet hc-btn--sm" type="button" data-action="view-log" data-visit="${esc(v.id)}">Nhật ký</button>`)).join('')}</div>`
             : empty('check-circle', 'Chưa có ca đã hoàn thành', 'Ca bạn hoàn thành sẽ được lưu ở đây.', true)}
-          <p class="hc-hint" style="margin-top:var(--space-3)">Ghi nhận hoạt động sinh hoạt, không chẩn đoán tình trạng y tế.</p>
+          <p class="hc-hint app-note">Nhật ký ghi nhận sinh hoạt, không chẩn đoán tình trạng y tế.</p>
         </section>
         ${accountSection(profile, 'Chuyên viên chăm sóc')}`;
     });

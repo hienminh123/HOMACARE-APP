@@ -6,7 +6,7 @@
 - Repo đã chuyển từ OneDrive sang `C:\dev\homacare`. Làm trên nhánh **`thiet-ke-lai`**. Tag **`ban-cu-v1`** = bản đang chạy trên homacare-demo.pages.dev.
 - **Không sửa, không merge vào `main`. Không push nếu chưa hỏi người dùng.** Commit cục bộ sau mỗi giai đoạn là được phép.
 - Cloudflare Pages chỉ build `main`, nên mọi thay đổi trên nhánh này chưa ảnh hưởng web thật.
-- Lộ trình đầy đủ: (0) dọn repo → (1) design system → (2) chuyển sang Astro, tách trang giới thiệu khỏi app → (3) app gia đình, ưu tiên điện thoại → (4) app chuyên viên và điều phối → (5) realtime + chế độ demo cho giám khảo → (6) kiểm thử toàn bộ. **Đã xong 0, 1, 2 và 3.**
+- Lộ trình đầy đủ: (0) dọn repo → (1) design system → (2) chuyển sang Astro, tách trang giới thiệu khỏi app → (3) app gia đình, ưu tiên điện thoại → (4) app chuyên viên và điều phối → (5) realtime + chế độ demo cho giám khảo → (6) kiểm thử toàn bộ. **Đã xong 0 đến 4.**
 
 ### Giai đoạn 0 · Dọn repo (commit `468af26`)
 - Xóa: `landing.html`, `landing-v2.html`, `landing-v3.html`, `home-classic.html`, 3 ảnh .jpg cũ trong `preview/`, `netlify.toml`, hai thư mục rỗng `tmp/`, `audit-assets/`. Tất cả vẫn lấy lại được từ tag `ban-cu-v1` (`git checkout ban-cu-v1 -- <file>`).
@@ -67,11 +67,26 @@
 - **Đã kiểm tra** (fixture, Chrome headless qua DevTools với phím thật, ở 375px và 1280px): mở đặt ca bằng Enter; ←/→ trong hàng ngày bỏ qua ngày đã có ca, vòng về cuối, có viền focus, thẻ luôn nằm trong vùng nhìn thấy; Esc đóng sheet ở cả bước 1 và 2, focus về nút "Đặt ca mới"; bước 2 focus vào vùng xem lại; đặt ca thành công → toast, "3 ca đang mở", focus về nút; trùng ngày như trên; đánh giá bằng phím → Tab tới "Gửi đánh giá" → Enter → "3 trên 5 sao" chỉ đọc + toast, focus ở khối đánh giá; thêm người thân báo đủ 3 lỗi, Esc trả focus về "Thêm người thân"; tài khoản `family-new` + `?booking=1` → sheet người thân + toast nhắc → lưu → sheet đặt ca tự mở (ẩn ô chọn người thân vì chỉ có 1). Ở 1280px sheet là hộp 560px giữa màn hình, hàng ngày vẫn cuộn ngang. Không tràn ngang ở cả hai cỡ (kể cả khi mở sheet), không lỗi console. `npm --prefix web run build` sạch, bản build không chứa fixture.
 - **Cần người dùng duyệt (chưa làm):** cho gia đình tự sửa hồ sơ người thân cần thêm policy UPDATE cho bảng `relatives` trong `backend/schema.sql` (chỉ chủ hồ sơ, `family_id = auth.uid()`) rồi chạy trên Supabase. Hiện app hướng dẫn gọi 0338 031 425.
 
-### Việc tiếp theo — Giai đoạn 4 · App chuyên viên và điều phối
-- Chuyên viên (`web/src/pages/app/chuyen-vien.astro`): bắt đầu ca (`start_homa_visit`), ghi nhật ký sau ca với đủ 4 hoạt động + ghi nhận chung + lời nhắn lần tới (`complete_homa_visit`, lỗi `incomplete_tasks`/`invalid_report` đặt dưới ô). Ưu tiên điện thoại như app gia đình.
-- Điều phối (`web/src/pages/app/dieu-phoi.astro`): phân công chuyên viên cho ca chờ (`assign_homa_visit`) ngay trong sheet chi tiết, xử lý 23505 (chuyên viên đã có ca tối đó).
-- Tái dùng mẫu của giai đoạn 3: sheet nhiều bước, `HC.closeSheet()` trả Promise + `refocus()` sau khi vẽ lại, lỗi cạnh ô (có thể tách `setError`/`refocus` từ `family.ts` ra file dùng chung).
-- Khi cả hai không gian đủ thao tác thì gỡ prop `notice` (dòng ghi chú giai đoạn) trong `chuyen-vien.astro` và `dieu-phoi.astro`.
+### Giai đoạn 4 · App chuyên viên và điều phối (commit "Giai đoạn 4")
+- `web/src/scripts/forms.ts` (mới): phần dùng chung tách từ `family.ts` — `setError` (ô hoặc nhóm `fieldset`), `clearErrors`, `formError`, `busy`, `close` (chờ sheet đóng hẳn), `refocus`, `syncCounters`; tự gỡ lỗi khi sửa ô và đếm ký tự cho mọi textarea có maxlength.
+- **Chuyên viên** (`chuyen-vien.astro` + `scripts/caregiver.ts`):
+  - Ba mục: **Cần làm** (ca từ hôm nay trở về trước chưa xong, ca đang chăm sóc lên đầu), **Sắp tới**, **Ca đã hoàn thành** (nút "Nhật ký" mở sheet chỉ đọc).
+  - Nút "Bắt đầu ca" chỉ hiện từ ngày chăm sóc (ca tương lai ghi "Nút Bắt đầu ca hiện vào Thứ…"); bấm thì hỏi lại trong sheet vì không hoàn tác được → `start_homa_visit`.
+  - "Ghi nhật ký và hoàn thành ca": sheet 2 bước. Bước 1: 4 hoạt động (bắt buộc đủ, đúng như RPC), ghi nhận chung (3 lựa chọn của DB; chọn "Cần điều phối viên liên hệ" thì nhắc gọi 0338 031 425), nhật ký ≥ 10 ký tự có bộ đếm, lời nhắn lần tới. Bước 2: xem trước bằng chính thẻ CareLog gia đình sẽ thấy + câu "gửi xong không sửa lại được" (không có policy UPDATE cho `visits`) → `complete_homa_visit`. Lỗi `incomplete_tasks`/`invalid_report` từ RPC đưa về bước 1, báo dưới đúng chỗ.
+  - **Bản nháp** nhật ký lưu localStorage theo ca (`homa-report-draft-<id>`) mỗi lần gõ; mở lại thì điền sẵn và báo "Đã mở lại bản nháp"; thẻ ca ghi "có bản nháp chưa gửi"; gửi xong thì xóa.
+- **Điều phối** (`dieu-phoi.astro` + `scripts/coordinator.ts`):
+  - Danh sách xếp việc cần làm lên trước (chờ phân công → đang chăm sóc → đã phân công → hoàn thành mới nhất); ca chờ có nút chính "Phân công". Bộ lọc tab giữ nguyên sau khi vẽ lại.
+  - Sheet "Phân công ca": hồ sơ người thân (thói quen), lưu ý gia đình, danh sách chuyên viên dạng radio có avatar — người đã có ca tối đó bị khóa ("Đã có ca tối này"), người trống ghi số ca đang nhận. Chưa chọn → lỗi dưới nhóm; 23505 → tải lại, khóa người vừa bận, báo tên; `invalid_state` (người khác đã phân công) → đóng, cập nhật, toast. Không còn ai trống → nút tắt và nhắc gọi gia đình đổi ngày.
+  - Mục Chuyên viên ghi số ca chưa hoàn thành của từng người.
+- Đã gỡ dòng ghi chú giai đoạn (`notice`) ở cả hai trang; prop `notice` của `AppLayout` vẫn giữ (có thể dùng cho chế độ demo giai đoạn 5).
+- **Lỗi có sẵn từ giai đoạn 2 đã sửa:** bấm tab lọc ở trang điều phối (trừ tab cuối) làm cả danh sách bị ẩn, vì mọi tab dùng chung một panel và `initTabs` ẩn panel theo tab chưa chọn. `preview/ds/components.js` vẫn còn lỗi này (không sửa `preview/`).
+- Sửa nhỏ: `.hc-check` không còn hai vòng focus lồng nhau; đường chia đầu danh sách điều phối khi hàng đầu bị lọc ẩn.
+- Fixture: thêm gia đình thứ hai (không đăng nhập được) có yêu cầu chờ tối nay, để thấy chuyên viên đã bận; RPC giả lập kiểm tra đúng điều kiện của `assign/start/complete_homa_visit` (vai trò, trạng thái, 23505 chuyên viên trùng tối, `incomplete_tasks`, `invalid_report`).
+- **Đã kiểm tra** (fixture, Chrome headless với phím thật, 375px và 1280px, cùng một dữ liệu đi qua ba vai trò): điều phối lọc "Chờ phân công" bằng phím mũi tên, mở phân công bằng Enter, lỗi chưa chọn, 23505, chọn bằng Space + Enter → toast, focus về tab đang chọn, bộ lọc giữ nguyên; Esc ở sheet chi tiết trả focus về nút "Nhật ký". Chuyên viên: Esc ở sheet bắt đầu không đổi trạng thái; bắt đầu ca → focus vào "Ghi nhật ký"; lỗi đủ 4 hoạt động + nhật ký ngắn (focus vào hoạt động chưa đánh dấu); đóng rồi mở lại còn bản nháp; xem trước không có dòng đánh giá; gửi → toast, focus "Ca đã hoàn thành", bản nháp bị xóa; sheet nhật ký đã gửi. Gia đình thấy nhật ký mới ở trạng thái chờ đánh giá. Hai kịch bản gia đình của giai đoạn 3 vẫn đạt. Không tràn ngang, không lỗi console; build sạch, bản build không chứa fixture.
+
+### Việc tiếp theo — Giai đoạn 5 · Realtime + chế độ demo cho giám khảo
+- Realtime: lắng nghe thay đổi bảng `visits` (Supabase Realtime, theo RLS) để gia đình thấy trạng thái/nhật ký mới và điều phối thấy yêu cầu mới mà không bấm Cập nhật; giữ `ctx.reload()` + `refocus` để không làm mất focus khi đang mở sheet (không vẽ lại khi sheet đang mở, chỉ báo "Có cập nhật").
+- Chế độ demo: dựa trên `src/lib/fixture.ts` (dữ liệu trong sessionStorage), cho giám khảo đổi vai trò nhanh mà không cần tài khoản; cần quyết định cách bật (đường dẫn riêng hay nút) và ghi rõ "dữ liệu minh họa" trên màn hình (prop `notice` của AppLayout). Hỏi người dùng trước khi chọn cách triển khai.
 
 ### Còn để ngỏ
 - Cal Sans (TTF 100 KB) trong bản Astro chỉ còn cho chữ logo và trang `/tinh-nang`; nên chuyển sang woff2 (cần `woff2_compress` hoặc fonttools, máy chưa có).

@@ -290,7 +290,7 @@ Mọi lớp có tiền tố `hc-` để sống chung với CSS cũ (`.btn`, `.pi
 - Gợi ý `.hc-hint`, lỗi `.hc-error` (có icon). Ô lỗi đặt `aria-invalid="true"` và `aria-describedby` trỏ tới câu lỗi.
 - Focus: viền Teal + vòng Teal nhạt 4px. Ô chỉ đọc (`readonly`) có nền lõm.
 - `.hc-check`: dòng chọn cao 56px cho bốn hoạt động của chuyên viên. Dùng `:has(input:checked)` để tô nền.
-- Lỗi xuất hiện khi bấm gửi (không báo khi đang gõ), đặt ngay dưới ô liên quan, focus vào ô lỗi đầu tiên; gõ lại thì lỗi của ô đó mất. Lỗi không gắn với ô nào (mạng, quyền) đặt cuối biểu mẫu trong `.app-form-error` có `role="alert"`.
+- Lỗi xuất hiện khi bấm gửi (không báo khi đang gõ), đặt ngay dưới ô liên quan, focus vào ô lỗi đầu tiên; gõ lại thì lỗi của ô đó mất. Nhóm lựa chọn (`fieldset.hc-field.app-fieldset`) báo lỗi ở cuối nhóm, nối bằng `aria-describedby` (không đặt `aria-invalid` lên fieldset), focus vào lựa chọn đầu tiên còn thiếu. Hàm dùng chung ở `web/src/scripts/forms.ts`. Lỗi không gắn với ô nào (mạng, quyền) đặt cuối biểu mẫu trong `.app-form-error` có `role="alert"`.
 - Hai ô cạnh nhau dùng `.app-row2` (`align-items: start`, để câu lỗi dưới một ô không kéo cao ô bên cạnh).
 
 ### Chọn ngày — `.app-days` > `label.app-day` (khu app, giai đoạn 3)
@@ -320,7 +320,9 @@ Mọi lớp có tiền tố `hc-` để sống chung với CSS cũ (`.btn`, `.pi
 
 - Gia đình: ngày (Lora 24px) + giờ, gói, giá → timeline → chuyên viên (hoặc "Đang chờ điều phối viên" với avatar viền đứt).
 - Chuyên viên: người thân + tuổi + khu vực → chip thói quen → lời nhắn gia đình (khối Sand) → nút "Bắt đầu ca".
-- Điều phối viên: `.hc-visit-row` một dòng trên máy tính, tự xếp thành 3 dòng khi khung hẹp hơn 620px.
+- Điều phối viên: `.hc-visit-row` một dòng trên máy tính, tự xếp thành 3 dòng khi khung hẹp hơn 620px. Danh sách xếp việc cần làm lên trước (chờ phân công → đang chăm sóc → đã phân công → hoàn thành mới nhất); hàng chờ phân công có nút chính "Phân công", hàng khác nút `--quiet`.
+- Nút thao tác của thẻ ca nằm trong `.app-visit-actions` ở cuối thẻ: điện thoại rộng hết thẻ (`hc-btn--lg hc-btn--block`), từ 900px co theo chữ; ngay dưới là một câu gợi ý ngắn ("Bấm khi bạn đã đến nơi."). Ca chưa đến ngày thì không hiện nút, chỉ ghi khi nào nút xuất hiện.
+- Chọn người (phân công): mỗi chuyên viên là một radio `.hc-check.app-staff-option` có avatar, tên và một dòng nhỏ; người không chọn được thì `disabled` kèm lý do ("Đã có ca tối này") thay vì ẩn đi.
 
 ### CareLogCard — `.hc-log`, `.hc-rating`
 
@@ -338,8 +340,10 @@ Mọi lớp có tiền tố `hc-` để sống chung với CSS cũ (`.btn`, `.pi
 - Dùng `<dialog>` gốc của trình duyệt (bẫy focus, phím Esc có sẵn). Điện thoại: trượt từ dưới lên, có thanh kéo; từ 640px: hộp giữa màn hình rộng 560px.
 - Mở bằng `data-hc-open="id"` hoặc `HC.openSheet(id)`; đóng bằng `data-hc-close`, Esc, chạm nền tối. Focus quay về nút đã mở.
 - Chỉ dùng khi cần tập trung xác nhận (xem lại trước khi gửi yêu cầu, phân công chuyên viên). Không dùng sheet cho nội dung đọc thường.
-- `HC.closeSheet(dialog)` trả về Promise xong khi sheet đã đóng hẳn. Nếu sau khi lưu trang vẽ lại (nút đã mở sheet bị thay), chờ cả việc đóng và tải lại rồi mới đặt focus vào phần tử tương ứng mới (`refocus()` trong `family.ts`).
-- **Mẫu sheet 2 bước** (đặt ca): một `<form>` chứa hai khối `[data-step="details"]` và `[data-step="review"]`; mô tả sheet ghi "Bước 1 trên 2 · …" / "Bước 2 trên 2 · …". Nút cuối đổi chữ theo bước: "Để sau" / "Xem lại yêu cầu" → "Quay lại sửa" / "Xác nhận và gửi yêu cầu". Chỉ gọi RPC ở bước 2; sang bước 2 thì focus vào khối xem lại (`tabindex="-1"`, có `aria-label`). Lỗi của một ô ở bước 1 (ví dụ trùng ngày) đưa về bước 1 và báo dưới ô đó. Đóng rồi mở lại luôn về bước 1.
+- `HC.closeSheet(dialog)` trả về Promise xong khi sheet đã đóng hẳn. Nếu sau khi lưu trang vẽ lại (nút đã mở sheet bị thay), chờ cả việc đóng và tải lại rồi mới đặt focus vào phần tử tương ứng mới (`refocus()` trong `web/src/scripts/forms.ts`).
+- **Sheet xác nhận** cho thao tác không hoàn tác được và gia đình thấy ngay (bắt đầu ca): một người/ca ở đầu, một câu nói rõ hậu quả ("Gia đình sẽ thấy trạng thái Đang chăm sóc ngay khi bạn bấm"), nút phụ nói việc không làm ("Chưa bắt đầu"), nút chính lặp lại động từ ("Bắt đầu ca"). Thao tác lặp lại được hoặc có bước xem lại thì không cần sheet này.
+- **Mẫu sheet 2 bước** (đặt ca, nhật ký sau ca): một `<form>` chứa hai khối `[data-step="details"]` và `[data-step="review"]`; mô tả sheet ghi "Bước 1 trên 2 · …" / "Bước 2 trên 2 · …". Nút cuối đổi chữ theo bước: "Để sau" / "Xem lại yêu cầu" → "Quay lại sửa" / "Xác nhận và gửi yêu cầu". Chỉ gọi RPC ở bước 2; sang bước 2 thì focus vào khối xem lại (`tabindex="-1"`, có `aria-label`). Lỗi của một ô ở bước 1 (ví dụ trùng ngày) đưa về bước 1 và báo dưới ô đó. Đóng rồi mở lại luôn về bước 1. Khi bước 2 cho người khác đọc (nhật ký gửi gia đình), xem trước bằng đúng thành phần người nhận sẽ thấy (`careLog(v, { preview: true })`).
+- **Bản nháp** cho nội dung dài gõ trên điện thoại (nhật ký sau ca): lưu localStorage theo từng ca mỗi lần gõ, mở lại thì điền sẵn và báo bằng dòng `.app-draft-note`, thẻ ngoài trang ghi "có bản nháp chưa gửi", gửi thành công thì xóa. Biểu mẫu ngắn (thêm người thân, đặt ca) không cần.
 
 ### Toast — `HC.toast(text, { tone, title, duration })`
 

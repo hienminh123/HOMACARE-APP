@@ -36,15 +36,16 @@ export function familyVisit(v: Visit, label: string): string {
   </article>`;
 }
 
-/** VisitCard của chuyên viên: người thân → thói quen → lời nhắn gia đình. */
-export function caregiverVisit(v: Visit, label: string): string {
+/** VisitCard của chuyên viên: người thân → thói quen → lời nhắn gia đình → nút thao tác (`action`, HTML). */
+export function caregiverVisit(v: Visit, label: string, action = ''): string {
   const r = relativeOf(v);
-  return `<article class="hc-card hc-visit" aria-label="Ca ${esc(dayLabel(v.care_date))}">
+  return `<article class="hc-card hc-visit" data-visit="${esc(v.id)}" aria-label="Ca ${esc(dayLabel(v.care_date))}">
     <div class="hc-card__head"><span class="hc-card__label">${esc(label)}</span>${pill(v.status)}</div>
     ${person(r?.full_name || 'Người thân', `${r?.age ? r.age + ' tuổi · ' : ''}${r?.area || ''}`, 'relative', { size: 'lg' })}
     <div class="hc-visit__when"><span class="hc-visit__date">${esc(dayLabel(v.care_date))}</span><span class="hc-visit__meta">${PACKAGE.hours} · ${PACKAGE.duration} · Gói ${PACKAGE.name}</span></div>
     <div class="hc-visit__note"><strong>Thói quen & mong muốn</strong>${esc(r?.preferences || 'Gia đình chưa ghi thói quen. Hãy hỏi người thân thích gì khi đến nơi.')}</div>
     ${v.care_note ? `<div class="hc-visit__note"><strong>Gia đình nhắn</strong>${esc(v.care_note)}</div>` : ''}
+    ${action ? `<div class="app-visit-actions">${action}</div>` : ''}
   </article>`;
 }
 
@@ -58,16 +59,18 @@ function rateForm(v: Visit): string {
   </div>`;
 }
 
-/** CareLogCard: luôn đủ 4 hoạt động. `rateable`: gia đình chấm sao được khi ca chưa có đánh giá. */
-export function careLog(v: Visit, { rateable = false } = {}): string {
+/** CareLogCard: luôn đủ 4 hoạt động. `rateable`: gia đình chấm sao được khi ca chưa có đánh giá.
+ *  `preview`: chuyên viên xem trước nhật ký sắp gửi (không có dòng đánh giá). */
+export function careLog(v: Visit, { rateable = false, preview = false } = {}): string {
   const cg = caregiverOf(v);
   const acts = TASKS.map((t, i) => {
     const done = v.tasks?.[i];
     return `<li class="hc-log__act${done ? '' : ' is-skipped'}"><span class="hc-log__act-icon">${icon(t.icon)}</span>${esc(t.label)}${done ? `<svg class="hc-icon hc-log__act-state" role="img" aria-label="Đã làm"><use href="/icons.svg#check"/></svg>` : '<span class="hc-log__act-state">Không thực hiện</span>'}</li>`;
   }).join('');
   const stars = [1, 2, 3, 4, 5].map(n => `<span class="hc-rating__star${n <= (v.rating || 0) ? ' is-on' : ''}">${icon('star')}</span>`).join('');
-  const rating = v.rating
-    ? `<div class="hc-rating" data-readonly><span class="hc-rating__label">Gia đình đã đánh giá</span><div class="hc-rating__stars" role="img" aria-label="${v.rating} trên 5 sao">${stars}</div></div>`
+  const rating = preview ? ''
+    : v.rating
+    ?`<div class="hc-rating" data-readonly><span class="hc-rating__label">Gia đình đã đánh giá</span><div class="hc-rating__stars" role="img" aria-label="${v.rating} trên 5 sao">${stars}</div></div>`
     : rateable ? rateForm(v) : '<p class="hc-card__meta">Gia đình chưa đánh giá</p>';
   return `<article class="hc-card hc-log" data-visit="${esc(v.id)}" aria-label="Nhật ký ca ${esc(dayLabel(v.care_date))}">
     <div class="hc-card__head"><span class="hc-card__label">Nhật ký sau ca · ${esc(dayLabel(v.care_date))}</span>${pill('completed')}</div>
