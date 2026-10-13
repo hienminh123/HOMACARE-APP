@@ -1,29 +1,54 @@
 /* ==========================================================================
-   HomaCare Fonts · v1.1 (13/10/2026: đổi từ Cal Sans + Be Vietnam Pro)
-   - Lexend: tiêu đề. Font biến thiên, dùng 400–600, tự lưu trữ, tách bộ Latin và
-     tiếng Việt để trình duyệt chỉ tải phần cần. Giấy phép SIL OFL: public/assets/Lexend-OFL.txt
-     (Outfit được cân nhắc nhưng không có ký tự tiếng Việt ạ, ở, ự, ẫ…)
-   - Nội dung: font hệ thống (Segoe UI trên Windows, San Francisco trên iPhone/Mac,
-     Roboto trên Android), khai báo ở --font-body trong tokens.css. Không tải gì thêm;
-     Segoe UI thuộc bản quyền Microsoft nên không được tự lưu trữ.
-   Đường dẫn tính từ thư mục styles/. Nên preload lexend-latin.woff2.
+   HomaCare Fonts · v1.2 (13/10/2026)
+   Tự lưu trữ, không gọi dịch vụ bên ngoài. Cả hai là font biến thiên, mỗi bộ ký tự
+   một file; trình duyệt chỉ tải phần cần nhờ unicode-range.
+   - Lora: tiêu đề (có chân). Dùng 400–700. Giấy phép SIL OFL: public/assets/Lora-OFL.txt
+   - Nunito: nội dung, nút, nhãn (bo tròn). Dùng 400–700. Giấy phép SIL OFL: public/assets/Nunito-OFL.txt
+   Lịch sử chọn font: Cal Sans + Be Vietnam Pro (v1.0) → Lexend + font hệ thống (v1.1)
+   → Lora + Nunito (v1.2). Outfit và Zain bị loại vì không có ký tự tiếng Việt.
+   - Cal Sans: chỉ cho chữ "HomaCare" trên logo (giữ như bản đang chạy), một độ đậm 400.
+     Dùng file chung /assets/CalSans-Regular.ttf trong public/ (trang /tinh-nang cũng dùng).
+     Giấy phép: public/assets/CalSans-LICENSE.txt
+   Đường dẫn tính từ thư mục styles/. Layout preload lora-latin và nunito-latin.
    ========================================================================== */
 
-/* --- Lexend · tiếng Việt --- */
+/* --- Lora · tiếng Việt --- */
 @font-face {
-  font-family: 'Lexend';
-  src: url('../assets/fonts/lexend-vietnamese.woff2') format('woff2');
-  font-weight: 400 600; font-style: normal;
-  /* block: tiêu đề không nháy font, giữ như quyết định đã chốt với Cal Sans */
+  font-family: 'Lora';
+  src: url('../assets/fonts/lora-vietnamese.woff2') format('woff2');
+  font-weight: 400 700; font-style: normal;
+  /* block: tiêu đề không nháy font, giữ như quyết định đã chốt từ bản đầu */
   font-display: block;
   unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
 }
-
-/* --- Lexend · Latin --- */
+/* --- Lora · Latin --- */
 @font-face {
-  font-family: 'Lexend';
-  src: url('../assets/fonts/lexend-latin.woff2') format('woff2');
-  font-weight: 400 600; font-style: normal;
+  font-family: 'Lora';
+  src: url('../assets/fonts/lora-latin.woff2') format('woff2');
+  font-weight: 400 700; font-style: normal;
   font-display: block;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* --- Nunito · tiếng Việt --- */
+@font-face {
+  font-family: 'Nunito';
+  src: url('../assets/fonts/nunito-vietnamese.woff2') format('woff2');
+  font-weight: 400 700; font-style: normal; font-display: swap;
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* --- Nunito · Latin --- */
+@font-face {
+  font-family: 'Nunito';
+  src: url('../assets/fonts/nunito-latin.woff2') format('woff2');
+  font-weight: 400 700; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* --- Cal Sans · chữ logo --- */
+@font-face {
+  font-family: 'Cal Sans';
+  src: url('/assets/CalSans-Regular.ttf') format('truetype');
+  font-weight: 400; font-style: normal;
+  font-display: block;
 }

@@ -48,7 +48,7 @@ MVP hiện hỗ trợ đặt ca **Ân cần**, khung giờ **18:00–22:00**, gi
 | Quản lý mã nguồn | Git và GitHub. |
 | Kiểm thử cơ sở dữ liệu | PostgreSQL PGlite. |
 
-Giao diện `preview/` sử dụng font **Cal Sans** tải tại chỗ; bản Astro trong `web/` dùng **Lexend** (tiêu đề, tự lưu trữ) và font hệ thống cho nội dung. Cả hai dùng logo do nhóm HOMACARE cung cấp và bảng màu nhận diện:
+Giao diện `preview/` sử dụng font **Cal Sans** tải tại chỗ; bản Astro trong `web/` dùng **Lora** (tiêu đề) và **Nunito** (nội dung), tự lưu trữ; chữ "HomaCare" trên logo vẫn là Cal Sans. Cả hai dùng logo do nhóm HOMACARE cung cấp và bảng màu nhận diện:
 
 | Màu | Mã |
 | --- | --- |

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HomaCare Components · v1.1
+   HomaCare Components · v1.2
    Tiền tố hc- để sống chung với CSS cũ (.btn, .pill, .modal…) trong lúc chuyển.
    Chỉ đọc token ngữ nghĩa trong tokens.css. Hành vi (tabs, sheet, toast,
    đánh giá) nằm ở components.js; không có JS, mọi thứ vẫn hiển thị đúng.
@@ -582,7 +582,7 @@ body:has(.hc-bottomnav) { padding-bottom: calc(76px + env(safe-area-inset-bottom
 .hc-header.is-scrolled { border-bottom-color: var(--color-border); }
 .hc-header__brand { display: inline-flex; align-items: center; gap: var(--space-2); text-decoration: none; color: inherit; min-height: var(--tap-min); flex: none; }
 .hc-header__brand img { width: 32px; height: 32px; border-radius: var(--radius-sm); }
-.hc-wordmark { font-family: var(--font-display); font-weight: var(--weight-display); font-synthesis: none; font-size: var(--text-lg); line-height: 1; letter-spacing: var(--tracking-display); }
+.hc-wordmark { font-family: var(--font-brand); font-weight: 400; font-synthesis: none; font-size: var(--text-lg); line-height: 1; letter-spacing: var(--tracking-display); }
 .hc-wordmark b { font-weight: inherit; color: var(--teal-800); }
 .hc-wordmark i { font-style: normal; color: var(--apricot-500); }
 .hc-header__title { min-width: 0; flex: 1; }

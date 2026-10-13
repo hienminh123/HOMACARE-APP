@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HomaCare Base · v1.1
+   HomaCare Base · v1.2
    Mặc định cho phần tử HTML: chữ, nền, focus, vùng chọn, thanh cuộn.
    Thứ tự nạp: tokens.css → fonts.css → base.css → components.css.
    ========================================================================== */
@@ -31,7 +31,7 @@ h1, h2, h3, h4 {
   margin: 0;
   font-family: var(--font-display);
   font-weight: var(--weight-display);
-  font-synthesis: none;          /* Lexend có sẵn 400–600: không để trình duyệt tô đậm giả */
+  font-synthesis: none;          /* Lora có sẵn 400–700: không để trình duyệt tô đậm giả */
   letter-spacing: var(--tracking-display);
   line-height: var(--leading-snug);
   text-wrap: balance;

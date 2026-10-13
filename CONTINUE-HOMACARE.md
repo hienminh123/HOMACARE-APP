@@ -33,7 +33,7 @@
 
 ### Giai đoạn 2 · Chuyển sang Astro, tách trang giới thiệu khỏi app (commit cuối phiên 13/10)
 - **Người dùng đã duyệt:** tạo dự án Astro output tĩnh trong `web/` (npm, không SSR, không adapter), Supabase lấy từ gói npm `@supabase/supabase-js`, **dựng lại** trang giới thiệu bằng design system (không chép CSS cũ), thêm Góc sức khỏe sau khi kiểm link.
-- **Đổi font (người dùng yêu cầu giữa phiên):** muốn Outfit + Segoe UI như trang Mantine. Outfit **không có tiếng Việt** (thiếu U+1EA0–1EF1: ạ, ở, ự, ẫ…), nên người dùng chọn **Lexend** cho tiêu đề (tự lưu trữ, biến thiên 400–600, dùng 500) + **font hệ thống** cho nội dung (Segoe UI trên Windows, San Francisco trên iPhone, Roboto trên Android; Segoe UI không được tự lưu trữ). Design system lên **v1.1**, chỉ đổi font; màu, khoảng cách, thành phần giữ nguyên. `preview/ds/` vẫn ở v1.0. DESIGN.md đã cập nhật.
+- **Đổi font (người dùng yêu cầu giữa phiên, chốt v1.2):** lần lượt hỏi Outfit + Segoe UI (Outfit không có tiếng Việt → thử Lexend + font hệ thống, commit `da1dd54`), rồi Zain + Nunito (Zain không có tiếng Việt, thiếu cả ă/đ/ơ/ư), cuối cùng **chốt Lora (tiêu đề, 600) + Nunito (nội dung)**, tự lưu trữ woff2 tách Latin/tiếng Việt (~100 KB cả hai). Người dùng yêu cầu **giữ chữ logo "HomaCare" bằng Cal Sans** (token `--font-brand`, chỉ `.hc-wordmark`). Màu, khoảng cách, thành phần giữ nguyên. `preview/ds/` vẫn ở v1.0. DESIGN.md đã cập nhật. Đã gửi người dùng mockup trước khi commit.
 - Phiên bản: Astro 7.3.8, @supabase/supabase-js 2.117.3, Node 24. Không cài gì khác (chưa có `@astrojs/check`/TypeScript để kiểm kiểu; muốn thêm thì hỏi người dùng).
 - Cấu trúc và cách chạy: xem `web/README.md`. Tóm tắt:
   - `web/src/styles/` = 4 file CSS của design system (nạp đúng thứ tự trong `BaseLayout.astro`) + `site.css` (trang giới thiệu) + `app.css` (khu app). `web/src/scripts/components.js` = bản chép `components.js`, chỉ đổi phần trạng thái ca/icon sang import từ `src/lib/status.ts`, `src/lib/html.ts`. `base.css` thêm quy tắc `[hidden]{display:none!important}`.
@@ -45,14 +45,14 @@
   - Chế độ giả lập `npm --prefix web run dev:fixture` (cổng 4322): `src/lib/fixture.ts` thay Supabase, dữ liệu minh họa trong sessionStorage; đã kiểm tra bản build không chứa file này. Có thể làm nền cho "chế độ demo cho giám khảo" ở giai đoạn 5.
 - Trang giới thiệu: giữ thứ tự mục và các quyết định đã chốt (chữ hero chiếm gần trọn màn đầu trên điện thoại, "Sự quan tâm vẫn ở gần." một dòng; "Về HomaCare" lên trước "Dõi theo từ xa" trên điện thoại, ẩn đoạn 3 và ảnh; 3 thẻ teal; 4 giá trị 2×2; điện thoại ẩn 4 thẻ dịch vụ, thay bằng "Chăm sóc theo buổi tại nhà"; bảng giá desktop đủ 3 gói, mobile rút gọn 2 gói đang phát triển; hiện dần 1,1s/36px/140ms; "Cách sử dụng" trên điện thoại mở minh họa ngay dưới bước bấm, bấm lại thì thu, bù cuộn, không tự cuộn/tự chuyển; desktop minh họa dính bên phải). Đơn giản hơn bản cũ: hero không còn 3 tab + điện thoại vuốt; minh họa dựng bằng component thật (VisitCard, CareLog, Timeline…) và ghi "dữ liệu minh họa". Thêm mục "Góc sức khỏe" vào menu.
 - Góc sức khỏe: đã mở lại 3 link ngày 13/10/2026, cả ba còn hoạt động (Cục Dân số 30/09/2026, server lỗi chuỗi chứng chỉ với một số công cụ nhưng trang trả 200; WHO Đông Nam Á 01/10/2026; WHO fact sheet 01/10/2025). Hai bài WHO ghi "Bài viết bằng tiếng Anh".
-- Đã kiểm tra: build sạch (7 trang, ảnh tự nén webp); không tràn ngang ở 375px và 1280px; header vừa ở 900px; Lexend nạp đúng, đủ dấu; chuỗi giả lập: đăng nhập chuyên viên → `/app/chuyen-vien/`, vào sai vai trò bị đưa về đúng không gian, đăng xuất về `/`, `/auth.html?role=caregiver#error_code=…` → trang đăng nhập giữ role và báo link hết hạn, Tabs lọc và Sheet chi tiết mở/focus đúng, "Cách sử dụng" trên điện thoại giữ bước đứng yên khi chuyển. Không tạo dữ liệu hay tài khoản Supabase thật. Khung trình duyệt của Claude chạy ẩn nên ảnh chụp dùng Chrome headless qua DevTools.
+- Đã kiểm tra: build sạch (7 trang, ảnh tự nén webp); không tràn ngang ở 375px và 1280px; header vừa ở 900px; Lora/Nunito/Cal Sans nạp đúng, đủ dấu; chuỗi giả lập: đăng nhập chuyên viên → `/app/chuyen-vien/`, vào sai vai trò bị đưa về đúng không gian, đăng xuất về `/`, `/auth.html?role=caregiver#error_code=…` → trang đăng nhập giữ role và báo link hết hạn, Tabs lọc và Sheet chi tiết mở/focus đúng, "Cách sử dụng" trên điện thoại giữ bước đứng yên khi chuyển. Không tạo dữ liệu hay tài khoản Supabase thật. Khung trình duyệt của Claude chạy ẩn nên ảnh chụp dùng Chrome headless qua DevTools.
 - `.claude/launch.json`: thêm `web` (4321), `web-fixture` (4322), `web-dist` (4323, `astro preview`).
 
 ### Trước khi merge `thiet-ke-lai` vào `main` (người dùng phải duyệt từng việc)
 1. **Cloudflare Pages** (project homacare-demo → Settings → Builds): **Root directory** `web`; **Build command** `npm run build`; **Build output directory** `dist`; biến môi trường `NODE_VERSION` = 22 trở lên. Hiện đang là build command trống, output `preview`.
 2. **Supabase → Authentication → URL Configuration:** đổi **Site URL** từ `https://homacare-demo.pages.dev/auth.html` thành `https://homacare-demo.pages.dev/app/dang-nhap/` (giữ nguyên cũng chạy nhờ trang chuyển hướng, nhưng đổi để bớt một bước). Giữ Redirect URL `https://homacare-demo.pages.dev/**`. Email template nào ghi cứng `auth.html` thì sửa theo.
 3. Sau khi deploy (nên thử trên URL preview của nhánh trước): một email xác nhận mới, một email quên mật khẩu, đăng nhập 3 vai trò, link cũ `/family.html?booking=1`.
-4. Thử trên iPhone thật: font hệ thống, "Cách sử dụng", sheet, BottomNav.
+4. Thử trên iPhone thật: font Lora/Nunito, "Cách sử dụng", sheet, BottomNav.
 5. Giữ `preview/` cho tới khi giai đoạn 3–4 xong rồi mới quyết định bỏ.
 
 ### Việc tiếp theo — Giai đoạn 3 · App gia đình, ưu tiên điện thoại
@@ -61,7 +61,7 @@
 - Khi cả ba không gian đủ thao tác thì gỡ dòng ghi chú "Khung app mới (giai đoạn 2)" trong `AppLayout.astro`.
 
 ### Còn để ngỏ
-- Cal Sans (TTF 100 KB) giờ chỉ còn dùng ở `preview/` và trang `/tinh-nang`; bản Astro dùng Lexend woff2.
+- Cal Sans (TTF 100 KB) trong bản Astro chỉ còn cho chữ logo và trang `/tinh-nang`; nên chuyển sang woff2 (cần `woff2_compress` hoặc fonttools, máy chưa có).
 - `tinh-nang.html` vẫn dùng CSS nội tuyến riêng (cả bản chép trong `web/public/`), chưa chuyển sang design system.
 - Chưa có trang tài liệu design system cho bản Astro (`preview/design-system.html` vẫn mô tả v1.0 với Cal Sans); có thể làm trang `/thiet-ke` noindex.
 - Chưa kiểm kiểu TypeScript (`astro check` cần cài thêm `@astrojs/check` và `typescript`, phải hỏi người dùng).
