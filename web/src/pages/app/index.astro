@@ -1,0 +1,60 @@
+---
+// Cửa vào app: đã đăng nhập thì chuyển thẳng tới không gian theo vai trò trong database,
+// chưa thì chọn vai trò (thay popup "Bạn đến với vai trò nào?" của trang chủ cũ).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/hc/Header.astro';
+import Button from '../../components/hc/Button.astro';
+import Card from '../../components/hc/Card.astro';
+import Avatar from '../../components/hc/Avatar.astro';
+import Icon from '../../components/hc/Icon.astro';
+import '../../styles/app.css';
+const roles = [
+  { role: 'family' as const, initials: 'GĐ', title: 'Không gian Gia đình', text: 'Sắp xếp chăm sóc và dõi theo người thân.' },
+  { role: 'caregiver' as const, initials: 'CV', title: 'Không gian Chuyên viên chăm sóc', text: 'Nhận ca được phân công và ghi lại từng buổi đồng hành.' },
+  { role: 'coordinator' as const, initials: 'ĐP', title: 'Không gian Điều phối viên', text: 'Tiếp nhận yêu cầu và sắp xếp người đồng hành.' },
+];
+---
+<BaseLayout title="Chọn vai trò · HomaCare" noindex>
+  <Header>
+    <Button slot="actions" href="/" variant="ghost" size="sm" icon="arrow-left">Về trang chủ</Button>
+  </Header>
+  <main class="app-main app-main--narrow" aria-busy="true" id="role-picker">
+    <div class="app-greeting">
+      <h1>Bạn đến với vai trò nào?</h1>
+      <p>Chọn không gian phù hợp với bạn. Việc chọn vai trò không cấp thêm quyền cho tài khoản; quyền do HomaCare kiểm tra trên máy chủ.</p>
+    </div>
+    <ul class="app-list">
+      {roles.map(r => (
+        <li>
+          <Card href={`/app/dang-nhap/?role=${r.role}`} class="role-link">
+            <Avatar role={r.role} size="lg">{r.initials}</Avatar>
+            <span class="role-link__text"><span class="hc-card__title">{r.title}</span><span class="hc-card__meta">{r.text}</span></span>
+            <Icon name="chevron-right" class="role-link__chevron" />
+          </Card>
+        </li>
+      ))}
+    </ul>
+  </main>
+  <script>
+    import { forwardAuthCallback, go, profile } from '../../lib/auth';
+    import { SESSION_STORAGE_KEY } from '../../lib/config';
+    const main = document.getElementById('role-picker')!;
+    (async () => {
+      if (forwardAuthCallback()) return;
+      try {
+        // Chỉ hỏi Supabase khi trình duyệt đang giữ phiên
+        if (localStorage.getItem(SESSION_STORAGE_KEY)) {
+          const current = await profile();
+          if (current) { go(current.role); return; }
+        }
+      } catch { /* mất mạng: vẫn cho chọn vai trò */ }
+      main.setAttribute('aria-busy', 'false');
+    })();
+  </script>
+</BaseLayout>
+
+<style>
+  .role-link { display: flex; align-items: center; gap: var(--space-4); color: inherit; }
+  .role-link__text { display: grid; gap: var(--space-1); flex: 1; min-width: 0; }
+  .role-link :global(.role-link__chevron) { color: var(--color-text-muted); }
+</style>

@@ -1,0 +1,27 @@
+---
+// .hc-log — nhật ký sau ca: luôn đủ bốn hoạt động (mục không làm ghi "Không thực hiện"),
+// lời ghi của chuyên viên cỡ 18px trong khối Sand, và đánh giá sao.
+import Card from './Card.astro';
+import Icon from './Icon.astro';
+import StatusPill from './StatusPill.astro';
+import Rating from './Rating.astro';
+import { TASKS } from '../../lib/visits';
+interface Props {
+  id: string; label: string; done?: boolean[]; note?: string; author?: string; time?: string;
+  rating?: number | null; rateable?: boolean;
+}
+const { id, label, done = [true, true, true, true], note, author, time, rating, rateable } = Astro.props;
+---
+<Card class="hc-log" aria-label={label}>
+  <div class="hc-card__head"><span class="hc-card__label">{label}</span><StatusPill status="completed" /></div>
+  <ul class="hc-log__acts">
+    {TASKS.map((task, i) => (
+      <li class:list={['hc-log__act', !done[i] && 'is-skipped']}>
+        <span class="hc-log__act-icon"><Icon name={task.icon} /></span>{task.label}
+        {done[i] ? <Icon name="check" class="hc-log__act-state" label="Đã làm" /> : <span class="hc-log__act-state">Không thực hiện</span>}
+      </li>
+    ))}
+  </ul>
+  {note && <blockquote class="hc-log__note">{note}{author && <footer>{author}{time && <> ghi lúc <time>{time}</time></>}</footer>}</blockquote>}
+  {rating ? <Rating id={id} value={rating} readonly /> : rateable && <Rating id={id} />}
+</Card>

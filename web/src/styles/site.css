@@ -1,0 +1,48 @@
+/* ==========================================================================
+   Trang giới thiệu · bố cục riêng của "/" (app dùng app.css).
+   Chỉ đọc token trong tokens.css; viết cho 375px trước, mở rộng bằng min-width.
+   ========================================================================== */
+
+html { scroll-padding-top: 80px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+.site-container { width: min(100% - 2 * var(--gutter), var(--container)); margin-inline: auto; }
+.site-section { padding-block: var(--space-16); }
+.site-section--surface { background: var(--color-surface); }
+.site-section--warm { background: var(--color-surface-warm); }
+@media (min-width: 900px) { .site-section { padding-block: var(--space-24); } }
+
+.section-head { max-width: 760px; margin-bottom: var(--space-10); }
+.section-head--center { margin-inline: auto; text-align: center; }
+.section-head h2 { font-size: var(--text-2xl); line-height: var(--leading-tight); }
+.section-desc { margin-top: var(--space-4); font-size: var(--text-md); line-height: var(--leading-normal); color: var(--color-text-muted); max-width: var(--measure); }
+.section-head--center .section-desc { margin-inline: auto; }
+.section-foot { margin-top: var(--space-10); display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.section-head--center + * + .section-foot, .section-foot--center { justify-content: center; }
+
+.demo-flag { font-size: var(--text-xs); color: var(--color-text-muted); }
+
+/* Lưới tiện dụng */
+.grid { display: grid; gap: var(--space-4); }
+@media (min-width: 640px) { .grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 900px) {
+  .grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); }
+  .grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-5); }
+}
+
+/* Danh sách có icon */
+.icon-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+.icon-list li { display: flex; gap: var(--space-3); align-items: flex-start; }
+.icon-list .hc-icon { margin-top: 2px; color: var(--color-text-brand); }
+
+/* ---------- Hiện dần khi cuộn (1,1s, trượt 36px, trễ 140ms giữa thẻ cạnh nhau) ----------
+   Chỉ ẩn khi JS đã gắn .reveal-ready lên <html>; không có JS thì mọi thứ hiện bình thường. */
+.reveal-ready [data-reveal] {
+  opacity: 0; transform: translateY(36px);
+  transition: opacity var(--duration-reveal) var(--ease-out), transform var(--duration-reveal) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal-ready [data-reveal].is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal-ready [data-reveal] { opacity: 1; transform: none; transition: none; }
+}

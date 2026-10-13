@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/hc/Header.astro';
+import EmptyState from '../components/hc/EmptyState.astro';
+import Button from '../components/hc/Button.astro';
+import '../styles/app.css';
+---
+<BaseLayout title="Không tìm thấy trang · HomaCare" noindex>
+  <Header />
+  <main class="app-main app-main--narrow">
+    <EmptyState icon="map-pin" title="Không tìm thấy trang này" text="Đường dẫn có thể đã đổi trong bản HomaCare mới. Bạn quay về trang chủ hoặc mở ứng dụng nhé." headingLevel={2}>
+      <div class="hc-cluster" style="justify-content:center">
+        <Button href="/">Về trang chủ</Button>
+        <Button href="/app/" variant="secondary">Mở ứng dụng</Button>
+      </div>
+    </EmptyState>
+  </main>
+</BaseLayout>

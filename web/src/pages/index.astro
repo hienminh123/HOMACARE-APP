@@ -1,0 +1,617 @@
+---
+// Trang giới thiệu "/". Nội dung chuyển từ preview/index.html (landing v4) và Góc sức khỏe
+// (docs/noi-dung/goc-suc-khoe.md, đã mở lại 3 link nguồn ngày 13/10/2026), dựng lại bằng design system.
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+import JourneySteps from '../components/site/JourneySteps.astro';
+import Button from '../components/hc/Button.astro';
+import Card from '../components/hc/Card.astro';
+import Icon from '../components/hc/Icon.astro';
+import StatusPill from '../components/hc/StatusPill.astro';
+import StatusTimeline from '../components/hc/StatusTimeline.astro';
+import VisitCard from '../components/hc/VisitCard.astro';
+import Person from '../components/hc/Person.astro';
+import Avatar from '../components/hc/Avatar.astro';
+import Chip from '../components/hc/Chip.astro';
+import { TASKS } from '../lib/visits';
+import '../styles/site.css';
+
+import companion from '../assets/photos/companion.jpg';
+import meal from '../assets/photos/meal.jpg';
+import walk from '../assets/photos/walk.jpg';
+import family from '../assets/photos/family.jpg';
+import caregiver from '../assets/photos/caregiver.jpg';
+
+const bookHref = '/app/dang-nhap/?role=family&booking=1';
+
+const values = [
+  { title: 'Biết người đang đồng hành', text: 'Xem tên chuyên viên sau khi điều phối viên phân công ca cho người thân.', kind: 'person' },
+  { title: 'Biết lịch đã được sắp xếp', text: 'Theo dõi ngày, khung giờ và trạng thái từ chờ phân công đến hoàn thành.', kind: 'status' },
+  { title: 'Biết hôm nay có gì đáng chú ý', text: 'Đọc hoạt động, ghi nhận chung và lưu ý cho lần tới sau khi chuyên viên gửi nhật ký.', kind: 'log' },
+];
+
+const coreValues = [
+  { icon: 'heart', title: 'Tận tâm', text: 'Hỏi kỹ cha mẹ cần gì, thích gì trước khi bắt tay vào việc.' },
+  { icon: 'users', title: 'Tôn trọng', text: 'Cha mẹ đồng ý mới làm. Giữ thói quen, để cha mẹ tự làm những việc còn tự làm được.' },
+  { icon: 'book', title: 'Rõ ràng', text: 'Nói trước sẽ làm gì, vào giờ nào, và ghi lại sau mỗi buổi.' },
+  { icon: 'shield', title: 'Có trách nhiệm', text: 'Làm đúng phần việc đã thống nhất, nhận góp ý để làm tốt hơn.' },
+];
+
+const roles = [
+  {
+    role: 'family' as const, initials: 'GĐ', name: 'Gia đình', title: 'Đặt lịch và dõi theo cha mẹ.',
+    text: 'Thêm hồ sơ cha mẹ, gửi yêu cầu, xem ai được phân công, đọc nhật ký và chấm sao sau mỗi buổi.',
+    flow: 'Thêm người thân → Gửi yêu cầu → Xem lịch và phân công → Đọc nhật ký gần nhất → Đánh giá ca.',
+    cta: 'Vào không gian gia đình', href: '/app/dang-nhap/?role=family',
+  },
+  {
+    role: 'caregiver' as const, initials: 'CV', name: 'Chuyên viên chăm sóc', title: 'Nhận ca và ghi lại buổi chăm sóc.',
+    text: 'Xem ca được giao, đọc lưu ý về người thân, bấm bắt đầu khi đến nơi, đánh dấu 4 việc và gửi nhật ký.',
+    flow: 'Hỗ trợ bữa tối · Đồng hành vận động nhẹ · Trò chuyện & nhắc lịch sinh hoạt · Kiểm tra an toàn trước khi kết thúc.',
+    cta: 'Vào không gian chuyên viên', href: '/app/dang-nhap/?role=caregiver',
+  },
+  {
+    role: 'coordinator' as const, initials: 'ĐP', name: 'Điều phối viên', title: 'Nhận yêu cầu và tìm người phù hợp.',
+    text: 'Xem các ca đang chờ, chọn chuyên viên còn trống lịch và theo dõi ca cho đến khi xong.',
+    flow: 'Xem danh sách ca → Lọc Chờ phân công → Chọn chuyên viên trống lịch → Xác nhận phân công → Theo dõi tiến độ ca.',
+    cta: 'Đăng nhập điều phối', href: '/app/dang-nhap/?role=coordinator',
+  },
+];
+
+const services = [
+  { image: companion, alt: 'Người cao tuổi đọc sách cùng người đồng hành tại nhà', title: 'Trò chuyện và đồng hành', text: 'Nói chuyện, đọc báo, đọc sách hay chơi cờ, tùy cha mẹ thích gì.' },
+  { image: meal, alt: 'Người đồng hành cùng người cao tuổi dùng bữa tối', title: 'Bữa ăn và sinh hoạt', text: 'Phụ chuẩn bị bữa, cùng ăn và giúp những việc sinh hoạt cơ bản đã thống nhất trước.' },
+  { image: walk, alt: 'Người cao tuổi đi dạo trong vườn cùng người đồng hành', title: 'Vận động nhẹ', text: 'Đi bộ cùng cha mẹ, đỡ khi đi lại trong nhà, vừa sức với từng người.' },
+  { image: caregiver, alt: 'Chuyên viên chăm sóc ghi nhật ký sau buổi đồng hành', title: 'Nhắc lịch và ghi nhận', text: 'Nhắc giờ sinh hoạt, ghi lại việc đã làm và gửi nhật ký cho gia đình.' },
+];
+
+const upcoming = [
+  { name: 'Gói Chăm chút', intro: 'Thêm thời gian hỗ trợ người thân trong các sinh hoạt ban ngày.', price: '600.000–800.000đ / buổi', duration: 'Thời lượng dự kiến: 8–12 giờ / buổi', text: 'Đồng hành trong sinh hoạt ban ngày, hỗ trợ dùng bữa trưa và chiều, theo dõi nề nếp sinh hoạt.' },
+  { name: 'Gói Thân tình', intro: 'Định hướng đồng hành định kỳ để gia đình chủ động sắp xếp trong tháng.', price: '2.800.000đ / tháng', duration: 'Dự kiến: 7 ngày lựa chọn/tháng · 8 giờ/ngày', text: 'Gói đồng hành định kỳ hàng tháng giúp người thân có người quen thuộc đồng hành đều đặn.' },
+];
+
+const quality = [
+  { icon: 'user-check', title: 'Tuyển chọn phù hợp', text: 'Dự kiến kiểm tra thông tin, kinh nghiệm và độ phù hợp với việc chăm sóc tại nhà trước khi nhận.' },
+  { icon: 'book', title: 'Đào tạo căn bản', text: 'Dự kiến chương trình 30 giờ về giao tiếp, hỗ trợ sinh hoạt, vận động an toàn và nhận biết tình huống cần hỗ trợ.' },
+  { icon: 'users', title: 'Có đầu mối điều phối', text: 'Mỗi ca đều có điều phối viên theo dõi, nên gia đình luôn biết cần hỏi ai.' },
+];
+
+const done = [
+  'Webapp chạy thật với 3 không gian riêng cho gia đình, chuyên viên và điều phối viên.',
+  'Đặt được gói Ân cần, theo dõi 4 trạng thái ca, đọc nhật ký và chấm sao sau mỗi buổi.',
+  'Quyền xem dữ liệu được kiểm tra trên máy chủ, có 28 bài kiểm thử tự động.',
+];
+const next = [
+  'Thử nghiệm với gia đình và chuyên viên thật tại một khu vực ở Hà Nội.',
+  'Tuyển chọn chuyên viên, xây dựng chương trình đào tạo căn bản 30 giờ.',
+  'Mở đặt gói Chăm chút và Thân tình, thêm thanh toán trực tuyến và thông báo.',
+];
+
+// Đã mở lại từng link ngày 13/10/2026: cả ba còn hoạt động.
+const articles = [
+  { image: walk, alt: 'Người cao tuổi và người đồng hành đi dạo trong khu vườn', source: 'Việt Nam · Cục Dân số', date: '30/09/2026', title: 'Ngày Quốc tế Người cao tuổi: nhìn lại cách chúng ta đồng hành', text: 'Bài viết về chủ đề năm 2026 và những điều kiện giúp người cao tuổi có cuộc sống khỏe mạnh, có phẩm giá.', href: 'https://vnpa.moh.gov.vn/ngay-quoc-te-nguoi-cao-tuoi-1-thang-10/' },
+  { image: family, alt: 'Người cha và con gái cùng xem điện thoại', source: 'Thế giới · WHO Đông Nam Á', date: '01/10/2026', title: 'Cùng xây dựng hệ thống hỗ trợ cho cuộc sống dài hơn', text: 'WHO chia sẻ về già hóa khỏe mạnh và sự phối hợp giữa y tế, cộng đồng và hỗ trợ xã hội. Bài viết bằng tiếng Anh.', href: 'https://www.who.int/southeastasia/news/detail/01-10-2026-healthy-ageing-2026' },
+  { image: companion, alt: 'Người cao tuổi trò chuyện và đọc sách cùng người đồng hành', source: 'Kiến thức nền · WHO', date: '01/10/2025', title: 'Già hóa và sức khỏe: hiểu nhu cầu ở mỗi giai đoạn', text: 'Tổng quan về già hóa dân số và cách tạo môi trường hỗ trợ người cao tuổi. Bài viết bằng tiếng Anh.', href: 'https://www.who.int/news-room/fact-sheets/detail/ageing-and-health' },
+];
+
+const faqs = [
+  { q: 'HomaCare phù hợp với gia đình nào?', a: 'Gia đình có cha mẹ lớn tuổi cần thêm người bầu bạn hoặc giúp một phần việc sinh hoạt, trong khi con cái không ở gần. Trước ca đầu tiên, bạn nên trao đổi với HomaCare để xem có phù hợp không.' },
+  { q: 'Cha mẹ có cần dùng ứng dụng không?', a: 'Gia đình có thể dùng tài khoản của mình để thêm người thân, đặt ca và theo dõi nhật ký. Người cao tuổi không cần tự thao tác trên app; gia đình vẫn cần trao đổi để người thân hiểu và đồng ý với buổi đồng hành.' },
+  { q: 'Hiện tôi có thể đặt gói nào?', a: 'Ứng dụng hiện hỗ trợ gửi yêu cầu ca Ân cần, từ 18:00 đến 22:00, kéo dài 4 giờ. Gói Chăm chút và Thân tình đang được phát triển; bạn có thể liên hệ để trao đổi nhu cầu.' },
+  { q: 'Giá ca Ân cần và thanh toán như thế nào?', a: 'Giá đang hiển thị là 320.000đ/buổi, là mức đề xuất cho giai đoạn thử nghiệm. Bạn được xem lại thông tin và giá trước khi gửi yêu cầu. App hiện chưa có thanh toán trực tuyến; bước gửi yêu cầu chưa thu tiền.' },
+  { q: 'Gửi yêu cầu xong có chuyên viên ngay không?', a: 'Yêu cầu được chuyển sang trạng thái Chờ phân công. Điều phối viên tiếp nhận và sắp xếp chuyên viên; khi phân công xong, tên chuyên viên sẽ xuất hiện trong lịch. Bạn có thể bấm Cập nhật để xem thông tin mới.' },
+  { q: 'Tôi ở xa thì theo dõi bằng cách nào?', a: 'Bạn xem ngày, giờ, trạng thái và chuyên viên trong Lịch chăm sóc. Sau khi ca hoàn thành, đọc Nhật ký chăm sóc gần nhất và đánh giá từ 1 đến 5 sao. Bấm Cập nhật để tải thông tin mới.' },
+  { q: 'HomaCare có cung cấp chăm sóc y tế không?', a: 'HomaCare hiện tập trung đồng hành và hỗ trợ sinh hoạt phi y tế. Khám, chẩn đoán, kê đơn, thay đổi thuốc, tiêm truyền, thủ thuật và phục hồi chức năng chuyên môn nằm ngoài phạm vi dịch vụ hiện tại.' },
+  { q: 'Tôi muốn đổi lịch hoặc phản ánh vấn đề thì làm gì?', a: 'Liên hệ HomaCare qua số 0338 031 425 hoặc email homacare@gmail.com. Khi trao đổi, cho biết người thân, ngày chăm sóc và nội dung cần hỗ trợ. App hiện chưa có chức năng tự đổi hoặc hủy ca.' },
+  { q: 'HomaCare có phục vụ ở khu vực của gia đình tôi không?', a: 'Giai đoạn đầu, HomaCare dự kiến thử nghiệm ở một khu vực tại Hà Nội. Khi liên hệ, bạn cho biết địa chỉ của cha mẹ để chúng tôi xác nhận có sắp xếp được không.' },
+];
+---
+<BaseLayout title="HomaCare · Chăm sóc người cao tuổi tại nhà, dõi theo từ xa">
+  <SiteHeader />
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <div class="site-container hero__grid">
+        <div class="hero__copy">
+          <h1 class="hero__title">Bạn ở xa.<br /><span>Sự quan tâm vẫn ở gần.</span></h1>
+          <p class="hero__lead">HomaCare kết nối gia đình với chuyên viên chăm sóc tại địa phương, sắp xếp những buổi đồng hành bên người thân và ghi nhận hoạt động sau mỗi ca. Để cha mẹ được hỗ trợ trong ngôi nhà quen thuộc, còn bạn vẫn có thể dõi theo từ xa.</p>
+          <p class="hero__slogan">Gửi trọn quan tâm, vẹn tròn đạo hiếu.</p>
+          <div class="hero__actions">
+            <Button href={bookHref} variant="accent" size="lg" iconEnd="arrow-right">Đặt ca chăm sóc</Button>
+            <Button href="#how-it-works" variant="secondary" size="lg">Xem cách sử dụng</Button>
+          </div>
+        </div>
+        <div class="hero__demo" aria-label="Minh họa không gian gia đình">
+          <VisitCard label="Ca sắp tới" status="assigned" date="Thứ Sáu, 16/10" meta="18:00–22:00 · Gói Ân cần · 320.000đ" caregiver="Nguyễn Thanh Trúc" />
+          <Card class="hero__log">
+            <div class="hc-card__head"><span class="hc-card__label">Nhật ký mới · 09/10</span><StatusPill status="completed" size="sm" /></div>
+            <p class="hc-log__note">Bác dùng bữa ngon miệng, tinh thần vui vẻ. Đã hoàn thành 4 hoạt động và kiểm tra an toàn trước khi ra về.</p>
+            <span class="hc-card__meta">4/4 hoạt động · Nguyễn Thanh Trúc</span>
+          </Card>
+          <p class="demo-flag">Minh họa giao diện · tên người là dữ liệu minh họa</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Về HomaCare + Dõi theo từ xa: điện thoại xếp "Về HomaCare" lên trước (đã chốt) -->
+    <div class="intro-order">
+      <section class="site-section site-section--surface values" id="values">
+        <div class="site-container">
+          <div class="section-head section-head--center" data-reveal>
+            <h2>Biết ai đồng hành. Biết ca diễn ra khi nào. Biết những điều cần lưu ý.</h2>
+            <p class="section-desc">Sự quan tâm cần những thông tin cụ thể. HomaCare giúp gia đình xem lịch, theo dõi trạng thái và đọc ghi nhận sau buổi chăm sóc trong cùng một không gian.</p>
+          </div>
+          <div class="grid grid--3">
+            {values.map((v, i) => (
+              <Card variant="brand" class="value-card" data-reveal style={`--reveal-delay:${i * 140}ms`}>
+                <h3 class="value-card__title">{v.title}</h3>
+                <p>{v.text}</p>
+                <div class="value-card__demo">
+                  {v.kind === 'person' && <><strong>Chuyên viên phụ trách:</strong> Nguyễn Thanh Trúc<span>Đã được điều phối viên xác nhận lịch</span></>}
+                  {v.kind === 'status' && <><strong>Tiến trình 4 bước</strong><span>Chờ phân công → Đã phân công → Đang chăm sóc → Hoàn thành</span></>}
+                  {v.kind === 'log' && <><strong>Nhật ký ca gần nhất:</strong> 4/4 hoạt động<span>Ghi nhận: Bác cười nhiều, tinh thần thoải mái</span></>}
+                </div>
+              </Card>
+            ))}
+          </div>
+          <div class="section-foot section-foot--center"><Button href="#how-it-works" variant="secondary" iconEnd="chevron-down">Khám phá không gian gia đình</Button></div>
+        </div>
+      </section>
+
+      <section class="site-section about" id="about">
+        <div class="site-container">
+          <div class="about__grid">
+            <div class="about__text" data-reveal>
+              <h2>Bắt đầu từ mong muốn được ở bên cha mẹ.</h2>
+              <p>Có những ngày bạn chỉ kịp gọi về sau giờ làm. Có những điều cha mẹ cần giúp đỡ mà một cuộc gọi chưa thể làm thay: một bữa ăn, một buổi đi dạo hay một người ngồi lại lắng nghe.</p>
+              <p>HomaCare được hình thành từ trăn trở ấy. Chúng tôi phát triển nền tảng kết nối và điều phối chăm sóc người cao tuổi tại nhà, giúp gia đình sắp xếp sự hỗ trợ tại địa phương và theo dõi những buổi đồng hành qua lịch chăm sóc, nhật ký và phản hồi.</p>
+              <p class="about__extra">Người cao tuổi được ở trong không gian quen thuộc, giữ những thói quen của mình. Người con có thêm một cách tham gia vào việc chăm sóc, dù khoảng cách khiến việc có mặt thường xuyên trở nên khó khăn.</p>
+              <div class="about__mv">
+                <div><strong>Sứ mệnh</strong><p>Giúp gia đình duy trì sự quan tâm từ xa, đồng thời hỗ trợ người cao tuổi sống tự chủ và có người đồng hành ngay tại nhà.</p></div>
+                <div><strong>Tầm nhìn</strong><p>Từng bước xây dựng mạng lưới chăm sóc tại địa phương có quy trình rõ ràng, kết nối gia đình, chuyên viên và điều phối viên.</p></div>
+              </div>
+            </div>
+            <div class="about__photo">
+              <Image src={companion} alt="Người cao tuổi và người đồng hành đọc sách tại nhà" widths={[480, 720, 960]} sizes="(min-width: 900px) 45vw, 100vw" loading="lazy" />
+            </div>
+          </div>
+          <h3 class="about__values-title">Bốn điều HomaCare luôn giữ</h3>
+          <ul class="core-values">
+            {coreValues.map((c, i) => (
+              <li class="core-value" data-reveal style={`--reveal-delay:${(i % 2) * 140}ms`}>
+                <span class="core-value__icon"><Icon name={c.icon} /></span>
+                <strong>{c.title}</strong>
+                <p>{c.text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <!-- Cách sử dụng -->
+    <section class="site-section site-section--warm" id="how-it-works">
+      <div class="site-container">
+        <div class="section-head" data-reveal>
+          <h2>Từ lịch hẹn đầu tiên đến nhật ký sau ca.</h2>
+          <p class="section-desc">Sáu bước, từ lúc tạo tài khoản đến lúc đặt buổi tiếp theo. Bấm vào từng bước để xem màn hình tương ứng.</p>
+        </div>
+        <JourneySteps />
+      </div>
+    </section>
+
+    <!-- Tính năng -->
+    <section class="site-section" id="features">
+      <div class="site-container">
+        <div class="section-head section-head--center" data-reveal>
+          <h2>Mọi buổi chăm sóc, gói gọn trong điện thoại của bạn</h2>
+          <p class="section-desc">Lịch, người đến, nhật ký và thói quen của cha mẹ nằm cùng một chỗ. Mỗi người vào đúng phần việc của mình.</p>
+        </div>
+        <div class="bento">
+          <Card class="bento__log" data-reveal>
+            <h3 class="hc-card__title">Nhật ký sau mỗi buổi</h3>
+            <p class="bento__text">Chuyên viên đánh dấu 4 việc đã làm và viết vài dòng về buổi hôm đó. Bạn đọc ngay trên điện thoại.</p>
+            <ul class="hc-log__acts">
+              {TASKS.map(t => <li class="hc-log__act"><span class="hc-log__act-icon"><Icon name={t.icon} /></span>{t.label}<Icon name="check" class="hc-log__act-state" label="Đã làm" /></li>)}
+            </ul>
+          </Card>
+          <Card class="bento__status" data-reveal style="--reveal-delay:140ms">
+            <h3 class="hc-card__title">Biết ca đang ở bước nào</h3>
+            <p class="bento__text">Từ lúc gửi yêu cầu đến lúc nhận nhật ký, bạn thấy ca đang ở đâu và ai nhận.</p>
+            <StatusTimeline status="in_progress" vertical times={{ pending: 'Gửi yêu cầu 20:14 · 12/10', assigned: 'Nguyễn Thanh Trúc nhận ca', in_progress: 'Bắt đầu 18:04 · 16/10' }} />
+          </Card>
+          <Card class="bento__habits" data-reveal>
+            <h3 class="hc-card__title">Hồ sơ thói quen người thân</h3>
+            <p class="bento__text">Cha mẹ thích trà sen sau bữa tối hay đi dạo lúc mấy giờ? Bạn ghi một lần, chuyên viên đọc trước mỗi buổi.</p>
+            <div class="hc-visit__habits">
+              <Chip icon="cup">Trà sen sau bữa tối</Chip>
+              <Chip icon="walk">Đi dạo sân vườn 15–20 phút</Chip>
+              <Chip icon="book">Nghe đọc báo thời sự buổi tối</Chip>
+            </div>
+          </Card>
+        </div>
+        <p class="demo-flag bento__flag">Minh họa giao diện · tên người là dữ liệu minh họa</p>
+      </div>
+    </section>
+
+    <!-- Vai trò -->
+    <section class="site-section site-section--surface" id="roles">
+      <div class="site-container">
+        <div class="section-head section-head--center" data-reveal>
+          <h2>Ai làm việc gì trong một buổi chăm sóc</h2>
+          <p class="section-desc">Gia đình đặt lịch, điều phối viên tìm người, chuyên viên đến nhà và ghi nhật ký. Mỗi người đăng nhập vào phần của mình và chỉ thấy đúng việc của mình.</p>
+        </div>
+        <div class="grid grid--3">
+          {roles.map((r, i) => (
+            <Card class="role-card" data-reveal style={`--reveal-delay:${i * 140}ms`}>
+              <div class="role-card__head"><Avatar role={r.role} size="lg">{r.initials}</Avatar><span class="hc-card__label">{r.name}</span></div>
+              <h3 class="hc-card__title">{r.title}</h3>
+              <p>{r.text}</p>
+              <p class="role-card__flow"><strong>{r.role === 'caregiver' ? 'Bốn hoạt động ghi nhận:' : 'Thao tác có trong app:'}</strong> {r.flow}</p>
+              <div class="hc-card__foot"><Button href={r.href} variant="quiet" block iconEnd="arrow-right">{r.cta}</Button></div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Dịch vụ và gói -->
+    <section class="site-section" id="services">
+      <div class="site-container">
+        <div class="services__intro">
+          <div class="section-head section-head--center" data-reveal>
+            <h2>Quan tâm từ những sinh hoạt mỗi ngày.</h2>
+            <p class="section-desc">Chuyên viên không làm thay bác sĩ. Họ ở bên cha mẹ trong những việc thường ngày.</p>
+          </div>
+          <ul class="services__list grid grid--4">
+            {services.map((s, i) => (
+              <li class="service" data-reveal style={`--reveal-delay:${i * 140}ms`}>
+                <Image src={s.image} alt={s.alt} widths={[320, 480, 640]} sizes="(min-width: 900px) 25vw, 50vw" loading="lazy" />
+                <h3>{s.title}</h3>
+                <p>{s.text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <h2 class="services__mobile-title">Chăm sóc theo buổi tại nhà</h2>
+        <div class="pricing">
+          <Card variant="brand" class="price price--main" data-reveal>
+            <div class="hc-card__head"><span class="hc-card__label">Gói đang mở đặt lịch</span></div>
+            <h3 class="price__name">Gói Ân cần</h3>
+            <p class="price__intro">Một buổi tối có người đồng hành</p>
+            <p class="price__amount"><span class="hc-num">320.000đ</span> / buổi · 4 giờ</p>
+            <p class="price__time"><Icon name="clock" size="sm" /> Khung giờ: <time>18:00–22:00</time></p>
+            <p>Trò chuyện, hỗ trợ bữa tối, vận động nhẹ, nhắc lịch sinh hoạt và kiểm tra an toàn trước khi kết thúc. Nhật ký được gửi sau khi chuyên viên hoàn thành ca.</p>
+            <div class="hc-card__foot"><Button href={bookHref} variant="accent" block iconEnd="arrow-right">Đặt ca chăm sóc</Button></div>
+            <p class="price__note">Giá đề xuất cho giai đoạn thử nghiệm. Bạn được xem lại thông tin trước khi gửi yêu cầu.</p>
+          </Card>
+          {upcoming.map((p, i) => (
+            <Card class="price" data-reveal style={`--reveal-delay:${(i + 1) * 140}ms`}>
+              <div class="hc-card__head"><h3 class="price__name">{p.name}</h3></div>
+              <StatusPill tone="accent" size="sm">Đang phát triển · Chưa mở đặt lịch trong app</StatusPill>
+              <div class="price__detail">
+                <p class="price__intro">{p.intro}</p>
+                <p class="price__amount price__amount--muted"><span class="hc-num">{p.price}</span></p>
+                <p class="hc-card__meta">{p.duration}</p>
+                <p>{p.text}</p>
+                <div class="hc-card__foot"><Button href="#contact" variant="secondary" block>Trao đổi nhu cầu</Button></div>
+              </div>
+              <p class="price__short">Thông tin chi tiết sẽ được cập nhật khi gói sẵn sàng.</p>
+            </Card>
+          ))}
+        </div>
+        <p class="scope-note"><Icon name="info" /><span><strong>Phạm vi dịch vụ:</strong> HomaCare hỗ trợ sinh hoạt và đồng hành phi y tế. Dịch vụ không thay thế khám, điều trị, thủ thuật y tế hoặc phục hồi chức năng chuyên môn.</span></p>
+      </div>
+    </section>
+
+    <!-- Đội ngũ (dự kiến) -->
+    <section class="site-section site-section--surface" id="team">
+      <div class="site-container">
+        <div class="section-head" data-reveal>
+          <h2>Người đến nhà bạn là ai?</h2>
+          <p class="section-desc">Đội ngũ chuyên viên đang trong giai đoạn xây dựng. Đây là cách HomaCare dự kiến chọn và hỗ trợ những người sẽ đến nhà cha mẹ bạn.</p>
+        </div>
+        <ul class="quality grid grid--3">
+          {quality.map((q, i) => (
+            <li class="quality__item" data-reveal style={`--reveal-delay:${i * 140}ms`}>
+              <span class="core-value__icon"><Icon name={q.icon} /></span>
+              <h3>{q.title}</h3>
+              <p>{q.text}</p>
+            </li>
+          ))}
+        </ul>
+        <div class="section-foot"><Button href="#contact" variant="ghost" iconEnd="arrow-right">Hỏi thêm về đội ngũ</Button></div>
+      </div>
+    </section>
+
+    <!-- Lộ trình -->
+    <section class="site-section" id="roadmap">
+      <div class="site-container">
+        <div class="section-head" data-reveal>
+          <h2>Đã làm được gì, tiếp theo là gì.</h2>
+          <p class="section-desc">HomaCare đang ở giai đoạn sản phẩm mẫu. Đây là những gì đã chạy được và kế hoạch cho giai đoạn thử nghiệm.</p>
+        </div>
+        <div class="grid grid--2">
+          <Card data-reveal>
+            <h3 class="hc-card__title">Đã có</h3>
+            <ul class="icon-list roadmap__list">{done.map(t => <li><Icon name="check-circle" />{t}</li>)}</ul>
+          </Card>
+          <Card variant="sunken" data-reveal style="--reveal-delay:140ms">
+            <h3 class="hc-card__title">Tiếp theo</h3>
+            <ul class="icon-list roadmap__list">{next.map(t => <li><Icon name="clock" />{t}</li>)}</ul>
+          </Card>
+        </div>
+        <div class="section-foot"><Button href="/app/" iconEnd="arrow-right">Dùng thử bản demo</Button></div>
+      </div>
+    </section>
+
+    <!-- Góc sức khỏe -->
+    <section class="site-section site-section--warm" id="goc-suc-khoe">
+      <div class="site-container">
+        <div class="section-head" data-reveal>
+          <h2>Hiểu thêm để quan tâm tốt hơn.</h2>
+          <p class="section-desc">Các bài đọc về người cao tuổi ở Việt Nam và trên thế giới, cùng nguồn tham khảo để bạn tìm hiểu thêm.</p>
+        </div>
+        <ul class="articles grid grid--3">
+          {articles.map((a, i) => (
+            <li data-reveal style={`--reveal-delay:${i * 140}ms`}>
+              <Card variant="flush" class="article">
+                <Image src={a.image} alt={a.alt} widths={[400, 640]} sizes="(min-width: 900px) 33vw, 100vw" loading="lazy" />
+                <div class="article__body">
+                  <p class="hc-card__meta">{a.source} · <time>{a.date}</time></p>
+                  <h3 class="hc-card__title">{a.title}</h3>
+                  <p>{a.text}</p>
+                  <Button href={a.href} variant="ghost" iconEnd="arrow-right" target="_blank" rel="noopener noreferrer" class="article__link">Đọc tại nguồn<span class="hc-visually-hidden"> (mở thẻ mới)</span></Button>
+                </div>
+              </Card>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- Hỏi đáp -->
+    <section class="site-section site-section--surface" id="faq">
+      <div class="site-container faq">
+        <div class="section-head" data-reveal>
+          <h2>Những điều bạn muốn biết trước buổi đồng hành.</h2>
+        </div>
+        <div class="faq__list">
+          {faqs.map(f => (
+            <details class="faq__item">
+              <summary><span>{f.q}</span><Icon name="chevron-down" /></summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Liên hệ -->
+    <section class="site-section" id="contact">
+      <div class="site-container contact">
+        <Card variant="brand" class="contact__card" data-reveal>
+          <h2>Cùng trao đổi điều người thân đang cần.</h2>
+          <p>Kể cho chúng tôi nghe cha mẹ ở đâu, thích gì, cần giúp gì. HomaCare sẽ gợi ý buổi đồng hành phù hợp.</p>
+          <div class="contact__actions">
+            <Button href="tel:0338031425" variant="quiet" icon="phone">Gọi HomaCare: 0338 031 425</Button>
+            <Button href="mailto:homacare@gmail.com" variant="quiet" icon="mail">homacare@gmail.com</Button>
+          </div>
+        </Card>
+        <Card class="contact__card" data-reveal style="--reveal-delay:140ms">
+          <h2>Gửi trọn quan tâm, vẹn tròn đạo hiếu.</h2>
+          <p>Thêm hồ sơ cha mẹ và đặt buổi đồng hành đầu tiên.</p>
+          <div class="contact__actions">
+            <Button href={bookHref} iconEnd="arrow-right">Đặt ca chăm sóc</Button>
+            <Button href="/app/" variant="secondary">Mở ứng dụng HomaCare</Button>
+          </div>
+        </Card>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+
+  <script>
+    import { SESSION_STORAGE_KEY } from '../lib/config';
+
+    // Link email Supabase trỏ về trang chủ (Site URL) → chuyển sang trang đăng nhập, giữ nguyên tham số.
+    const hash = new URLSearchParams(location.hash.slice(1));
+    const search = new URLSearchParams(location.search);
+    if (hash.has('access_token') || hash.has('error_code') || search.has('code')) {
+      location.replace('/app/dang-nhap/' + location.search + location.hash);
+    }
+
+    // Đã có phiên trong trình duyệt này: nút tài khoản dẫn vào app (app tự đưa về đúng không gian theo vai trò).
+    try {
+      if (localStorage.getItem(SESSION_STORAGE_KEY)) {
+        const label = document.querySelector('[data-account-label]');
+        if (label) label.textContent = matchMedia('(min-width: 640px)').matches ? 'Vào không gian của bạn' : 'Tài khoản';
+      }
+    } catch { /* trình duyệt chặn bộ nhớ: giữ nhãn mặc định */ }
+
+    // Hiện dần khi cuộn
+    const targets = document.querySelectorAll('[data-reveal]');
+    if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('reveal-ready');
+      const io = new IntersectionObserver(entries => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+      }), { rootMargin: '0px 0px -8% 0px' });
+      targets.forEach(t => io.observe(t));
+    }
+  </script>
+</BaseLayout>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero { padding-block: var(--space-8) var(--space-16); }
+  .hero__grid { display: grid; gap: var(--space-10); align-items: center; }
+  .hero__copy {
+    display: flex; flex-direction: column; justify-content: center; gap: var(--space-5);
+    /* Điện thoại: phần chữ chiếm gần trọn màn hình đầu, minh họa hiện khi bắt đầu cuộn (đã chốt) */
+    min-height: calc(100svh - 64px - 110px);
+  }
+  .hero__title { font-size: var(--text-3xl); line-height: var(--leading-tight); }
+  .hero__title span { color: var(--color-text-brand); white-space: nowrap; font-size: min(1em, 7.4vw); }
+  .hero__lead { font-size: var(--text-md); color: var(--color-text-muted); max-width: var(--measure); }
+  .hero__slogan {
+    align-self: flex-start; padding: var(--space-2) var(--space-4); border-radius: var(--radius-full);
+    background: var(--color-action-subtle); color: var(--color-text-brand); font-weight: var(--weight-semibold);
+  }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+  .hero__actions :global(.hc-btn) { flex: 1 1 220px; }
+  .hero__demo { display: grid; gap: var(--space-3); max-width: 480px; width: 100%; justify-self: center; }
+  .hero__log .hc-log__note { font-size: var(--text-base); margin-block: var(--space-3) var(--space-2); }
+  @media (min-width: 900px) {
+    .hero { padding-block: var(--space-16) var(--space-24); }
+    .hero__grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: var(--space-16); }
+    .hero__copy { min-height: 0; }
+    .hero__title span { white-space: normal; font-size: 1em; }
+    .hero__actions :global(.hc-btn) { flex: 0 0 auto; }
+  }
+
+  /* ---------- Dõi theo từ xa ---------- */
+  .intro-order { display: flex; flex-direction: column; }
+  .about { order: -1; }
+  @media (min-width: 900px) { .about { order: 0; } }
+  .value-card { display: flex; flex-direction: column; gap: var(--space-3); }
+  .value-card__title { color: var(--color-text-on-brand); font-size: var(--text-lg); }
+  .value-card__demo {
+    margin-top: auto; display: grid; gap: var(--space-1); padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md); background: var(--teal-900); font-size: var(--text-sm); color: var(--teal-50);
+  }
+  .value-card__demo strong { font-weight: var(--weight-semibold); color: var(--white); }
+  .value-card__demo span { color: var(--teal-100); }
+
+  /* ---------- Về HomaCare ---------- */
+  .about__grid { display: grid; gap: var(--space-10); align-items: start; }
+  .about__text { display: grid; gap: var(--space-4); }
+  .about__text h2 { font-size: var(--text-2xl); line-height: var(--leading-tight); margin-bottom: var(--space-2); }
+  .about__text p { font-size: var(--text-md); color: var(--color-text-muted); }
+  .about__text p + p { margin-top: 0; }
+  .about__extra, .about__photo { display: none; }
+  .about__mv { display: grid; gap: var(--space-3); margin-top: var(--space-2); }
+  .about__mv > div { padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-surface-sunken); }
+  .about__mv strong { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--text-lg); }
+  .about__mv p { font-size: var(--text-base); margin-top: var(--space-1); }
+  .about__photo :global(img) { width: 100%; height: auto; border-radius: var(--radius-lg); box-shadow: var(--elevation-card); }
+  .about__values-title { text-align: center; font-size: var(--text-xl); margin-block: var(--space-16) var(--space-6); }
+  .core-values { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+  .core-value { display: grid; gap: var(--space-2); align-content: start; padding: var(--space-4); border-radius: var(--radius-lg); background: var(--color-surface); border: 1px solid var(--color-border); }
+  .core-value strong { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--text-lg); }
+  .core-value p { color: var(--color-text-muted); font-size: var(--text-sm); }
+  .core-value__icon { width: 44px; height: 44px; border-radius: var(--radius-full); display: grid; place-items: center; background: var(--color-action-subtle); color: var(--teal-700); }
+  @media (min-width: 900px) {
+    .about__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-16); }
+    .about__extra { display: block; }
+    .about__photo { display: block; position: sticky; top: 96px; }
+    .about__mv { grid-template-columns: 1fr 1fr; }
+    .core-values { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-5); }
+    .core-value { padding: var(--space-5); }
+    .core-value p { font-size: var(--text-base); }
+  }
+
+  /* ---------- Tính năng ---------- */
+  .bento { display: grid; gap: var(--space-4); }
+  .bento :global(.hc-card) { display: grid; gap: var(--space-3); align-content: start; }
+  .bento__text { color: var(--color-text-muted); }
+  .bento__flag { margin-top: var(--space-4); text-align: center; }
+  @media (min-width: 900px) {
+    .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); }
+    .bento :global(.bento__status) { grid-row: span 2; }
+  }
+
+  /* ---------- Vai trò ---------- */
+  .role-card { display: flex; flex-direction: column; gap: var(--space-3); }
+  .role-card__head { display: flex; align-items: center; gap: var(--space-3); }
+  .role-card p { color: var(--color-text-muted); }
+  .role-card__flow { font-size: var(--text-sm); padding: var(--space-3); border-radius: var(--radius-md); background: var(--color-surface-sunken); }
+  .role-card__flow strong { color: var(--color-text); font-weight: var(--weight-semibold); }
+  .role-card .hc-card__foot { margin-top: auto; padding-top: var(--space-2); }
+
+  /* ---------- Dịch vụ, gói ---------- */
+  .services__intro { display: none; }
+  .services__mobile-title { font-size: var(--text-2xl); margin-bottom: var(--space-6); }
+  .services__list { list-style: none; margin: 0 0 var(--space-16); padding: 0; }
+  .service { display: grid; gap: var(--space-2); align-content: start; }
+  .service :global(img) { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius-lg); margin-bottom: var(--space-2); }
+  .service h3 { font-size: var(--text-lg); }
+  .service p { color: var(--color-text-muted); }
+  @media (min-width: 900px) {
+    .services__intro { display: block; }
+    .services__mobile-title { display: none; }
+  }
+  .pricing { display: grid; gap: var(--space-4); align-items: start; }
+  .price { display: flex; flex-direction: column; gap: var(--space-3); }
+  .price__name { font-size: var(--text-xl); }
+  .price--main .price__name { color: var(--color-text-on-brand); }
+  .price__intro { font-weight: var(--weight-medium); }
+  .price__amount { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--text-xl); }
+  .price__amount--muted { font-size: var(--text-lg); }
+  .price__time { display: flex; align-items: center; gap: var(--space-2); font-weight: var(--weight-medium); }
+  .price__note { font-size: var(--text-sm); color: var(--teal-100); }
+  .price--main .hc-card__foot { margin-top: var(--space-2); }
+  .price__detail { display: none; }
+  .price__short { color: var(--color-text-muted); font-size: var(--text-sm); }
+  .scope-note {
+    display: flex; gap: var(--space-3); align-items: flex-start; margin-top: var(--space-6);
+    padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-info-subtle); max-width: var(--measure);
+  }
+  .scope-note :global(.hc-icon) { margin-top: 2px; color: var(--color-info); }
+  .scope-note strong { font-weight: var(--weight-semibold); }
+  @media (min-width: 900px) {
+    .pricing { grid-template-columns: 1.15fr 1fr 1fr; gap: var(--space-5); }
+    .price__detail { display: grid; gap: var(--space-3); }
+    .price__short { display: none; }
+  }
+
+  /* ---------- Đội ngũ ---------- */
+  .quality { list-style: none; margin: 0; padding: 0; }
+  .quality__item { display: grid; gap: var(--space-2); align-content: start; padding: var(--space-5); border-radius: var(--radius-lg); background: var(--color-surface-sunken); }
+  .quality__item h3 { font-size: var(--text-lg); margin-top: var(--space-1); }
+  .quality__item p { color: var(--color-text-muted); }
+
+  /* ---------- Lộ trình ---------- */
+  .roadmap__list { margin-top: var(--space-4); }
+
+  /* ---------- Góc sức khỏe ---------- */
+  .articles { list-style: none; margin: 0; padding: 0; }
+  .articles > li { display: flex; }
+  .article { display: flex; flex-direction: column; width: 100%; }
+  .article :global(img) { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
+  .article__body { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-5); flex: 1; }
+  .article__body > p:not(.hc-card__meta) { color: var(--color-text-muted); }
+  .article__body :global(.article__link) { align-self: flex-start; margin-top: auto; margin-left: calc(-1 * var(--space-3)); }
+
+  /* ---------- Hỏi đáp ---------- */
+  .faq { max-width: 860px; }
+  .faq__list { border-top: 1px solid var(--color-border); }
+  .faq__item { border-bottom: 1px solid var(--color-border); }
+  .faq__item summary {
+    display: flex; justify-content: space-between; align-items: center; gap: var(--space-4);
+    min-height: 64px; padding-block: var(--space-3); cursor: pointer; list-style: none;
+    font-weight: var(--weight-semibold); font-size: var(--text-md); line-height: 1.4;
+  }
+  .faq__item summary::-webkit-details-marker { display: none; }
+  .faq__item summary :global(.hc-icon) { flex: none; color: var(--color-text-muted); transition: transform var(--duration-base) var(--ease-out); }
+  .faq__item[open] summary :global(.hc-icon) { transform: rotate(180deg); }
+  .faq__item summary:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+  .faq__item p { padding-bottom: var(--space-5); color: var(--color-text-muted); max-width: var(--measure); }
+
+  /* ---------- Liên hệ ---------- */
+  .contact { display: grid; gap: var(--space-4); }
+  .contact__card { display: grid; gap: var(--space-4); align-content: start; padding: var(--space-6); }
+  .contact__card h2 { font-size: var(--text-xl); }
+  .contact__card.hc-card--brand h2 { color: var(--color-text-on-brand); }
+  .contact__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+  .contact__actions :global(.hc-btn) { white-space: normal; }
+  @media (min-width: 900px) {
+    .contact { grid-template-columns: 1.2fr 1fr; gap: var(--space-5); }
+    .contact__card { padding: var(--space-10); }
+    .contact__card h2 { font-size: var(--text-2xl); }
+  }
+</style>

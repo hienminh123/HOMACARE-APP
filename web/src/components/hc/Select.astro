@@ -1,0 +1,6 @@
+---
+// .hc-select — mũi tên vẽ bằng CSS. Truyền <option> qua slot.
+interface Props { id: string; invalid?: boolean; class?: string; [attr: string]: unknown }
+const { id, invalid, class: extra, ...attrs } = Astro.props;
+---
+<select class:list={['hc-select', extra]} id={id} aria-invalid={invalid ? 'true' : undefined} {...attrs}><slot /></select>

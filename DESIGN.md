@@ -26,34 +26,34 @@ colors:
   danger: "#A02228"
 typography:
   display:
-    fontFamily: "Cal Sans, Be Vietnam Pro, system-ui, sans-serif"
+    fontFamily: "Lexend, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "clamp(2.25rem, 1.6rem + 2.8vw, 3.5rem)"
-    fontWeight: 400
+    fontWeight: 500
     lineHeight: 1.15
     letterSpacing: "-0.01em"
   heading:
-    fontFamily: "Cal Sans, Be Vietnam Pro, system-ui, sans-serif"
+    fontFamily: "Lexend, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "1.5rem"
-    fontWeight: 400
+    fontWeight: 500
     lineHeight: 1.3
     letterSpacing: "-0.01em"
   body:
-    fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
+    fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif"
     fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.6
   reading:
-    fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
+    fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif"
     fontSize: "1.125rem"
     fontWeight: 400
     lineHeight: 1.55
   label:
-    fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
+    fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 600
     lineHeight: 1.4
   meta:
-    fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
+    fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: 1.5
@@ -130,25 +130,25 @@ components:
 
 # Design System: HomaCare
 
-Phiên bản 1.0, duyệt ngày 13/10/2026. Nguồn chuẩn là code trong `preview/ds/`. File này giải thích **khi nào dùng cái gì**; giá trị chính xác luôn lấy từ `tokens.css`. Trang xem trực tiếp: `preview/design-system.html` (chạy máy chủ xem thử rồi mở `/design-system.html`).
+Phiên bản 1.1, 13/10/2026 (v1.0 duyệt cùng ngày; v1.1 đổi font theo yêu cầu người dùng: **Lexend** cho tiêu đề, **font hệ thống** cho nội dung; màu, khoảng cách, thành phần giữ nguyên). Từ giai đoạn 2, nguồn chuẩn là `web/src/styles/` của bản Astro. `preview/ds/` và `preview/design-system.html` giữ nguyên ở v1.0 (Cal Sans + Be Vietnam Pro) làm tài liệu tham khảo cho bản cũ. File này giải thích **khi nào dùng cái gì**; giá trị chính xác luôn lấy từ `tokens.css`.
 
 | File | Vai trò |
 | --- | --- |
-| `preview/ds/tokens.css` | Token primitive (dải màu, thang số) và token ngữ nghĩa (vai trò) |
-| `preview/ds/fonts.css` | `@font-face` Cal Sans + Be Vietnam Pro, tự lưu trữ |
-| `preview/ds/base.css` | Mặc định phần tử HTML: chữ, focus, vùng chọn, thanh cuộn |
-| `preview/ds/components.css` | 15 thành phần, tiền tố `hc-` |
-| `preview/ds/components.js` | Hành vi (tabs, sheet, toast, đánh giá) và hàm `HC.pill()`, `HC.timeline()` |
-| `preview/ds/icons.svg` | Bộ icon nét 1,75px trên lưới 24px |
+| `web/src/styles/tokens.css` | Token primitive (dải màu, thang số) và token ngữ nghĩa (vai trò) |
+| `web/src/styles/fonts.css` | `@font-face` Lexend (tự lưu trữ, tách Latin/tiếng Việt); nội dung dùng font hệ thống |
+| `web/src/styles/base.css` | Mặc định phần tử HTML: chữ, focus, vùng chọn, thanh cuộn |
+| `web/src/styles/components.css` | 15 thành phần, tiền tố `hc-`; bản `.astro` ở `web/src/components/hc/` |
+| `web/src/scripts/components.js` | Hành vi (tabs, sheet, toast, đánh giá), đặt `window.HC`; trạng thái ca dùng chung `web/src/lib/status.ts` |
+| `web/public/icons.svg` | Bộ icon nét 1,75px trên lưới 24px (`<use href="/icons.svg#id">`) |
 
-Thứ tự nạp: `tokens.css → fonts.css → base.css → components.css`, sau đó `<script src="ds/components.js" defer>`. Khi chuyển sang Astro, chép nguyên thư mục `ds/` vào `src/styles/` và import theo cùng thứ tự; không cần viết lại.
+Thứ tự nạp: `tokens.css → fonts.css → base.css → components.css`, sau đó `components.js`. Trong Astro, `web/src/layouts/BaseLayout.astro` đã import đúng thứ tự cho mọi trang.
 
 ## Overview
 
 **Một lá thư từ nhà, không phải bảng điều khiển bệnh viện.** HomaCare dành cho người con ở xa muốn biết bố mẹ hôm nay có người bên cạnh. Giao diện phải bình tĩnh, ấm, dễ đọc trên điện thoại sau giờ làm, và luôn trả lời ba câu hỏi: **ai đến, khi nào, đã xảy ra gì**.
 
 - **Nền cát nhạt, chữ Navy, hành động Teal.** Apricot là điểm ấm hiếm hoi, dùng như dấu nhấn, không phủ cả màn hình.
-- **Chữ làm chủ, trang trí lùi lại.** Cal Sans cho tiêu đề tạo dấu ấn; Be Vietnam Pro cho nội dung đọc thoải mái với dấu tiếng Việt.
+- **Chữ làm chủ, trang trí lùi lại.** Lexend (hình học, tròn, rộng) cho tiêu đề tạo dấu ấn; font hệ thống cho nội dung: quen mắt trên từng máy và không phải tải thêm.
 - **Trạng thái là xương sống.** Mỗi ca đi qua bốn bước *Chờ phân công → Đã phân công → Đang chăm sóc → Hoàn thành*, và bốn bước này hiện giống nhau ở mọi vai trò.
 - **Ưu tiên điện thoại.** Thiết kế ở 375px trước, rồi mở rộng. Gia đình dùng điện thoại; điều phối viên dùng máy tính nhiều hơn nên có biến thể dày hơn.
 - **Không phải dịch vụ y tế.** Không dùng biểu tượng chữ thập, ống nghe, nhịp tim hay màu đỏ cấp cứu cho trang trí.
@@ -197,22 +197,23 @@ Phản hồi chung: `--color-success`, `--color-warning`, `--color-danger`, `--c
 
 ## Typography
 
-- **Cal Sans** (tiêu đề): chỉ có **một độ đậm 400**. `base.css` đặt `font-synthesis: none` để trình duyệt không tô đậm giả. Không đặt `font-weight` khác cho tiêu đề. Dùng từ 18px trở lên.
-- **Be Vietnam Pro** (nội dung): 400 đoạn văn, 500 nhãn và tab, 600 tên người, nút và chỗ cần nhấn. **Không dùng 700.** Do người Việt thiết kế, dấu chồng (ặ, ỗ, ữ) gọn và không chạm dòng trên.
+- **Lexend** (tiêu đề): font biến thiên 400–600, tự lưu trữ trong `web/src/assets/fonts/` (latin 40 KB + tiếng Việt 14 KB, giấy phép OFL ở `web/public/assets/Lexend-OFL.txt`). Tiêu đề dùng `--weight-display` (500). `font-display: block` để tiêu đề không nháy font. Dùng từ 18px trở lên.
+  - Đã cân nhắc **Outfit** (người dùng gửi ảnh mẫu từ trang Mantine) nhưng Outfit **không có ký tự tiếng Việt** (thiếu dải U+1EA0–1EF1: ạ, ở, ự, ẫ…), nên chọn Lexend có dáng gần nhất mà đủ dấu.
+- **Nội dung: font hệ thống** `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, …`: Segoe UI trên Windows, San Francisco trên iPhone/Mac, Roboto trên Android, đều đủ dấu tiếng Việt. Segoe UI thuộc bản quyền Microsoft nên **không được tự lưu trữ**; mỗi máy hiện font của chính nó. 400 đoạn văn, 500 nhãn và tab, 600 tên người, nút và chỗ cần nhấn (Segoe UI không có 500 nên hiện như 400). **Không dùng 700.**
 - Cả hai font tự lưu trữ (`assets/CalSans-Regular.ttf`, `assets/fonts/*.woff2`), tách bộ ký tự Latin và tiếng Việt. Nên preload hai file: `CalSans-Regular.ttf` và `be-vietnam-pro-400-latin.woff2`.
 
 ### Hierarchy
 
 | Token | Cỡ · khoảng dòng | Font | Dùng cho |
 | --- | --- | --- | --- |
-| `--text-3xl` | 36→56px · 1,15 | Cal Sans | Tiêu đề lớn trang giới thiệu |
-| `--text-2xl` | 32px · 1,15 | Cal Sans | Tiêu đề trang |
-| `--text-xl` | 24px · 1,3 | Cal Sans | Tiêu đề mục, ngày của ca |
-| `--text-lg` | 20px · 1,3 | Cal Sans | Tiêu đề thẻ |
-| `--text-md` | 18px · 1,55 | Be Vietnam Pro | Lời ghi trong nhật ký, đoạn dẫn |
-| `--text-base` | 16px · 1,6 | Be Vietnam Pro | Nội dung, ô nhập, nút |
-| `--text-sm` | 14px · 1,5 | Be Vietnam Pro | Metadata, nhãn ô, chữ phụ |
-| `--text-xs` | 12px · 1,45 | Be Vietnam Pro | Nhãn bước trên timeline, số đếm, chú thích |
+| `--text-3xl` | 36→56px · 1,15 | Lexend | Tiêu đề lớn trang giới thiệu |
+| `--text-2xl` | 32px · 1,15 | Lexend | Tiêu đề trang |
+| `--text-xl` | 24px · 1,3 | Lexend | Tiêu đề mục, ngày của ca |
+| `--text-lg` | 20px · 1,3 | Lexend | Tiêu đề thẻ |
+| `--text-md` | 18px · 1,55 | Hệ thống | Lời ghi trong nhật ký, đoạn dẫn |
+| `--text-base` | 16px · 1,6 | Hệ thống | Nội dung, ô nhập, nút |
+| `--text-sm` | 14px · 1,5 | Hệ thống | Metadata, nhãn ô, chữ phụ |
+| `--text-xs` | 12px · 1,45 | Hệ thống | Nhãn bước trên timeline, số đếm, chú thích |
 
 ### Named Rules
 
@@ -269,7 +270,7 @@ Nền phẳng, chiều sâu đến từ viền mảnh + bóng nhẹ. Bóng luôn
 | `--radius-lg` | 20px | Thẻ, sheet, modal |
 | `--radius-full` | 999px | Pill trạng thái, avatar, nút chỉ có icon |
 
-Khối con bên trong thẻ dùng bậc nhỏ hơn thẻ một nấc (thẻ `lg`, khối trong `md`). Icon: nét 1,75px, đầu tròn, lưới 24px, lấy từ `ds/icons.svg`. Không dùng emoji hay ký tự Unicode thay icon.
+Khối con bên trong thẻ dùng bậc nhỏ hơn thẻ một nấc (thẻ `lg`, khối trong `md`). Icon: nét 1,75px, đầu tròn, lưới 24px, lấy từ `/icons.svg`. Không dùng emoji hay ký tự Unicode thay icon.
 
 ## Components
 
@@ -307,7 +308,7 @@ Mọi lớp có tiền tố `hc-` để sống chung với CSS cũ (`.btn`, `.pi
 
 ### VisitCard — `.hc-visit`, `.hc-visit-row`
 
-- Gia đình: ngày (Cal Sans 24px) + giờ, gói, giá → timeline → chuyên viên (hoặc "Đang chờ điều phối viên" với avatar viền đứt).
+- Gia đình: ngày (Lexend 24px) + giờ, gói, giá → timeline → chuyên viên (hoặc "Đang chờ điều phối viên" với avatar viền đứt).
 - Chuyên viên: người thân + tuổi + khu vực → chip thói quen → lời nhắn gia đình (khối Sand) → nút "Bắt đầu ca".
 - Điều phối viên: `.hc-visit-row` một dòng trên máy tính, tự xếp thành 3 dòng khi khung hẹp hơn 620px.
 
@@ -335,7 +336,7 @@ Mọi lớp có tiền tố `hc-` để sống chung với CSS cũ (`.btn`, `.pi
 
 ### EmptyState — `.hc-empty`
 
-- Icon trong vòng tròn Teal nhạt → tiêu đề (Cal Sans 20px) → một câu nói vì sao trống → (tuỳ chọn) nút việc tiếp theo. `--compact` cho trong danh sách.
+- Icon trong vòng tròn Teal nhạt → tiêu đề (Lexend 20px) → một câu nói vì sao trống → (tuỳ chọn) nút việc tiếp theo. `--compact` cho trong danh sách.
 - Tài khoản mới luôn trống, nên đây thường là màn hình đầu tiên người dùng thấy: viết ấm áp và chỉ đường.
 
 ### Navigation — `.hc-tabs`, `.hc-bottomnav`, `.hc-header`
@@ -362,7 +363,7 @@ Mọi lớp có tiền tố `hc-` để sống chung với CSS cũ (`.btn`, `.pi
 
 - **Don't** viết mã màu, cỡ chữ, bo góc hay bóng trực tiếp trong CSS mới. Thiếu token thì thêm vào `tokens.css` kèm lý do.
 - **Don't** dùng Apricot làm màu chữ, hoặc đặt chữ trắng lên nền Apricot.
-- **Don't** đặt `font-weight` 700 cho bất kỳ font nào, hoặc khác 400 cho Cal Sans.
+- **Don't** đặt `font-weight` 700 cho bất kỳ font nào; tiêu đề dùng `--weight-display`.
 - **Don't** dùng nhãn nhỏ phía trên tiêu đề (kicker/eyebrow), số mục 01/02/03 trang trí, chữ gradient, viền màu dày bên trái thẻ, hay bóng quầng màu.
 - **Don't** lồng thẻ trong thẻ, hoặc mở modal cho việc không cần xác nhận.
 - **Don't** bịa số liệu, đánh giá, chứng chỉ, logo đối tác hay số lượng khách hàng. Đào tạo 30 giờ và thẩm định nhân sự là **dự kiến**.
@@ -386,4 +387,4 @@ HomaCare nói như một người cháu lễ phép đang kể cho cả nhà nghe
 1. Thêm 4 file CSS và `components.js` vào trang cần sửa (thứ tự ở đầu file này). Token mới có tên trùng vài biến cũ trong `index.html` (`--radius-sm`, `--radius-md`, `--shadow-sm`…): xoá khối `:root` cũ của trang đó khi chuyển, đừng để hai định nghĩa cùng tồn tại.
 2. Thay từng thành phần: `.pill.orange` → `HC.pill('pending')`, `.btn` → `.hc-btn`, `.modal` → `dialog.hc-sheet`…
 3. Mỗi trang chuyển xong thì xoá CSS cũ tương ứng trong `styles.css` / `account.css`.
-4. Với Astro: mỗi thành phần thành một file `.astro` dùng đúng lớp `hc-*`; `HC.pill`/`HC.timeline` thành component nhận prop `status`.
+4. Với Astro (đã làm ở giai đoạn 2): mỗi thành phần là một file trong `web/src/components/hc/` dùng đúng lớp `hc-*` (`Button`, `Field`/`Input`/`Select`/`Textarea`/`Check`, `Card`, `StatusPill`, `StatusTimeline`, `VisitCard`, `VisitRow`, `CareLogCard`, `Rating`, `Avatar`, `Person`, `Chip`, `Sheet`, `EmptyState`, `Tabs`, `BottomNav`, `Header`, `Wordmark`, `Skeleton`, `Icon`). `StatusPill`/`StatusTimeline` nhận prop `status`. Phần app vẽ dữ liệu phía trình duyệt bằng `pill()`/`timeline()` trong `web/src/lib/status.ts` và các hàm trong `web/src/scripts/render.ts`, cho ra cùng HTML. Toast không có component, gọi `HC.toast()`.

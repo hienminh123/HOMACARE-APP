@@ -1,0 +1,8 @@
+---
+// .hc-skeleton — khung chờ đúng hình dạng nội dung sắp hiện. Vùng cha đặt aria-busy="true"
+// và một dòng .hc-visually-hidden "Đang tải…".
+interface Props { variant?: 'text' | 'title' | 'circle' | 'pill' | 'block'; w?: string; h?: string; size?: string; class?: string }
+const { variant = 'text', w, h, size, class: extra } = Astro.props;
+const style = [w && `--sk-w:${w}`, h && `--sk-h:${h}`, size && `--sk-size:${size}`].filter(Boolean).join(';') || undefined;
+---
+<span class:list={['hc-skeleton', `hc-skeleton--${variant}`, extra]} style={style}></span>

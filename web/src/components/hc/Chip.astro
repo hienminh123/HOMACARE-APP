@@ -1,0 +1,7 @@
+---
+// .hc-chip — thói quen của người thân (nền Sand), có thể kèm icon.
+import Icon from './Icon.astro';
+interface Props { icon?: string }
+const { icon } = Astro.props;
+---
+<span class="hc-chip">{icon && <Icon name={icon} />}<slot /></span>

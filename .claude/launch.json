@@ -4,8 +4,54 @@
     {
       "name": "preview",
       "runtimeExecutable": "npx.cmd",
-      "runtimeArgs": ["--yes", "http-server", "preview", "-a", "127.0.0.1", "-p", "4173", "-c-1", "-s"],
+      "runtimeArgs": [
+        "--yes",
+        "http-server",
+        "preview",
+        "-a",
+        "127.0.0.1",
+        "-p",
+        "4173",
+        "-c-1",
+        "-s"
+      ],
       "port": 4173
+    },
+    {
+      "name": "web",
+      "runtimeExecutable": "npm.cmd",
+      "runtimeArgs": [
+        "--prefix",
+        "web",
+        "run",
+        "dev"
+      ],
+      "port": 4321
+    },
+    {
+      "name": "web-fixture",
+      "runtimeExecutable": "npm.cmd",
+      "runtimeArgs": [
+        "--prefix",
+        "web",
+        "run",
+        "dev:fixture"
+      ],
+      "port": 4322
+    },
+    {
+      "name": "web-dist",
+      "runtimeExecutable": "npm.cmd",
+      "runtimeArgs": [
+        "--prefix",
+        "web",
+        "run",
+        "preview",
+        "--",
+        "--port",
+        "4323"
+      ],
+      "port": 4323
     }
   ]
 }

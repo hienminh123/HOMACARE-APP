@@ -1,0 +1,26 @@
+---
+// .hc-header — dính khi cuộn, hiện viền khi nội dung trượt dưới.
+//  Trang chính: logo + chữ HomaCare (+ nav từ 900px). Trang con: truyền `backHref` + `title`.
+// Slot "actions" cho nút bên phải (Cập nhật, tài khoản…).
+import Button from './Button.astro';
+import Wordmark from './Wordmark.astro';
+interface NavLink { href: string; label: string; current?: boolean }
+interface Props {
+  brandHref?: string; brandLabel?: string; nav?: NavLink[]; navLabel?: string;
+  backHref?: string; title?: string; subtitle?: string; titleTag?: 'h1' | 'strong'; class?: string;
+}
+const { brandHref = '/', brandLabel = 'HomaCare — Trang chủ', nav = [], navLabel = 'Điều hướng chính', backHref, title, subtitle, titleTag = 'strong', class: extra } = Astro.props;
+const TitleTag = titleTag;
+---
+<header class:list={['hc-header', extra]} data-hc-sticky>
+  {backHref
+    ? <Button href={backHref} variant="ghost" iconOnly icon="arrow-left" aria-label="Quay lại" />
+    : <a class="hc-header__brand" href={brandHref} aria-label={brandLabel}><img src="/assets/app-icon-h.png" alt="" width="32" height="32" /><Wordmark /></a>}
+  {title && <div class="hc-header__title"><TitleTag>{title}</TitleTag>{subtitle && <span>{subtitle}</span>}</div>}
+  {nav.length > 0 && (
+    <nav class="hc-header__nav" aria-label={navLabel}>
+      {nav.map(link => <a href={link.href} aria-current={link.current ? 'page' : undefined}>{link.label}</a>)}
+    </nav>
+  )}
+  <div class="hc-header__actions"><slot name="actions" /></div>
+</header>

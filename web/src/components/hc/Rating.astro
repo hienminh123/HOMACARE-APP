@@ -1,0 +1,22 @@
+---
+// .hc-rating — 5 sao. Chưa đánh giá: radiogroup dùng phím mũi tên, phát sự kiện `hc:rate` (hành vi trong components.js).
+// Có `value` và `readonly`: chỉ hiển thị.
+import Icon from './Icon.astro';
+interface Props { id: string; label?: string; value?: number | null; readonly?: boolean }
+const { id, label, value, readonly } = Astro.props;
+const stars = [1, 2, 3, 4, 5];
+---
+{readonly
+  ? <div class="hc-rating" data-readonly>
+      <span class="hc-rating__label">{label ?? 'Gia đình đã đánh giá'}</span>
+      <div class="hc-rating__stars" role="img" aria-label={`${value ?? 0} trên 5 sao`}>
+        {stars.map(n => <span class:list={['hc-rating__star', n <= (value ?? 0) && 'is-on']}><Icon name="star" /></span>)}
+      </div>
+    </div>
+  : <div class="hc-rating" data-value={value ?? undefined}>
+      <span class="hc-rating__label" id={`${id}-label`}>{label ?? 'Ca này thế nào?'}</span>
+      <div class="hc-rating__stars" role="radiogroup" aria-labelledby={`${id}-label`}>
+        {stars.map(n => <button class="hc-rating__star" type="button" aria-label={`${n} sao`}><Icon name="star" /></button>)}
+      </div>
+      <span class="hc-rating__value" aria-live="polite"></span>
+    </div>}

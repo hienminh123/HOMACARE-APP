@@ -1,0 +1,37 @@
+---
+// .hc-visit — thẻ ca trả lời: ai đến, khi nào, đang ở bước nào.
+//  variant="family":    ngày + giờ, gói → timeline → chuyên viên (hoặc "Đang chờ điều phối viên").
+//  variant="caregiver": người thân + tuổi + khu vực → chip thói quen → lời nhắn gia đình.
+// Slot "actions" cho nút cuối thẻ.
+import Card from './Card.astro';
+import StatusPill from './StatusPill.astro';
+import StatusTimeline from './StatusTimeline.astro';
+import Person from './Person.astro';
+import Chip from './Chip.astro';
+import type { VisitStatus } from '../../lib/status';
+interface Props {
+  variant?: 'family' | 'caregiver'; label: string; status: VisitStatus;
+  date?: string; meta?: string; caregiver?: string | null;
+  relative?: { name: string; detail?: string }; habits?: { label: string; icon?: string }[]; note?: string;
+}
+const { variant = 'family', label, status, date, meta, caregiver, relative, habits = [], note } = Astro.props;
+---
+<Card class="hc-visit" aria-label={date ? `Ca ${date}` : label}>
+  <div class="hc-card__head"><span class="hc-card__label">{label}</span><StatusPill status={status} /></div>
+  {variant === 'family' ? (
+    <>
+      <div class="hc-visit__when"><span class="hc-visit__date">{date}</span>{meta && <span class="hc-visit__meta">{meta}</span>}</div>
+      <StatusTimeline status={status} />
+      {caregiver
+        ? <Person boxed name={caregiver} detail="Chuyên viên chăm sóc" role="caregiver" />
+        : <Person boxed pending pendingIcon="hourglass" name="Đang chờ điều phối viên" detail="Tên chuyên viên hiện khi ca được phân công" />}
+    </>
+  ) : (
+    <>
+      {relative && <Person size="lg" role="relative" name={relative.name} detail={relative.detail} />}
+      {habits.length > 0 && <div class="hc-visit__habits">{habits.map(h => <Chip icon={h.icon}>{h.label}</Chip>)}</div>}
+      {note && <div class="hc-visit__note"><strong>Gia đình nhắn</strong>{note}</div>}
+    </>
+  )}
+  {Astro.slots.has('actions') && <div class="hc-visit__actions"><slot name="actions" /></div>}
+</Card>

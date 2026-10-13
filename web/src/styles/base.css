@@ -1,0 +1,96 @@
+/* ==========================================================================
+   HomaCare Base · v1.1
+   Mặc định cho phần tử HTML: chữ, nền, focus, vùng chọn, thanh cuộn.
+   Thứ tự nạp: tokens.css → fonts.css → base.css → components.css.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  color-scheme: light;
+  accent-color: var(--color-action);
+  scrollbar-color: var(--gray-300) transparent;
+}
+
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  font-weight: var(--weight-regular);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-synthesis: none;          /* Lexend có sẵn 400–600: không để trình duyệt tô đậm giả */
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-snug);
+  text-wrap: balance;
+  color: var(--color-text);
+}
+h1 { font-size: var(--text-2xl); line-height: var(--leading-tight); }
+h2 { font-size: var(--text-xl); }
+h3 { font-size: var(--text-lg); }
+h4 { font-size: var(--text-md); }
+
+p { margin: 0; text-wrap: pretty; }
+p + p { margin-top: var(--space-3); }
+
+a {
+  color: var(--color-link);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+a:hover { text-decoration-thickness: 2px; }
+
+img, svg, video { display: block; max-width: 100%; }
+
+/* Thuộc tính hidden luôn thắng display của thành phần (.hc-field, .hc-tabs…) */
+[hidden] { display: none !important; }
+
+button, input, select, textarea { font: inherit; color: inherit; }
+
+/* Số liệu: giờ, ngày, giá thẳng cột */
+time, data, .hc-num { font-variant-numeric: tabular-nums; }
+
+::selection { background: var(--color-selection); color: var(--color-text); }
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  border-radius: var(--radius-full);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-track { background: transparent; }
+
+.hc-visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}

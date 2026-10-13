@@ -1,0 +1,18 @@
+---
+// .hc-btn — mỗi màn hình một nút chính. Có `href` thì thành thẻ <a>.
+import Icon from './Icon.astro';
+type Variant = 'primary' | 'secondary' | 'quiet' | 'accent' | 'ghost' | 'danger';
+interface Props {
+  variant?: Variant; size?: 'sm' | 'md' | 'lg'; block?: boolean; iconOnly?: boolean;
+  icon?: string; iconEnd?: string; href?: string; type?: 'button' | 'submit' | 'reset';
+  class?: string; [attr: string]: unknown;
+}
+const { variant = 'primary', size = 'md', block, iconOnly, icon, iconEnd, href, type = 'button', class: extra, ...attrs } = Astro.props;
+const cls = [
+  'hc-btn', variant !== 'primary' && `hc-btn--${variant}`, size !== 'md' && `hc-btn--${size}`,
+  block && 'hc-btn--block', iconOnly && 'hc-btn--icon', extra,
+].filter(Boolean).join(' ');
+---
+{href
+  ? <a class={cls} href={href} {...attrs}>{icon && <Icon name={icon} />}<slot />{iconEnd && <Icon name={iconEnd} />}</a>
+  : <button class={cls} type={type} {...attrs}>{icon && <Icon name={icon} />}<slot />{iconEnd && <Icon name={iconEnd} />}</button>}

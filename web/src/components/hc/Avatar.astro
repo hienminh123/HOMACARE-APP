@@ -1,0 +1,9 @@
+---
+// .hc-avatar — chữ cái đầu (hoặc ảnh qua slot), viền đứt khi chưa có người (`pending`).
+import Icon from './Icon.astro';
+import { initials } from '../../lib/html';
+type AvatarRole = 'family' | 'caregiver' | 'coordinator' | 'relative';
+interface Props { name?: string; role?: AvatarRole; size?: 'sm' | 'md' | 'lg' | 'xl'; pending?: boolean; pendingIcon?: string }
+const { name, role, size = 'md', pending, pendingIcon = 'user' } = Astro.props;
+---
+<span class:list={['hc-avatar', `hc-avatar--${size}`, pending && 'hc-avatar--pending']} data-role={pending ? undefined : role} aria-hidden="true">{pending ? <Icon name={pendingIcon} /> : <slot>{initials(name)}</slot>}</span>

@@ -1,0 +1,6 @@
+---
+// .hc-textarea
+interface Props { id: string; invalid?: boolean; class?: string; [attr: string]: unknown }
+const { id, invalid, class: extra, ...attrs } = Astro.props;
+---
+<textarea class:list={['hc-textarea', extra]} id={id} aria-invalid={invalid ? 'true' : undefined} {...attrs}><slot /></textarea>

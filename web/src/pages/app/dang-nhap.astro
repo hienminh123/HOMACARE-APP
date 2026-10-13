@@ -1,0 +1,228 @@
+---
+// Đăng nhập · đăng ký · quên mật khẩu · đặt mật khẩu mới (thay auth.html). Luồng giống preview/auth.js:
+// signInWithPassword, signUp (kèm full_name và role trong metadata), resetPasswordForEmail, updateUser,
+// và nhận phiên từ link email (#access_token hoặc ?code). Điều hướng theo vai trò trong bảng profiles.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/hc/Header.astro';
+import Button from '../../components/hc/Button.astro';
+import Field from '../../components/hc/Field.astro';
+import Input from '../../components/hc/Input.astro';
+import Icon from '../../components/hc/Icon.astro';
+import '../../styles/app.css';
+---
+<BaseLayout title="Tài khoản · HomaCare" noindex>
+  <Header>
+    <Button slot="actions" href="/app/" variant="ghost" size="sm" icon="arrow-left">Đổi vai trò</Button>
+  </Header>
+  <main class="app-main app-main--narrow">
+    <div class="hc-card auth">
+      <div class="auth__head">
+        <span class="hc-pill hc-pill--plain" data-tone="brand" id="auth-role">Gia đình</span>
+        <h1 id="auth-title">Chào mừng bạn trở lại.</h1>
+        <p id="auth-description" class="auth__desc">Đăng nhập để xem lịch và nhật ký chăm sóc.</p>
+      </div>
+
+      <div class="hc-tabs hc-tabs--full" role="tablist" aria-label="Chọn thao tác" id="auth-tabs">
+        <button class="hc-tab" role="tab" type="button" data-value="login" aria-selected="true">Đăng nhập</button>
+        <button class="hc-tab" role="tab" type="button" data-value="signup" aria-selected="false">Đăng ký</button>
+      </div>
+
+      <form id="account-form" class="hc-stack" novalidate style="--stack-gap: var(--space-4)">
+        <Field label="Họ và tên" for="account-name" data-field="name" hidden>
+          <Input id="account-name" name="name" autocomplete="name" minlength="2" maxlength="100" />
+        </Field>
+        <Field label="Email" for="account-email" data-field="email">
+          <Input id="account-email" name="email" type="email" autocomplete="email" inputmode="email" required />
+        </Field>
+        <Field label="Mật khẩu" for="account-password" data-field="password">
+          <div class="auth__password">
+            <Input id="account-password" name="password" type="password" autocomplete="current-password" required />
+            <Button variant="ghost" size="sm" id="toggle-password" aria-label="Hiện mật khẩu" aria-controls="account-password">Hiện</Button>
+          </div>
+        </Field>
+        <Field label="Nhập lại mật khẩu" for="account-confirmation" data-field="confirmation" hidden>
+          <Input id="account-confirmation" name="confirmation" type="password" autocomplete="new-password" minlength="8" />
+        </Field>
+
+        <p class="auth__message" id="auth-message" role="status" aria-live="polite" hidden></p>
+
+        <Button type="submit" size="lg" block id="auth-submit">Đăng nhập</Button>
+        <div class="auth__links">
+          <Button variant="ghost" size="sm" id="forgot-password">Quên mật khẩu?</Button>
+          <Button variant="ghost" size="sm" id="back-login" hidden icon="arrow-left">Quay lại đăng nhập</Button>
+        </div>
+      </form>
+    </div>
+    <p class="hc-hint auth__foot"><Icon name="shield" size="sm" /> Quyền xem dữ liệu được kiểm tra trên máy chủ. Mỗi vai trò chỉ thấy đúng phần việc của mình.</p>
+  </main>
+
+  <script>
+    import { getClient } from '../../lib/supabase';
+    import { failure, profile, go, emailRedirect, isRole, LABELS, type Role } from '../../lib/auth';
+
+    type Mode = 'login' | 'signup' | 'forgot' | 'recovery';
+    const params = new URLSearchParams(location.search);
+    const role: Role = isRole(params.get('role')) ? (params.get('role') as Role) : 'family';
+    const booking = params.get('booking') === '1';
+    const hash = new URLSearchParams(location.hash.slice(1));
+    const callbackError = hash.get('error_code') || hash.get('error') || params.get('error');
+    let mode: Mode = params.get('mode') === 'recovery' ? 'recovery' : role !== 'coordinator' && params.get('mode') === 'signup' ? 'signup' : 'login';
+    let busy = false, recoverySession = false;
+
+    const $ = <T extends HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
+    const form = $<HTMLFormElement>('#account-form');
+    const message = $<HTMLParagraphElement>('#auth-message');
+    const submit = $<HTMLButtonElement>('#auth-submit');
+    const field = (name: string) => $<HTMLElement>(`[data-field="${name}"]`);
+    const input = (id: string) => $<HTMLInputElement>(`#${id}`);
+    const SUBMIT: Record<Mode, string> = { signup: 'Tạo tài khoản', login: 'Đăng nhập', forgot: 'Gửi email khôi phục', recovery: 'Lưu mật khẩu mới' };
+
+    function announce(text: string, success = false) {
+      message.textContent = text;
+      message.hidden = false;
+      message.dataset.tone = success ? 'success' : 'danger';
+    }
+
+    function render() {
+      message.hidden = true; message.textContent = '';
+      const show = {
+        name: mode === 'signup',
+        email: mode !== 'recovery',
+        password: mode !== 'forgot',
+        confirmation: mode === 'signup' || mode === 'recovery',
+      };
+      (Object.keys(show) as (keyof typeof show)[]).forEach(k => {
+        field(k).hidden = !show[k];
+        field(k).querySelectorAll('input').forEach(i => (i.disabled = !show[k]));
+      });
+      input('account-name').required = show.name;
+      input('account-email').required = show.email;
+      input('account-confirmation').required = show.confirmation;
+      const pw = input('account-password');
+      pw.required = show.password;
+      pw.minLength = mode === 'login' ? 1 : 8;
+      pw.autocomplete = mode === 'login' ? 'current-password' : 'new-password';
+
+      $('#auth-role').textContent = LABELS[role];
+      const headings: Record<Mode, string> = { signup: 'Tạo tài khoản mới.', login: role === 'coordinator' ? 'Đăng nhập điều phối.' : 'Chào mừng bạn trở lại.', forgot: 'Lấy lại mật khẩu.', recovery: 'Đặt mật khẩu mới.' };
+      const descriptions: Record<Mode, string> = {
+        signup: role === 'family' ? 'Tạo tài khoản để sắp xếp chăm sóc và theo dõi nhật ký của người thân.' : 'Tạo tài khoản để nhận ca được phân công và ghi nhật ký sau mỗi buổi.',
+        login: role === 'coordinator' ? 'Đăng nhập bằng email và mật khẩu của tài khoản điều phối được cấp.' : 'Đăng nhập để xem lịch và nhật ký chăm sóc.',
+        forgot: 'Chúng tôi sẽ gửi đường dẫn đặt lại mật khẩu đến email của bạn.',
+        recovery: 'Chọn mật khẩu mới gồm ít nhất 8 ký tự.',
+      };
+      $('#auth-title').textContent = headings[mode];
+      $('#auth-description').textContent = descriptions[mode];
+      submit.textContent = SUBMIT[mode];
+      $('#auth-tabs').hidden = role === 'coordinator' || mode === 'forgot' || mode === 'recovery';
+      $('#forgot-password').hidden = mode !== 'login';
+      $('#back-login').hidden = mode !== 'forgot';
+      document.querySelectorAll<HTMLButtonElement>('#auth-tabs [role="tab"]').forEach(t => {
+        const on = t.dataset.value === mode;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+      });
+    }
+
+    document.addEventListener('hc:tabchange', e => {
+      if (busy) return;
+      const value = (e as CustomEvent).detail.value;
+      if (value === 'login' || value === 'signup') { mode = value; render(); }
+    });
+    $('#forgot-password').addEventListener('click', () => { if (!busy) { mode = 'forgot'; render(); } });
+    $('#back-login').addEventListener('click', () => { mode = 'login'; render(); });
+    $('#toggle-password').addEventListener('click', e => {
+      const pw = input('account-password'), button = e.currentTarget as HTMLButtonElement;
+      const show = pw.type === 'password';
+      pw.type = show ? 'text' : 'password';
+      button.textContent = show ? 'Ẩn' : 'Hiện';
+      button.setAttribute('aria-label', show ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+    });
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (busy) return;
+      if (!form.reportValidity()) return;
+      const client = await getClient();
+      if (!client) return announce('Hệ thống tài khoản đang được chuẩn bị. Vui lòng quay lại sau.');
+      const email = input('account-email').value.trim();
+      const password = input('account-password').value;
+      const name = input('account-name').value.trim();
+      if ((mode === 'signup' || mode === 'recovery') && password !== input('account-confirmation').value) return announce('Hai mật khẩu chưa khớp nhau.');
+      if (mode === 'signup' && name.length < 2) return announce('Bạn nhập họ và tên để chúng tôi xưng hô nhé.');
+
+      busy = true;
+      submit.setAttribute('aria-busy', 'true');
+      try {
+        if (mode === 'forgot') {
+          const { error } = await client.auth.resetPasswordForEmail(email, { redirectTo: emailRedirect(role, 'recovery') });
+          if (error) throw error;
+          announce('Nếu email này có tài khoản, bạn sẽ nhận được đường dẫn khôi phục. Hãy kiểm tra cả thư mục thư rác.', true);
+        } else if (mode === 'recovery') {
+          if (!recoverySession) throw new Error('recovery_invalid');
+          const { error } = await client.auth.updateUser({ password });
+          if (error) throw error;
+          const current = await profile();
+          if (current) go(current.role);
+        } else {
+          const result = mode === 'signup'
+            ? await client.auth.signUp({ email, password, options: { data: { full_name: name, role }, emailRedirectTo: emailRedirect(role) } })
+            : await client.auth.signInWithPassword({ email, password });
+          if (result.error) throw result.error;
+          if (mode === 'signup' && (!result.data.session || !result.data.user?.identities?.length)) {
+            form.reset();
+            announce('Kiểm tra email để xác nhận tài khoản. Nếu bạn đã đăng ký trước đó, hãy chuyển sang Đăng nhập.', true);
+            return;
+          }
+          const current = await profile();
+          if (!current) { announce('Chưa tải được hồ sơ tài khoản. Vui lòng thử lại.'); return; }
+          go(current.role, booking);
+        }
+      } catch (error) {
+        announce((error as Error).message === 'recovery_invalid' ? 'Đường dẫn khôi phục chưa hợp lệ hoặc đã hết hạn. Hãy yêu cầu một email mới.' : failure(error));
+      } finally {
+        busy = false;
+        submit.removeAttribute('aria-busy');
+        submit.textContent = SUBMIT[mode];
+      }
+    });
+
+    render();
+    if (callbackError) announce('Link xác nhận đã hết hạn hoặc đã được sử dụng. Nếu bạn đã xác nhận email, hãy đăng nhập bằng email và mật khẩu.');
+
+    (async () => {
+      const client = await getClient();
+      if (!client) return;
+      client.auth.onAuthStateChange(event => {
+        if (event === 'PASSWORD_RECOVERY') { recoverySession = true; mode = 'recovery'; render(); }
+      });
+      try {
+        const { data, error } = await client.auth.getSession();
+        if (callbackError) return;
+        if (error) { announce(failure(error)); return; }
+        if (mode === 'recovery') { recoverySession = !!data.session; return; }
+        if (data.session) {
+          const current = await profile();
+          if (current) go(current.role, booking);
+        }
+      } catch (error) {
+        announce(error instanceof Error && !/fetch|network/i.test(error.message) ? error.message : failure(error));
+      }
+    })();
+  </script>
+</BaseLayout>
+
+<style>
+  .auth { display: grid; gap: var(--space-6); padding: var(--space-6); }
+  .auth__head { display: grid; gap: var(--space-2); justify-items: start; }
+  .auth__head h1 { font-size: var(--text-2xl); line-height: var(--leading-tight); }
+  .auth__desc { color: var(--color-text-muted); }
+  .auth__password { position: relative; }
+  .auth__password :global(.hc-input) { padding-right: 72px; }
+  .auth__password :global(.hc-btn) { position: absolute; right: var(--space-1); top: 50%; transform: translateY(-50%); }
+  .auth__message { padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); font-weight: var(--weight-medium); }
+  .auth__message[data-tone="danger"] { background: var(--color-danger-subtle); color: var(--color-danger); }
+  .auth__message[data-tone="success"] { background: var(--color-success-subtle); color: var(--color-success); }
+  .auth__links { display: flex; justify-content: center; }
+  .auth__foot { display: flex; gap: var(--space-2); align-items: center; justify-content: center; margin-top: var(--space-4); text-align: center; }
+</style>

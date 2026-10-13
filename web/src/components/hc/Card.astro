@@ -1,0 +1,8 @@
+---
+// .hc-card — không lồng thẻ trong thẻ. `href` → cả thẻ là liên kết (--interactive).
+type Variant = 'default' | 'flat' | 'sunken' | 'warm' | 'brand' | 'flush';
+interface Props { variant?: Variant; as?: 'article' | 'section' | 'div' | 'li' | 'aside'; href?: string; class?: string; [attr: string]: unknown }
+const { variant = 'default', as: Tag = 'article', href, class: extra, ...attrs } = Astro.props;
+const cls = ['hc-card', variant !== 'default' && `hc-card--${variant}`, href && 'hc-card--interactive', extra].filter(Boolean).join(' ');
+---
+{href ? <a class={cls} href={href} {...attrs}><slot /></a> : <Tag class={cls} {...attrs}><slot /></Tag>}

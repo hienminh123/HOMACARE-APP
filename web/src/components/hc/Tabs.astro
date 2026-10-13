@@ -1,0 +1,15 @@
+---
+// .hc-tabs[role=tablist] — tab phân đoạn; phím mũi tên/Home/End và sự kiện hc:tabchange do components.js xử lý.
+// `controls` trỏ tới id của .hc-tabpanel tương ứng (tùy chọn).
+interface Item { label: string; value?: string; count?: number; controls?: string; id?: string; selected?: boolean }
+interface Props { label: string; items: Item[]; full?: boolean; class?: string }
+const { label, items, full, class: extra } = Astro.props;
+const active = Math.max(0, items.findIndex(i => i.selected));
+---
+<div class:list={['hc-tabs', full && 'hc-tabs--full', extra]} role="tablist" aria-label={label}>
+  {items.map((item, i) => (
+    <button class="hc-tab" role="tab" type="button" id={item.id} data-value={item.value} aria-selected={String(i === active)} aria-controls={item.controls}>
+      {item.label}{item.count !== undefined && <span class="hc-tab__count">{item.count}</span>}
+    </button>
+  ))}
+</div>

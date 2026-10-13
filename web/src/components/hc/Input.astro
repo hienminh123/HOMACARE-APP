@@ -1,0 +1,6 @@
+---
+// .hc-input — cỡ chữ 16px để Safari iOS không tự phóng to. Dùng trong <Field>.
+interface Props { id: string; invalid?: boolean; class?: string; [attr: string]: unknown }
+const { id, invalid, class: extra, ...attrs } = Astro.props;
+---
+<input class:list={['hc-input', extra]} id={id} aria-invalid={invalid ? 'true' : undefined} {...attrs} />

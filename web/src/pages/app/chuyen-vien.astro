@@ -1,0 +1,42 @@
+---
+// Không gian chuyên viên (thay caregiver.html). Giai đoạn 2: khung + dữ liệu thật ở chế độ xem.
+import AppLayout from '../../layouts/AppLayout.astro';
+const nav = [
+  { href: '#ca-duoc-giao', label: 'Ca được giao', icon: 'calendar' },
+  { href: '#da-xong', label: 'Đã xong', icon: 'check-circle' },
+  { href: '#tai-khoan', label: 'Tài khoản', icon: 'user' },
+];
+---
+<AppLayout role="caregiver" title="Ca chăm sóc của tôi" nav={nav}>
+  <script>
+    import { boot, accountSection } from '../../scripts/workspace';
+    import { empty, caregiverVisit, visitRow } from '../../scripts/render';
+    import { esc } from '../../lib/html';
+    import { today } from '../../lib/visits';
+
+    boot('caregiver', ({ profile, data }) => {
+      const open = data.visits.filter(v => v.status !== 'completed');
+      const completed = data.visits.filter(v => v.status === 'completed').reverse();
+      const now = today();
+      return `
+        <div class="app-greeting" id="ca-duoc-giao">
+          <h1>Chào ${esc(profile.full_name)}</h1>
+          <p>Đây là các ca được giao cho bạn.</p>
+        </div>
+        <section class="app-section" aria-labelledby="open-title">
+          <div class="app-section__head"><h2 id="open-title">Ca được giao</h2><span class="hc-pill hc-pill--plain">${open.length} ca</span></div>
+          ${open.length
+            ? `<ul class="app-list app-list--2">${open.map(v => `<li>${caregiverVisit(v, v.care_date === now ? 'Ca hôm nay' : 'Ca sắp tới')}</li>`).join('')}</ul>`
+            : empty('inbox', 'Chưa có ca được phân công', 'Khi điều phối viên giao ca, ca sẽ hiện ở đây.')}
+        </section>
+        <section class="app-section" id="da-xong" aria-labelledby="done-title">
+          <div class="app-section__head"><h2 id="done-title">Ca đã hoàn thành</h2><span class="hc-pill hc-pill--plain">${completed.length} ca</span></div>
+          ${completed.length
+            ? `<div class="hc-card hc-card--flush">${completed.map(v => visitRow(v, '')).join('')}</div>`
+            : empty('check-circle', 'Chưa có ca đã hoàn thành', 'Ca bạn hoàn thành sẽ được lưu ở đây.', true)}
+          <p class="hc-hint" style="margin-top:var(--space-3)">Ghi nhận hoạt động sinh hoạt, không chẩn đoán tình trạng y tế.</p>
+        </section>
+        ${accountSection(profile, 'Chuyên viên chăm sóc')}`;
+    });
+  </script>
+</AppLayout>

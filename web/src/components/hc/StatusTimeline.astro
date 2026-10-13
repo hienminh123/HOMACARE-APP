@@ -1,0 +1,16 @@
+---
+// .hc-timeline — bốn bước của mỗi ca. Ngang trong thẻ; `vertical` kèm `times` ở trang chi tiết.
+import Icon from './Icon.astro';
+import { timelineSteps, type VisitStatus, type TimelineTimes } from '../../lib/status';
+interface Props { status: VisitStatus; vertical?: boolean; times?: TimelineTimes; label?: string }
+const { status, vertical, times = {}, label = 'Tiến trình ca' } = Astro.props;
+---
+<ol class:list={['hc-timeline', vertical && 'hc-timeline--vertical']} aria-label={label}>
+  {timelineSteps(status).map(step => (
+    <li class:list={['hc-timeline__step', step.state]} aria-current={step.current ? 'step' : undefined}>
+      <span class="hc-timeline__node">{step.finished && <Icon name="check" />}</span>
+      <span class="hc-timeline__label">{step.label}</span>
+      {times[step.key] && <span class="hc-timeline__meta">{times[step.key]}</span>}
+    </li>
+  ))}
+</ol>

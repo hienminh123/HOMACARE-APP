@@ -1,0 +1,9 @@
+---
+// .hc-check — dòng chọn cao 56px, dùng cho 4 hoạt động của chuyên viên.
+interface Props { label: string; note?: string; name?: string; checked?: boolean; disabled?: boolean; type?: 'checkbox' | 'radio'; value?: string }
+const { label, note, name, checked, disabled, type = 'checkbox', value } = Astro.props;
+---
+<label class="hc-check">
+  <input type={type} name={name} value={value} checked={checked} disabled={disabled} />
+  <span class="hc-check__text">{label}{note && <small>{note}</small>}</span>
+</label>

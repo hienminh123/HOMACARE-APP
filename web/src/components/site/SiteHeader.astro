@@ -1,0 +1,19 @@
+---
+// Header trang giới thiệu. Nút tài khoản đổi nhãn khi trình duyệt đã có phiên đăng nhập
+// (đọc khóa phiên trong localStorage, không tải SDK Supabase trên trang này).
+import Header from '../hc/Header.astro';
+import Button from '../hc/Button.astro';
+const nav = [
+  { href: '#about', label: 'Về HomaCare' },
+  { href: '#how-it-works', label: 'Cách sử dụng' },
+  { href: '#services', label: 'Dịch vụ' },
+  { href: '#goc-suc-khoe', label: 'Góc sức khỏe' },
+  { href: '#faq', label: 'Hỏi đáp' },
+  { href: '#contact', label: 'Liên hệ' },
+];
+---
+<Header brandHref="#hero" brandLabel="HomaCare — Về đầu trang" nav={nav} navLabel="Các mục trên trang">
+  <Button slot="actions" href="/app/" size="sm" data-account-cta>
+    <span data-account-label>Đăng nhập / Đăng ký</span>
+  </Button>
+</Header>

@@ -1,0 +1,90 @@
+---
+// Không gian điều phối (thay coordinator.html). Giai đoạn 2: khung + dữ liệu thật ở chế độ xem,
+// lọc theo trạng thái và xem chi tiết ca trong Sheet. Phân công dựng lại ở giai đoạn 4.
+import AppLayout from '../../layouts/AppLayout.astro';
+import Sheet from '../../components/hc/Sheet.astro';
+const nav = [
+  { href: '#yeu-cau', label: 'Danh sách ca', icon: 'inbox' },
+  { href: '#chuyen-vien', label: 'Chuyên viên', icon: 'users' },
+  { href: '#tai-khoan', label: 'Tài khoản', icon: 'user' },
+];
+---
+<AppLayout role="coordinator" title="Không gian điều phối" nav={nav}>
+  <Sheet id="visit-detail" title="Chi tiết ca" description="Thông tin ca, tiến trình và nhật ký nếu đã có.">
+    <div data-detail-body class="hc-stack" style="--stack-gap: var(--space-4)"></div>
+  </Sheet>
+
+  <script>
+    import { boot, accountSection } from '../../scripts/workspace';
+    import { empty, visitRow, person, careLog, times, relativeName } from '../../scripts/render';
+    import { esc } from '../../lib/html';
+    import { ORDER, STATUS, pill, timeline } from '../../lib/status';
+    import { caregiverOf, dayLabel, familyOf, relativeOf, PACKAGE, type Visit } from '../../lib/visits';
+
+    let visits: Visit[] = [];
+
+    boot('coordinator', ({ profile, data }) => {
+      visits = data.visits;
+      const counts = Object.fromEntries(ORDER.map(s => [s, visits.filter(v => v.status === s).length]));
+      const tabs = [['all', 'Tất cả', visits.length], ...ORDER.map(s => [s, STATUS[s].label, counts[s]])]
+        .map(([value, label, count], i) => `<button class="hc-tab" role="tab" type="button" data-value="${value}" aria-selected="${i === 0}" aria-controls="visit-list">${label}<span class="hc-tab__count">${count}</span></button>`).join('');
+      const rows = visits.map(v => `<div data-row-status="${v.status}">${visitRow(v, `<button class="hc-btn hc-btn--quiet hc-btn--sm" type="button" data-detail="${esc(v.id)}">${v.status === 'completed' ? 'Nhật ký' : 'Xem ca'}</button>`)}</div>`).join('');
+      return `
+        <div class="app-greeting">
+          <h1>Chào ${esc(profile.full_name)}</h1>
+          <p>Các yêu cầu đang chờ và tiến độ từng ca.</p>
+        </div>
+        <section class="app-section" id="yeu-cau" aria-labelledby="list-title">
+          <div class="app-section__head"><h2 id="list-title">Danh sách ca chăm sóc</h2></div>
+          <div class="hc-tabs" role="tablist" aria-label="Lọc theo trạng thái" style="margin-bottom:var(--space-4)">${tabs}</div>
+          <div id="visit-list" role="tabpanel" aria-labelledby="list-title">
+            ${visits.length ? `<div class="hc-card hc-card--flush">${rows}</div>` : ''}
+            <div data-list-empty ${visits.length ? 'hidden' : ''}>${empty('inbox', 'Chưa có ca trong danh sách này', 'Yêu cầu mới từ gia đình sẽ hiện ở đây.', true)}</div>
+          </div>
+        </section>
+        <section class="app-section" id="chuyen-vien" aria-labelledby="staff-title">
+          <div class="app-section__head"><h2 id="staff-title">Chuyên viên chăm sóc</h2><span class="hc-pill hc-pill--plain">${data.staff.length}</span></div>
+          ${data.staff.length
+            ? `<ul class="app-list app-list--2">${data.staff.map(p => `<li class="hc-card">${person(p.full_name, 'Tài khoản chuyên viên chăm sóc', 'caregiver')}</li>`).join('')}</ul>`
+            : empty('users', 'Chưa có chuyên viên', 'Chuyên viên cần tạo tài khoản trước khi được phân công.', true)}
+          <p class="hc-hint" style="margin-top:var(--space-3)">Với nhu cầu vượt phạm vi hỗ trợ sinh hoạt, trao đổi cùng gia đình để kết nối đơn vị chuyên môn phù hợp.</p>
+        </section>
+        ${accountSection(profile, 'Điều phối viên')}`;
+    });
+
+    // Lọc theo tab (sự kiện hc:tabchange từ components.js)
+    document.addEventListener('hc:tabchange', e => {
+      const value = (e as CustomEvent).detail.value as string;
+      let shown = 0;
+      document.querySelectorAll<HTMLElement>('#visit-list [data-row-status]').forEach(row => {
+        row.hidden = value !== 'all' && row.dataset.rowStatus !== value;
+        if (!row.hidden) shown++;
+      });
+      const emptyBox = document.querySelector<HTMLElement>('[data-list-empty]');
+      if (emptyBox) emptyBox.hidden = shown > 0;
+    });
+
+    // Chi tiết ca
+    document.addEventListener('click', e => {
+      const button = (e.target as Element).closest<HTMLButtonElement>('[data-detail]');
+      if (!button) return;
+      const v = visits.find(x => x.id === button.dataset.detail);
+      const body = document.querySelector<HTMLElement>('[data-detail-body]');
+      if (!v || !body) return;
+      const r = relativeOf(v), cg = caregiverOf(v), fam = familyOf(v);
+      body.innerHTML = `
+        <div class="hc-card__head">${person(r?.full_name || 'Người thân', `${r?.age ? r.age + ' tuổi · ' : ''}${r?.area || ''}`, 'relative')}${pill(v.status)}</div>
+        <dl class="app-dl">
+          <div><dt>Ngày</dt><dd>${esc(dayLabel(v.care_date))}</dd></div>
+          <div><dt>Khung giờ</dt><dd>${PACKAGE.hours} · Gói ${PACKAGE.name}</dd></div>
+          <div><dt>Gia đình</dt><dd>${esc(fam?.full_name || '')}</dd></div>
+          <div><dt>Người thân</dt><dd>${esc(relativeName(r))}</dd></div>
+          <div><dt>Chuyên viên</dt><dd>${esc(cg?.full_name || 'Chưa phân công')}</dd></div>
+        </dl>
+        ${timeline(v.status, { vertical: true, times: times(v) })}
+        <div class="hc-visit__note"><strong>Lưu ý của gia đình</strong>${esc(v.care_note || 'Chưa có lưu ý thêm')}</div>
+        ${v.status === 'completed' ? careLog(v) : ''}`;
+      window.HC.openSheet('visit-detail', button);
+    });
+  </script>
+</AppLayout>

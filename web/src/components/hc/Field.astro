@@ -1,0 +1,13 @@
+---
+// .hc-field — nhãn trên ô, gợi ý hoặc lỗi dưới ô. Đặt <Input>/<Select>/<Textarea> vào slot và nối
+// aria-describedby với `${for}-hint` / `${for}-error`.
+import Icon from './Icon.astro';
+interface Props { label: string; for: string; hint?: string; error?: string; optional?: boolean; class?: string; [attr: string]: unknown }
+const { label, for: id, hint, error, optional, class: extra, ...attrs } = Astro.props;
+---
+<div class:list={['hc-field', extra]} {...attrs}>
+  <label class="hc-label" for={id}>{label}{optional && <span class="hc-optional"> (không bắt buộc)</span>}</label>
+  <slot />
+  {hint && <span class="hc-hint" id={`${id}-hint`}>{hint}</span>}
+  {error && <span class="hc-error" id={`${id}-error`}><Icon name="alert" />{error}</span>}
+</div>

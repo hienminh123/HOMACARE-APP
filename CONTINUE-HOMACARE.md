@@ -6,7 +6,7 @@
 - Repo đã chuyển từ OneDrive sang `C:\dev\homacare`. Làm trên nhánh **`thiet-ke-lai`**. Tag **`ban-cu-v1`** = bản đang chạy trên homacare-demo.pages.dev.
 - **Không sửa, không merge vào `main`. Không push nếu chưa hỏi người dùng.** Commit cục bộ sau mỗi giai đoạn là được phép.
 - Cloudflare Pages chỉ build `main`, nên mọi thay đổi trên nhánh này chưa ảnh hưởng web thật.
-- Lộ trình đầy đủ: (0) dọn repo → (1) design system → (2) chuyển sang Astro, tách trang giới thiệu khỏi app → (3) app gia đình, ưu tiên điện thoại → (4) app chuyên viên và điều phối → (5) realtime + chế độ demo cho giám khảo → (6) kiểm thử toàn bộ. **Đã xong 0 và 1.**
+- Lộ trình đầy đủ: (0) dọn repo → (1) design system → (2) chuyển sang Astro, tách trang giới thiệu khỏi app → (3) app gia đình, ưu tiên điện thoại → (4) app chuyên viên và điều phối → (5) realtime + chế độ demo cho giám khảo → (6) kiểm thử toàn bộ. **Đã xong 0, 1 và 2.**
 
 ### Giai đoạn 0 · Dọn repo (commit `468af26`)
 - Xóa: `landing.html`, `landing-v2.html`, `landing-v3.html`, `home-classic.html`, 3 ảnh .jpg cũ trong `preview/`, `netlify.toml`, hai thư mục rỗng `tmp/`, `audit-assets/`. Tất cả vẫn lấy lại được từ tag `ban-cu-v1` (`git checkout ban-cu-v1 -- <file>`).
@@ -31,16 +31,40 @@
 - Đã kiểm tra: 17/17 cặp tương phản đạt AA; không tràn ngang ở 375px; mọi vùng chạm ≥ 44px trên cảm ứng; sheet mở/đóng/trả focus, toast, tabs bằng phím, đánh giá bằng phím chạy đúng; không lỗi console. Detector impeccable còn các cảnh báo có chủ đích (nền Sand là màu thương hiệu, chữ "Care" trong logo, chấm nhịp "Đang chăm sóc", shimmer khi tải).
 - **Chưa đụng** vào `index.html`, `auth.html`, ba dashboard, `styles.css`, `account.css`: chúng vẫn dùng CSS cũ. Design system mới chỉ được dùng trong `design-system.html`.
 
-### Việc tiếp theo — Giai đoạn 2 · Chuyển sang Astro
-1. Hỏi người dùng trước khi cài: tạo dự án Astro (output tĩnh, không SSR, để Cloudflare Pages miễn phí) trong thư mục riêng, ví dụ `web/`, giữ `preview/` chạy song song cho tới khi bản mới đủ chức năng.
-2. Chép `preview/ds/` vào `src/styles/` (import đúng thứ tự trong DESIGN.md); mỗi thành phần `hc-*` thành một file `.astro`; `HC.pill/timeline` thành component nhận prop `status`.
-3. Tách hai khu: trang giới thiệu (`/`, nội dung từ `index.html` + Góc sức khỏe) và app (`/app/gia-dinh`, `/app/chuyen-vien`, `/app/dieu-phoi`, `/app/dang-nhap`). Giữ redirect cho `auth.html`, `family.html`… vì email xác nhận Supabase đang trỏ `auth.html`.
-4. Chuyển `auth.js`/`workspace.js` sang module dùng chung, giữ nguyên RPC và RLS (không đổi `backend/schema.sql` nếu không cần).
-5. Trước khi merge vào `main` sau này: đổi cấu hình Cloudflare Pages (build command `npm run build`, output `web/dist`), cập nhật Site URL/Redirect URLs của Supabase nếu đường dẫn đổi. Đây là việc người dùng phải duyệt.
+### Giai đoạn 2 · Chuyển sang Astro, tách trang giới thiệu khỏi app (commit cuối phiên 13/10)
+- **Người dùng đã duyệt:** tạo dự án Astro output tĩnh trong `web/` (npm, không SSR, không adapter), Supabase lấy từ gói npm `@supabase/supabase-js`, **dựng lại** trang giới thiệu bằng design system (không chép CSS cũ), thêm Góc sức khỏe sau khi kiểm link.
+- **Đổi font (người dùng yêu cầu giữa phiên):** muốn Outfit + Segoe UI như trang Mantine. Outfit **không có tiếng Việt** (thiếu U+1EA0–1EF1: ạ, ở, ự, ẫ…), nên người dùng chọn **Lexend** cho tiêu đề (tự lưu trữ, biến thiên 400–600, dùng 500) + **font hệ thống** cho nội dung (Segoe UI trên Windows, San Francisco trên iPhone, Roboto trên Android; Segoe UI không được tự lưu trữ). Design system lên **v1.1**, chỉ đổi font; màu, khoảng cách, thành phần giữ nguyên. `preview/ds/` vẫn ở v1.0. DESIGN.md đã cập nhật.
+- Phiên bản: Astro 7.3.8, @supabase/supabase-js 2.117.3, Node 24. Không cài gì khác (chưa có `@astrojs/check`/TypeScript để kiểm kiểu; muốn thêm thì hỏi người dùng).
+- Cấu trúc và cách chạy: xem `web/README.md`. Tóm tắt:
+  - `web/src/styles/` = 4 file CSS của design system (nạp đúng thứ tự trong `BaseLayout.astro`) + `site.css` (trang giới thiệu) + `app.css` (khu app). `web/src/scripts/components.js` = bản chép `components.js`, chỉ đổi phần trạng thái ca/icon sang import từ `src/lib/status.ts`, `src/lib/html.ts`. `base.css` thêm quy tắc `[hidden]{display:none!important}`.
+  - 15 thành phần thành component trong `web/src/components/hc/` (danh sách trong DESIGN.md mục "Chuyển dần code cũ"). `StatusPill`/`StatusTimeline` nhận prop `status`.
+  - `src/lib/auth.ts` (từ auth.js) và `src/lib/visits.ts` (từ workspace.js): cùng bảng, cùng câu select, cùng 5 RPC, cùng câu báo lỗi. **Không đổi `backend/schema.sql`.**
+  - Đường dẫn mới: `/`, `/app/` (chọn vai trò, hoặc tự chuyển theo vai trò nếu đã đăng nhập), `/app/dang-nhap/`, `/app/gia-dinh/`, `/app/chuyen-vien/`, `/app/dieu-phoi/`, `/tinh-nang` (chép nguyên từ preview). Email Supabase giờ trỏ `/app/dang-nhap/?role=…`.
+  - Link cũ: `web/public/auth.html`, `family.html`, `caregiver.html`, `coordinator.html` chuyển bằng JavaScript, **giữ ?query và #fragment** (không dùng `_redirects` cho chúng vì tài liệu Cloudflare không nói rõ có giữ query). `_redirects` chỉ còn các landing cũ và `design-system.html` → `/`. Trang chủ và mọi trang app nhận `#access_token`/`?code` thì chuyển sang trang đăng nhập.
+  - Ba không gian hiện là **khung + dữ liệu thật ở chế độ xem** (có dòng ghi chú giai đoạn 2 trên đầu): gia đình (ca sắp tới, lịch, nhật ký, người thân, tài khoản), chuyên viên (ca được giao, ca đã xong), điều phối (lọc theo 4 trạng thái bằng Tabs, xem chi tiết ca trong Sheet, danh sách chuyên viên). Đặt ca, thêm người thân, phân công, bắt đầu ca, ghi nhật ký, đánh giá: hàm đã có trong `visits.ts`, giao diện làm ở giai đoạn 3–4.
+  - Chế độ giả lập `npm --prefix web run dev:fixture` (cổng 4322): `src/lib/fixture.ts` thay Supabase, dữ liệu minh họa trong sessionStorage; đã kiểm tra bản build không chứa file này. Có thể làm nền cho "chế độ demo cho giám khảo" ở giai đoạn 5.
+- Trang giới thiệu: giữ thứ tự mục và các quyết định đã chốt (chữ hero chiếm gần trọn màn đầu trên điện thoại, "Sự quan tâm vẫn ở gần." một dòng; "Về HomaCare" lên trước "Dõi theo từ xa" trên điện thoại, ẩn đoạn 3 và ảnh; 3 thẻ teal; 4 giá trị 2×2; điện thoại ẩn 4 thẻ dịch vụ, thay bằng "Chăm sóc theo buổi tại nhà"; bảng giá desktop đủ 3 gói, mobile rút gọn 2 gói đang phát triển; hiện dần 1,1s/36px/140ms; "Cách sử dụng" trên điện thoại mở minh họa ngay dưới bước bấm, bấm lại thì thu, bù cuộn, không tự cuộn/tự chuyển; desktop minh họa dính bên phải). Đơn giản hơn bản cũ: hero không còn 3 tab + điện thoại vuốt; minh họa dựng bằng component thật (VisitCard, CareLog, Timeline…) và ghi "dữ liệu minh họa". Thêm mục "Góc sức khỏe" vào menu.
+- Góc sức khỏe: đã mở lại 3 link ngày 13/10/2026, cả ba còn hoạt động (Cục Dân số 30/09/2026, server lỗi chuỗi chứng chỉ với một số công cụ nhưng trang trả 200; WHO Đông Nam Á 01/10/2026; WHO fact sheet 01/10/2025). Hai bài WHO ghi "Bài viết bằng tiếng Anh".
+- Đã kiểm tra: build sạch (7 trang, ảnh tự nén webp); không tràn ngang ở 375px và 1280px; header vừa ở 900px; Lexend nạp đúng, đủ dấu; chuỗi giả lập: đăng nhập chuyên viên → `/app/chuyen-vien/`, vào sai vai trò bị đưa về đúng không gian, đăng xuất về `/`, `/auth.html?role=caregiver#error_code=…` → trang đăng nhập giữ role và báo link hết hạn, Tabs lọc và Sheet chi tiết mở/focus đúng, "Cách sử dụng" trên điện thoại giữ bước đứng yên khi chuyển. Không tạo dữ liệu hay tài khoản Supabase thật. Khung trình duyệt của Claude chạy ẩn nên ảnh chụp dùng Chrome headless qua DevTools.
+- `.claude/launch.json`: thêm `web` (4321), `web-fixture` (4322), `web-dist` (4323, `astro preview`).
+
+### Trước khi merge `thiet-ke-lai` vào `main` (người dùng phải duyệt từng việc)
+1. **Cloudflare Pages** (project homacare-demo → Settings → Builds): **Root directory** `web`; **Build command** `npm run build`; **Build output directory** `dist`; biến môi trường `NODE_VERSION` = 22 trở lên. Hiện đang là build command trống, output `preview`.
+2. **Supabase → Authentication → URL Configuration:** đổi **Site URL** từ `https://homacare-demo.pages.dev/auth.html` thành `https://homacare-demo.pages.dev/app/dang-nhap/` (giữ nguyên cũng chạy nhờ trang chuyển hướng, nhưng đổi để bớt một bước). Giữ Redirect URL `https://homacare-demo.pages.dev/**`. Email template nào ghi cứng `auth.html` thì sửa theo.
+3. Sau khi deploy (nên thử trên URL preview của nhánh trước): một email xác nhận mới, một email quên mật khẩu, đăng nhập 3 vai trò, link cũ `/family.html?booking=1`.
+4. Thử trên iPhone thật: font hệ thống, "Cách sử dụng", sheet, BottomNav.
+5. Giữ `preview/` cho tới khi giai đoạn 3–4 xong rồi mới quyết định bỏ.
+
+### Việc tiếp theo — Giai đoạn 3 · App gia đình, ưu tiên điện thoại
+- Dựng lại thao tác trong `web/src/pages/app/gia-dinh.astro`: thêm/sửa người thân (Sheet + Field), đặt ca Ân cần 2 bước (Thông tin ca → Xác nhận, giữ dữ liệu khi quay lại, như bản cũ), đánh giá sao bằng sự kiện `hc:rate` → `rateVisit`, mở `?booking=1` thẳng vào đặt ca. Dùng hàm sẵn trong `src/lib/visits.ts`, `HC.toast` cho xác nhận, lỗi đặt cạnh ô nhập.
+- Ô chọn ngày hiển thị dd/mm (máy tiếng Anh hiện mm/dd với `type="date"`).
+- Khi cả ba không gian đủ thao tác thì gỡ dòng ghi chú "Khung app mới (giai đoạn 2)" trong `AppLayout.astro`.
 
 ### Còn để ngỏ
-- Cal Sans đang là TTF 100 KB; nên chuyển sang woff2 (cần `woff2_compress` hoặc fonttools, máy hiện chưa có).
-- `tinh-nang.html` vẫn dùng CSS nội tuyến riêng, chưa chuyển sang design system.
+- Cal Sans (TTF 100 KB) giờ chỉ còn dùng ở `preview/` và trang `/tinh-nang`; bản Astro dùng Lexend woff2.
+- `tinh-nang.html` vẫn dùng CSS nội tuyến riêng (cả bản chép trong `web/public/`), chưa chuyển sang design system.
+- Chưa có trang tài liệu design system cho bản Astro (`preview/design-system.html` vẫn mô tả v1.0 với Cal Sans); có thể làm trang `/thiet-ke` noindex.
+- Chưa kiểm kiểu TypeScript (`astro check` cần cài thêm `@astrojs/check` và `typescript`, phải hỏi người dùng).
 - Ô `type="date"` hiển thị theo ngôn ngữ của máy (máy tiếng Anh sẽ ra mm/dd); khi làm app có thể cần ô chọn ngày riêng hiển thị dd/mm.
 - Chưa tạo file phụ `.impeccable/design.json` cho bảng điều khiển của skill impeccable (không bắt buộc).
 - Việc cũ còn treo: bật lại Confirm email hoặc cấu hình Custom SMTP; thử hiệu ứng trên iPhone thật.

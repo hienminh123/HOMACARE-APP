@@ -10,7 +10,8 @@ Dự án hiện là MVP phục vụ trình diễn và kiểm chứng luồng ch�
 - **Repository:** [hienminh123/HOMACARE-APP](https://github.com/hienminh123/HOMACARE-APP) — riêng tư, cần quyền truy cập.
 - **Thiết lập Supabase:** [SUPABASE-SETUP.md](SUPABASE-SETUP.md)
 - **Trạng thái công việc và bàn giao:** [CONTINUE-HOMACARE.md](CONTINUE-HOMACARE.md)
-- **Hệ thống thiết kế:** [DESIGN.md](DESIGN.md) · xem trực tiếp tại `/design-system.html` khi chạy máy chủ xem thử
+- **Hệ thống thiết kế:** [DESIGN.md](DESIGN.md) · xem trực tiếp tại `/design-system.html` khi chạy máy chủ xem thử (bản v1.0)
+- **Bản thiết kế lại (Astro, nhánh `thiet-ke-lai`):** [web/README.md](web/README.md). Chưa thay `preview/` trên web thật; xem việc cần làm trước khi merge trong [CONTINUE-HOMACARE.md](CONTINUE-HOMACARE.md).
 
 ## Chức năng
 
@@ -47,7 +48,7 @@ MVP hiện hỗ trợ đặt ca **Ân cần**, khung giờ **18:00–22:00**, gi
 | Quản lý mã nguồn | Git và GitHub. |
 | Kiểm thử cơ sở dữ liệu | PostgreSQL PGlite. |
 
-Giao diện sử dụng font **Cal Sans** tải tại chỗ, logo do nhóm HOMACARE cung cấp và bảng màu nhận diện:
+Giao diện `preview/` sử dụng font **Cal Sans** tải tại chỗ; bản Astro trong `web/` dùng **Lexend** (tiêu đề, tự lưu trữ) và font hệ thống cho nội dung. Cả hai dùng logo do nhóm HOMACARE cung cấp và bảng màu nhận diện:
 
 | Màu | Mã |
 | --- | --- |
@@ -81,6 +82,7 @@ HOMACARE APP/
 │   ├── assets/                  # Logo, icon, font (Cal Sans, fonts/Be Vietnam Pro)
 │   ├── vendor/                  # Supabase JavaScript SDK
 │   └── manifest.webmanifest     # Tên, icon và chế độ mở như ứng dụng
+├── web/                         # Bản thiết kế lại bằng Astro (tĩnh): trang giới thiệu / và app /app/… (xem web/README.md)
 ├── backend/
 │   ├── schema.sql               # Bảng, RLS, trigger và RPC
 │   ├── promote-coordinator.sql  # Cấp quyền điều phối theo email
@@ -118,6 +120,8 @@ npx --yes http-server preview -a 127.0.0.1 -p 4173 -c-1
 Mở [http://127.0.0.1:4173/](http://127.0.0.1:4173/). Dừng máy chủ bằng `Ctrl+C`. Nếu cổng 4173 đang có máy chủ dự án chạy, sử dụng máy chủ đó hoặc dừng trước khi mở lại.
 
 Lệnh dùng [http-server](https://github.com/http-party/http-server), chỉ phục vụ website trên máy và tắt cache để thấy các chỉnh sửa. Lần đầu cần mạng để tải công cụ. Luồng tài khoản và dữ liệu thật cần kết nối Internet.
+
+Bản Astro (`web/`): chạy `npm --prefix web install` một lần, rồi `npm --prefix web run dev` (http://127.0.0.1:4321, Supabase thật) hoặc `npm --prefix web run dev:fixture` (http://127.0.0.1:4322, dữ liệu giả lập, không gọi Supabase). Chi tiết trong [web/README.md](web/README.md).
 
 `preview/config.js` hiện trỏ tới Supabase của HOMACARE. Đăng ký hoặc đặt ca khi chạy cục bộ vẫn ghi vào project đó. Link xác nhận/khôi phục hiện được gửi về Netlify theo `siteUrl`.
 

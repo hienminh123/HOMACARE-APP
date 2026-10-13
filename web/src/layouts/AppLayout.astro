@@ -1,0 +1,41 @@
+---
+// Khung chung của ba không gian: Header (logo, điều hướng máy tính, nút Cập nhật), vùng nội dung
+// do script vẽ sau khi kiểm tra phiên và vai trò, BottomNav trên điện thoại.
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/hc/Header.astro';
+import Button from '../components/hc/Button.astro';
+import BottomNav, { type NavItem } from '../components/hc/BottomNav.astro';
+import Skeleton from '../components/hc/Skeleton.astro';
+import Icon from '../components/hc/Icon.astro';
+import { DESTINATIONS, LABELS, type Role } from '../lib/auth';
+import '../styles/app.css';
+
+interface Props { role: Role; title: string; nav: NavItem[] }
+const { role, title, nav } = Astro.props;
+---
+<BaseLayout title={`${title} · HomaCare`} noindex>
+  <Header brandHref={DESTINATIONS[role]} brandLabel={`HomaCare — ${LABELS[role]}`} nav={nav.map((n, i) => ({ href: n.href, label: n.label, current: i === 0 }))} navLabel={title}>
+    <Fragment slot="actions">
+      <Button variant="secondary" iconOnly icon="refresh" aria-label="Cập nhật dữ liệu" data-action="refresh" disabled />
+    </Fragment>
+  </Header>
+
+  <main class="app-main" id="workspace" data-role={role} aria-busy="true">
+    <p class="app-notice"><Icon name="info" /><span>Khung app mới (giai đoạn 2): đang hiển thị dữ liệu thật ở chế độ xem. Các thao tác như đặt ca, phân công, ghi nhật ký sẽ được dựng lại ở giai đoạn tiếp theo.</span></p>
+    <div data-view>
+      <div class="hc-stack" style="--stack-gap: var(--space-4)">
+        <span class="hc-visually-hidden">Đang tải không gian làm việc…</span>
+        <Skeleton variant="title" w="55%" />
+        <Skeleton variant="text" w="40%" />
+        <div class="hc-card hc-stack" style="--stack-gap: var(--space-4)">
+          <div class="hc-card__head"><Skeleton w="35%" /><Skeleton variant="pill" /></div>
+          <Skeleton variant="title" />
+          <Skeleton variant="block" h="56px" />
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <BottomNav label={title} items={nav.map((n, i) => ({ ...n, current: i === 0 }))} />
+  <slot />
+</BaseLayout>

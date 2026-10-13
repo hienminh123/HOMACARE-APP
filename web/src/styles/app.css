@@ -1,0 +1,43 @@
+/* ==========================================================================
+   Khu app /app/… · bố cục chung cho trang đăng nhập và ba không gian.
+   Ưu tiên điện thoại: một cột, BottomNav dưới cùng; từ 900px điều hướng lên Header.
+   ========================================================================== */
+
+html { scroll-padding-top: 80px; }
+
+.app-main { width: min(100% - 2 * var(--gutter), var(--container)); margin-inline: auto; padding-block: var(--space-6) var(--space-12); }
+.app-main--narrow { max-width: 560px; }
+
+.app-greeting { display: grid; gap: var(--space-1); margin-bottom: var(--space-6); }
+.app-greeting h1 { font-size: var(--text-2xl); line-height: var(--leading-tight); }
+.app-greeting p { color: var(--color-text-muted); }
+
+.app-section { scroll-margin-top: 80px; }
+.app-section + .app-section { margin-top: var(--space-10); }
+.app-section__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-4); }
+.app-section__head h2 { font-size: var(--text-xl); }
+
+.app-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
+@media (min-width: 900px) {
+  .app-list--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+}
+
+/* Ghi chú giai đoạn: khung app đang xây dựng */
+.app-notice {
+  display: flex; gap: var(--space-3); align-items: flex-start; margin-bottom: var(--space-6);
+  padding: var(--space-3) var(--space-4); border-radius: var(--radius-md);
+  background: var(--color-info-subtle); font-size: var(--text-sm);
+}
+.app-notice .hc-icon { color: var(--color-info); margin-top: 1px; }
+
+/* Trạng thái chặn: chưa cấu hình, lỗi tải */
+.app-blocked { max-width: 480px; margin: var(--space-12) auto; }
+
+/* Danh sách định nghĩa trong sheet chi tiết */
+.app-dl { margin: 0; display: grid; gap: var(--space-2); }
+.app-dl div { display: flex; justify-content: space-between; gap: var(--space-4); padding-bottom: var(--space-2); border-bottom: 1px solid var(--color-divider); }
+.app-dl dt { color: var(--color-text-muted); font-size: var(--text-sm); }
+.app-dl dd { margin: 0; font-weight: var(--weight-medium); text-align: right; }
+
+/* Hàng điều phối được bọc để lọc theo trạng thái: giữ đường chia giữa các hàng */
+[data-row-status] + [data-row-status] .hc-visit-row { border-top: 1px solid var(--color-divider); }

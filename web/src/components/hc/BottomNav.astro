@@ -1,0 +1,15 @@
+---
+// .hc-bottomnav — điều hướng chính trên điện thoại, 3–5 mục có nhãn chữ. Tự ẩn từ 900px (trừ `always`).
+import Icon from './Icon.astro';
+export interface NavItem { href: string; label: string; icon: string; current?: boolean; dot?: string }
+interface Props { label: string; items: NavItem[]; always?: boolean }
+const { label, items, always } = Astro.props;
+---
+<nav class:list={['hc-bottomnav', always && 'hc-bottomnav--always']} aria-label={label}>
+  {items.map(item => (
+    <a class="hc-bottomnav__item" href={item.href} aria-current={item.current ? 'page' : undefined}>
+      <span class="hc-bottomnav__icon"><Icon name={item.icon} /></span>{item.label}
+      {item.dot && <span class="hc-bottomnav__dot" role="img" aria-label={item.dot}></span>}
+    </a>
+  ))}
+</nav>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="assets/app-icon-h.png">
+<title>[Tổng hợp] Tính năng nổi bật của webapp HomaCare</title>
+<style>
+@font-face { font-family: 'Cal Sans'; src: url(assets/CalSans-Regular.ttf) format('truetype'); font-display: block; }
+:root { --teal:#0F4C46; --teal2:#16645D; --apricot:#F28C68; --sand:#F6EDE3; --sky:#C9D8E3; --navy:#1B2A41; --text:#2B3445; --muted:#6B7280; --line:#E6E8EC; --bg:#FFFFFF; --soft:#F7F8F9; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+body { margin:0; background:var(--bg); color:var(--text); font:16px/1.75 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+a { color: var(--teal); }
+.topbar { position:sticky; top:0; z-index:10; background:rgba(250,250,248,.9); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-bottom:1px solid rgba(15,76,70,.08); height:68px; display:flex; align-items:center; padding:0 24px; }
+.topbar .brand { display:flex; align-items:center; gap:10px; color:var(--teal); text-decoration:none; font:24px 'Cal Sans', sans-serif; letter-spacing:-.02em; }
+.topbar .brand img { width:34px; height:34px; border-radius:9px; object-fit:contain; }
+.topbar .brand b { color: var(--apricot); font-weight:400; }
+.topbar .cta { margin-left:auto; background:var(--teal); color:#fff; text-decoration:none; font-size:14px; font-weight:700; padding:9px 16px; border-radius:10px; }
+.topbar .cta:hover { background:var(--teal2); }
+.wrap { max-width:1140px; margin:0 auto; padding:20px 24px 64px; display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:48px; }
+.crumb { font-size:13px; color:var(--muted); margin-bottom:10px; }
+.crumb span { color: var(--text); }
+h1, h2, h3, h4 { font-family:'Cal Sans', 'Segoe UI', sans-serif; font-weight:400; color:var(--navy); letter-spacing:.2px; }
+h1 { font-size:34px; line-height:1.25; margin:4px 0 14px; }
+.meta { display:flex; flex-wrap:wrap; gap:6px 22px; padding:0; margin:0 0 22px; list-style:none; font-size:13px; color:var(--muted); }
+.meta li::before { content:'•'; color:var(--apricot); margin-right:6px; }
+.hero { border-radius:16px; overflow:hidden; background:linear-gradient(135deg, var(--teal) 0%, var(--teal2) 55%, #2E7D72 100%); color:#fff; display:grid; grid-template-columns:1.1fr 1fr; align-items:end; min-height:360px; position:relative; }
+.hero::after { content:''; position:absolute; right:-80px; top:-80px; width:280px; height:280px; border-radius:50%; background:rgba(242,140,104,.18); }
+.hero-text { padding:36px 34px; align-self:center; position:relative; z-index:1; }
+.hero-logo { display:inline-flex; align-items:center; gap:10px; background:#fff; color:var(--teal); padding:8px 14px; border-radius:12px; font:20px 'Cal Sans', sans-serif; }
+.hero-logo img { width:28px; height:28px; }
+.hero-logo b { color:var(--apricot); font-weight:400; }
+.hero h2 { color:#fff; font-size:22px; margin:22px 0 0; padding:0; border:0; }
+.hero .big { font:44px/1.1 'Cal Sans', sans-serif; margin:4px 0 18px; }
+.hero .pill { display:inline-block; white-space:nowrap; background:var(--apricot); color:#fff; padding:8px 18px; border-radius:999px; font:17px 'Cal Sans', sans-serif; }
+.hero-phones { display:flex; justify-content:center; align-items:center; gap:16px; padding:30px 24px; position:relative; z-index:1; }
+.hero-phones .phone { width:176px; border:6px solid #0B2F2B; box-shadow:0 12px 34px rgba(0,0,0,.3); }
+
+.phone { flex:none; position:relative; container-type:inline-size; background:var(--sb); border:5px solid var(--navy); border-radius:30px; overflow:hidden; box-shadow:0 10px 30px rgba(27,42,65,.18); }
+.phone img { display:block; width:100%; height:auto; }
+.phone::after { content:''; position:absolute; left:50%; bottom:2.2cqw; transform:translateX(-50%); width:34cqw; height:1.3cqw; border-radius:99px; background:rgba(0,0,0,.55); }
+.sb { position:relative; height:12.5cqw; display:flex; align-items:center; justify-content:space-between; padding:0 6.5cqw 0 10cqw; color:var(--sbt); font:600 4.3cqw/1 -apple-system, 'Segoe UI', sans-serif; }
+.sb .island { position:absolute; left:50%; top:2.6cqw; transform:translateX(-50%); width:30cqw; height:8.6cqw; background:#000; border-radius:99px; }
+.sb .ic { display:flex; align-items:center; gap:1.4cqw; }
+.sb .ic svg { height:3.1cqw; width:auto; fill:currentColor; }
+.sb .ic svg:last-child { height:3.4cqw; }
+
+.intro { margin:22px 0 4px; }
+h2 { font-size:28px; margin:44px 0 6px; padding-bottom:10px; border-bottom:2px solid var(--sand); }
+h3 { font-size:22px; margin:30px 0 4px; color:var(--teal); }
+h4 { font-size:18px; margin:26px 0 12px; }
+h4 .no { color:var(--apricot); margin-right:4px; }
+.banner { margin:0; border-radius:14px; padding:28px 20px; background:linear-gradient(160deg, #E3EFEC 0%, #F6EDE3 100%); overflow:hidden; }
+.banner.sand { background:linear-gradient(160deg, #F6EDE3 0%, #E6EEF3 100%); }
+.phones { display:flex; justify-content:center; align-items:flex-start; gap:18px; }
+.phones .phone { width:30%; max-width:220px; }
+
+.phones.n1 .phone { width:46%; max-width:260px; }
+
+.phones.n2 .phone { width:40%; max-width:240px; }
+.caption { text-align:center; font-size:14px; font-style:italic; color:var(--muted); margin:8px 0 14px; }
+.caption span { font-style:normal; color:#9AA1AC; }
+ul { padding-left:22px; margin:8px 0 0; }
+li { margin:4px 0; }
+li::marker { color: var(--teal); }
+.limits { background:var(--soft); border:1px solid var(--line); border-radius:14px; padding:18px 22px; margin-top:16px; }
+.endbox { margin-top:34px; padding:22px 24px; border-radius:14px; background:var(--sand); }
+.endbox p { margin:0 0 12px; }
+.btn { display:inline-block; background:var(--teal); color:#fff; text-decoration:none; padding:10px 18px; border-radius:10px; font:16px 'Cal Sans', sans-serif; }
+aside { position:relative; }
+.side { position:sticky; top:88px; }
+.toc-title { font:16px 'Cal Sans', sans-serif; color:var(--teal); text-transform:uppercase; letter-spacing:.5px; padding-bottom:6px; border-bottom:2px solid var(--teal); display:inline-block; margin:6px 0 10px; }
+.toc, .toc ol { list-style:none; padding:0; margin:0; }
+.toc > li { margin:8px 0; font-size:14px; font-weight:600; }
+.toc ol { padding-left:12px; margin-top:4px; }
+.toc ol li { font-weight:400; font-size:13.5px; margin:3px 0; }
+.toc a { color:var(--text); text-decoration:none; }
+.toc a:hover { color:var(--teal); text-decoration:underline; }
+.promo { margin-top:24px; border-radius:14px; padding:20px; color:#fff; background:linear-gradient(150deg, var(--teal), #2E7D72); }
+.promo h5 { font:20px/1.3 'Cal Sans', sans-serif; margin:10px 0 6px; }
+.promo p { font-size:14px; line-height:1.55; margin:0 0 14px; opacity:.92; }
+.promo .btn { background:var(--apricot); }
+.promo small { display:block; margin-top:12px; font-size:12.5px; opacity:.85; }
+footer { border-top:1px solid var(--line); text-align:center; font-size:13px; color:var(--muted); padding:20px; }
+@media (max-width: 960px) { .wrap { grid-template-columns:1fr; gap:0; } aside { display:none; } }
+@media (max-width: 640px) {
+  .topbar { height:60px; padding:0 16px; background:#fff; }
+  .topbar .brand { font-size:21px; gap:8px; }
+  .topbar .brand img { width:30px; height:30px; }
+  .topbar .cta { padding:8px 12px; font-size:13px; }
+  .wrap { padding:14px 16px 40px; }
+  h1 { font-size:26px; }
+  .hero { grid-template-columns:1fr; min-height:0; }
+  .hero-text { padding:26px 22px 10px; }
+  .hero .big { font-size:34px; }
+  .hero-phones .phone { width:42%; }
+  .banner { padding:16px 10px; }
+  .phones { gap:8px; }
+  .phones .phone { border-width:3px; border-radius:16px; }
+  h2 { font-size:23px; } h3 { font-size:20px; }
+}
+@media print { .topbar, aside { display:none; } .wrap { display:block; } .banner { break-inside:avoid; } html { scroll-behavior:auto; } }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#"><img src="assets/app-icon-h.png" alt=""><span>Homa<b>Care</b></span></a>
+  <a class="cta" href="https://homacare-demo.pages.dev" target="_blank" rel="noopener">Trải nghiệm webapp</a>
+</header>
+<div class="wrap">
+<main>
+  <div class="crumb">HomaCare › <span>Tính năng nổi bật</span></div>
+  <h1>[Tổng hợp] Tính năng nổi bật của webapp HomaCare</h1>
+  <ul class="meta">
+    <li>Cập nhật lần cuối: 10/10/2026</li>
+    <li>Đăng bởi: Nhóm dự án HomaCare</li>
+    <li>Phiên bản: MVP thử nghiệm · Giao diện điện thoại</li>
+  </ul>
+  <div class="hero">
+    <div class="hero-text">
+      <span class="hero-logo"><img src="assets/app-icon-h.png" alt=""><span>Homa<b>Care</b></span></span>
+      <h2>Tổng hợp</h2>
+      <div class="big">TÍNH NĂNG<br>NỔI BẬT</div>
+      <span class="pill">Webapp · 10/2026</span>
+    </div>
+    <div class="hero-phones"><div class="phone"><img src="assets/tinh-nang/pl-01.jpg" alt="" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-02.jpg" alt="" loading="lazy" width="1320" height="2868"></div></div>
+  </div>
+  <p class="intro">HomaCare là nền tảng kết nối <b>gia đình</b>, <b>chuyên viên chăm sóc</b> và <b>điều phối viên</b> để sắp xếp những buổi đồng hành bên người cao tuổi ngay tại nhà. Bài viết tổng hợp các tính năng cốt lõi theo từng vai trò và những điểm nổi bật trên giao diện điện thoại của phiên bản thử nghiệm hiện tại. Cùng điểm qua hành trình của một ca chăm sóc – từ lúc gia đình gửi yêu cầu đến khi đọc nhật ký sau ca.</p>
+  <h2 id="giao-dien">Giao diện nổi bật trên trang chủ</h2><h3 id="giao-dien-1">1. Trang chủ</h3><h4 id="giao-dien-f-1-1"><span class="no">1.1</span> Mở đầu bằng một thông điệp rõ ràng</h4>
+<figure class="banner sand">
+  <div class="phones n2"><div class="phone"><img src="assets/tinh-nang/pl-03.jpg" alt="Hình PL.1" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-01.jpg" alt="Hình PL.2" loading="lazy" width="1320" height="2868"></div></div>
+</figure>
+<p class="caption">Màn hình đầu và khung mô phỏng giao diện ứng dụng <span>(Hình PL.1, PL.2)</span></p><p>Trên điện thoại, thông điệp <b>“Bạn ở xa. Sự quan tâm vẫn ở gần.”</b> chiếm trọn màn hình đầu. Khi bắt đầu cuộn, khung mô phỏng ứng dụng hiện ra với 3 màn hình Lịch chăm sóc, Xem lại yêu cầu và Nhật ký chăm sóc; vuốt ngang để chuyển màn.</p><h4 id="giao-dien-f-1-2"><span class="no">1.2</span> Cho gia đình biết mình sẽ theo dõi được gì</h4>
+<figure class="banner sand">
+  <div class="phones n2"><div class="phone"><img src="assets/tinh-nang/pl-04.jpg" alt="Hình PL.5" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-05.jpg" alt="Hình PL.6" loading="lazy" width="1320" height="2868"></div></div>
+</figure>
+<p class="caption">Khu vực “Dõi theo từ xa” <span>(Hình PL.5, PL.6)</span></p><p>Ba thẻ nổi bật trả lời ba câu hỏi người con ở xa quan tâm nhất: <b>ai đang đồng hành, ca diễn ra khi nào, hôm nay có gì đáng chú ý</b>.</p><h4 id="giao-dien-f-1-3"><span class="no">1.3</span> Giới thiệu các tính năng chính</h4>
+<figure class="banner sand">
+  <div class="phones n3"><div class="phone"><img src="assets/tinh-nang/pl-06.jpg" alt="Hình PL.7" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-07.jpg" alt="Hình PL.9" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-08.jpg" alt="Hình PL.8" loading="lazy" width="1320" height="2868"></div></div>
+</figure>
+<p class="caption">Khu vực giới thiệu tính năng <span>(Hình PL.7, PL.9, PL.8)</span></p><p>Nhật ký sau mỗi buổi, hồ sơ thói quen của người thân và màn hình riêng cho từng vai trò được trình bày gọn trong một khu vực.</p><h3 id="giao-dien-2">2. Hướng dẫn “Cách sử dụng”</h3><h4 id="giao-dien-f-2-1"><span class="no">2.1</span> Chạm vào từng bước để xem màn hình minh họa</h4>
+<figure class="banner sand">
+  <div class="phones n3"><div class="phone"><img src="assets/tinh-nang/pl-09.jpg" alt="Hình PL.11" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-10.jpg" alt="Hình PL.12" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-11.jpg" alt="Hình PL.13" loading="lazy" width="1320" height="2868"></div></div>
+</figure>
+<p class="caption">Bước 1 – tạo tài khoản, bước 3 – đặt ca, bước 5 – đọc nhật ký <span>(Hình PL.11, PL.12, PL.13)</span></p><p>Hành trình 6 bước từ tạo tài khoản đến đánh giá ca. Trên điện thoại, chạm vào bước nào thì màn hình minh họa của bước đó mở ngay bên dưới; chạm lại để thu gọn.</p><h3 id="giao-dien-3">3. Giới thiệu dự án và dịch vụ</h3><h4 id="giao-dien-f-3-1"><span class="no">3.1</span> Kể câu chuyện và giá trị của HomaCare</h4>
+<figure class="banner sand">
+  <div class="phones n2"><div class="phone"><img src="assets/tinh-nang/pl-12.jpg" alt="Hình PL.3" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-13.jpg" alt="Hình PL.4" loading="lazy" width="1320" height="2868"></div></div>
+</figure>
+<p class="caption">Giới thiệu HomaCare và 4 giá trị cốt lõi <span>(Hình PL.3, PL.4)</span></p><p>Câu chuyện hình thành, sứ mệnh, tầm nhìn và 4 giá trị <b>Tận tâm · Tôn trọng · Rõ ràng · Có trách nhiệm</b>, trình bày dạng lưới 2×2 gọn trên điện thoại.</p><h4 id="giao-dien-f-3-2"><span class="no">3.2</span> Trình bày gói dịch vụ và giải đáp thắc mắc</h4>
+<figure class="banner sand">
+  <div class="phones n3"><div class="phone"><img src="assets/tinh-nang/pl-14.jpg" alt="Hình PL.14" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-15.jpg" alt="Hình PL.15" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-16.jpg" alt="Hình PL.16" loading="lazy" width="1320" height="2868"></div></div>
+</figure>
+<p class="caption">Gói dịch vụ, vai trò và câu hỏi thường gặp <span>(Hình PL.14, PL.15, PL.16)</span></p><p>Gói Ân cần hiển thị đầy đủ nội dung; các gói Chăm chút, Thân tình được đánh dấu <b>Đang phát triển</b>. Phần vai trò giải thích việc của từng bên, và mục hỏi đáp trả lời 9 câu hỏi thường gặp trước buổi đồng hành.</p><h2 id="cot-loi">Tính năng cốt lõi theo từng vai trò</h2><h3 id="cot-loi-1">1. Không gian gia đình</h3><h4 id="cot-loi-f-1-1"><span class="no">1.1</span> Lưu hồ sơ và thói quen của người thân</h4>
+<figure class="banner ">
+  <div class="phones n2"><div class="phone"><img src="assets/tinh-nang/pl-02.jpg" alt="Hình PL.20" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-17.jpg" alt="Hình PL.24" loading="lazy" width="1320" height="2868"></div></div>
+</figure>
+<p class="caption">Tổng quan không gian gia đình và biểu mẫu thêm người thân <span>(Hình PL.20, PL.24)</span></p><p>Gia đình tạo hồ sơ cho người thân cần chăm sóc: họ tên, mối quan hệ, tuổi, khu vực. Điểm khác biệt là HomaCare lưu cả <b>thói quen và mong muốn</b> như tách trà sau bữa tối, giờ đi dạo, chương trình yêu thích, để chuyên viên đồng hành đúng nếp sống của từng người.</p>
+        <ul><li>Một tài khoản gia đình có thể chăm lo cho nhiều người thân</li><li>Thông tin thói quen hiện cho chuyên viên trước mỗi ca</li><li>Trang tổng quan hiển thị người thân, lịch gần nhất và nút đặt ca</li></ul><h4 id="cot-loi-f-1-2"><span class="no">1.2</span> Đặt ca chăm sóc chỉ trong 2 bước</h4>
+<figure class="banner ">
+  <div class="phones n3"><div class="phone"><img src="assets/tinh-nang/pl-18.jpg" alt="Hình PL.25" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-19.jpg" alt="Hình PL.26" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-20.jpg" alt="Hình PL.27" loading="lazy" width="1320" height="2868"></div></div>
+</figure>
+<p class="caption">Đặt ca chăm sóc: nhập thông tin, xem lại và xác nhận gửi <span>(Hình PL.25, PL.26, PL.27)</span></p><p>Chọn người thân, ngày chăm sóc và ghi lưu ý cho chuyên viên, sau đó <b>xem lại toàn bộ yêu cầu</b> gồm khu vực, khung giờ 18:00–22:00 và gói dịch vụ trước khi gửi. Gia đình chưa cần thanh toán ở bước này; yêu cầu chuyển sang trạng thái Chờ phân công.</p><h4 id="cot-loi-f-1-3"><span class="no">1.3</span> Theo dõi tiến trình chăm sóc minh bạch</h4>
+<figure class="banner ">
+  <div class="phones n2"><div class="phone"><img src="assets/tinh-nang/pl-21.jpg" alt="Hình PL.21" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-22.jpg" alt="Hình PL.23" loading="lazy" width="1320" height="2868"></div></div>
+</figure>
+<p class="caption">Lịch chăm sóc và tiến trình từng bước của ca <span>(Hình PL.21, PL.23)</span></p><p>Mỗi ca đi qua 4 trạng thái <b>Chờ phân công → Đã phân công → Đang chăm sóc → Hoàn thành</b>. Gia đình thấy ngày, khung giờ, tên chuyên viên được phân công và mốc thời gian của từng bước, bấm <b>Cập nhật</b> để tải thông tin mới nhất.</p><h4 id="cot-loi-f-1-4"><span class="no">1.4</span> Đọc nhật ký và đánh giá sau mỗi buổi</h4>
+<figure class="banner ">
+  <div class="phones n1"><div class="phone"><img src="assets/tinh-nang/pl-23.jpg" alt="Hình PL.22" loading="lazy" width="1320" height="2868"></div></div>
+</figure>
+<p class="caption">Nhật ký chăm sóc gần nhất và đánh giá ca <span>(Hình PL.22)</span></p><p>Sau buổi chăm sóc, gia đình đọc nhật ký do chuyên viên gửi: 4 hoạt động đã thực hiện, ghi nhận chung, nội dung chi tiết và lưu ý cho lần tới, rồi chấm từ 1 đến 5 sao để HomaCare nâng cao chất lượng đồng hành.</p>
+        <ul><li>Người con ở xa biết cụ thể hôm nay bố mẹ ăn uống, vận động, tinh thần ra sao</li><li>Ghi chú rõ phạm vi: nhật ký ghi nhận sinh hoạt, không chẩn đoán y tế</li></ul><h3 id="cot-loi-2">2. Trở thành điều phối viên</h3><h4 id="cot-loi-f-2-1"><span class="no">2.1</span> Nắm toàn bộ ca chăm sóc trên một màn hình</h4>
+<figure class="banner ">
+  <div class="phones n3"><div class="phone"><img src="assets/tinh-nang/pl-24.jpg" alt="Hình PL.32" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-25.jpg" alt="Hình PL.33" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-26.jpg" alt="Hình PL.34" loading="lazy" width="1320" height="2868"></div></div>
+</figure>
+<p class="caption">Bảng điều phối: chỉ số tổng quan và danh sách ca <span>(Hình PL.32, PL.33, PL.34)</span></p><p>Điều phối viên theo dõi hoạt động qua 3 chỉ số <b>Chờ phân công, Đang đồng hành, Hoàn thành</b>, cùng danh sách ca kèm người thân, gia đình, lịch, chuyên viên và trạng thái.</p><h4 id="cot-loi-f-2-2"><span class="no">2.2</span> Phân công chuyên viên còn trống lịch</h4>
+<figure class="banner ">
+  <div class="phones n2"><div class="phone"><img src="assets/tinh-nang/pl-27.jpg" alt="Hình PL.35" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-28.jpg" alt="Hình PL.36" loading="lazy" width="1320" height="2868"></div></div>
+</figure>
+<p class="caption">Lọc ca chờ phân công và chọn chuyên viên phù hợp <span>(Hình PL.35, PL.36)</span></p><p>Lọc nhanh các ca đang chờ, bấm <b>Phân công</b> và chọn chuyên viên. Hệ thống chỉ gợi ý những chuyên viên <b>chưa có lịch trong ngày đó</b>, tránh trùng ca. Ngay khi xác nhận, tên chuyên viên xuất hiện bên phía gia đình.</p><h3 id="cot-loi-3">3. Trở thành chuyên viên chăm sóc</h3><h4 id="cot-loi-f-3-1"><span class="no">3.1</span> Đọc trước thói quen và lưu ý của gia đình</h4>
+<figure class="banner ">
+  <div class="phones n2"><div class="phone"><img src="assets/tinh-nang/pl-29.jpg" alt="Hình PL.28" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-30.jpg" alt="Hình PL.29" loading="lazy" width="1320" height="2868"></div></div>
+</figure>
+<p class="caption">Danh sách ca được giao và chi tiết ca <span>(Hình PL.28, PL.29)</span></p><p>Chuyên viên xem các ca được phân công, đọc trước thói quen của người thân và lưu ý gia đình gửi kèm, rồi bấm <b>Bắt đầu ca chăm sóc</b> khi đến nơi. Gia đình ở xa thấy ngay trạng thái Đang chăm sóc.</p><h4 id="cot-loi-f-3-2"><span class="no">3.2</span> Ghi lại buổi chăm sóc và gửi nhật ký</h4>
+<figure class="banner ">
+  <div class="phones n2"><div class="phone"><img src="assets/tinh-nang/pl-31.jpg" alt="Hình PL.30" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-32.jpg" alt="Hình PL.31" loading="lazy" width="1320" height="2868"></div></div>
+</figure>
+<p class="caption">Ghi nhận hoạt động trong ca và nhật ký gửi gia đình <span>(Hình PL.30, PL.31)</span></p><p>Trong ca, chuyên viên đánh dấu 4 hoạt động chuẩn; thanh tiến độ cập nhật theo từng mục. Kết thúc ca, chuyên viên chọn ghi nhận chung, viết nội dung gửi gia đình và mong muốn cho lần tới.</p>
+        <ul><li>Hỗ trợ bữa tối</li><li>Đồng hành vận động nhẹ</li><li>Trò chuyện & nhắc lịch sinh hoạt</li><li>Kiểm tra an toàn trước khi kết thúc</li><li>Chỉ gửi được nhật ký khi đã ghi nhận đủ 4 hoạt động</li></ul><h3 id="cot-loi-4">4. Cách tạo tài khoản</h3><h4 id="cot-loi-f-4-1"><span class="no">4.1</span> Chọn vai trò rồi đăng ký bằng email</h4>
+<figure class="banner ">
+  <div class="phones n3"><div class="phone"><img src="assets/tinh-nang/pl-33.jpg" alt="Hình PL.17" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-34.jpg" alt="Hình PL.18" loading="lazy" width="1320" height="2868"></div><div class="phone"><img src="assets/tinh-nang/pl-35.jpg" alt="Hình PL.19" loading="lazy" width="1320" height="2868"></div></div>
+</figure>
+<p class="caption">Chọn vai trò, đăng nhập và đăng ký tài khoản <span>(Hình PL.17, PL.18, PL.19)</span></p><p>Người dùng chọn đúng không gian của mình (gia đình, chuyên viên hoặc điều phối viên) rồi đăng ký hoặc đăng nhập bằng email. Gia đình và chuyên viên tự tạo tài khoản; tài khoản điều phối do chủ dự án cấp quyền.</p>
+  <h2 id="gioi-han">Phạm vi và định hướng tiếp theo</h2>
+  <div class="limits">
+    <ul><li>HomaCare tập trung đồng hành và hỗ trợ sinh hoạt <b>phi y tế</b>; không thay thế khám, điều trị hay phục hồi chức năng chuyên môn.</li><li>Hiện mở đặt <b>gói Ân cần</b> (18:00–22:00, 320.000đ/buổi – giá đề xuất giai đoạn thử nghiệm); gói Chăm chút và Thân tình đang phát triển.</li><li>Chưa có thanh toán trực tuyến, thông báo đẩy và tự đổi/hủy ca trong ứng dụng; thông tin cập nhật khi bấm Cập nhật hoặc tải lại trang.</li><li>Định hướng thử nghiệm tại một khu vực ở Hà Nội, hoàn thiện quy trình tuyển chọn và đào tạo chuyên viên.</li></ul>
+  </div>
+  <div class="endbox">
+    <p>Hy vọng những tính năng trên giúp gia đình ở xa yên tâm hơn khi gửi gắm người thân, và giúp chuyên viên, điều phối viên làm việc rõ ràng trong cùng một hệ thống. <b>Gửi trọn quan tâm, vẹn tròn đạo hiếu.</b></p>
+    <a class="btn" href="https://homacare-demo.pages.dev" target="_blank" rel="noopener">Trải nghiệm HomaCare →</a>
+  </div>
+  <p class="caption" style="margin-top:22px">Ảnh chụp giao diện điện thoại từ webapp HomaCare; dữ liệu trong ảnh là dữ liệu minh họa.</p>
+</main>
+<aside><div class="side">
+  <div class="toc-title">Tổng quan bài viết</div>
+  <ol class="toc"><li><a href="#giao-dien">Giao diện nổi bật trên trang chủ</a><ol><li><a href="#giao-dien-1">1. Trang chủ</a></li><li><a href="#giao-dien-2">2. Hướng dẫn “Cách sử dụng”</a></li><li><a href="#giao-dien-3">3. Giới thiệu dự án và dịch vụ</a></li></ol></li><li><a href="#cot-loi">Tính năng cốt lõi theo từng vai trò</a><ol><li><a href="#cot-loi-1">1. Không gian gia đình</a></li><li><a href="#cot-loi-2">2. Trở thành điều phối viên</a></li><li><a href="#cot-loi-3">3. Trở thành chuyên viên chăm sóc</a></li><li><a href="#cot-loi-4">4. Cách tạo tài khoản</a></li></ol></li><li><a href="#gioi-han">Phạm vi và định hướng tiếp theo</a></li></ol>
+  <div class="promo">
+    <span class="hero-logo" style="font-size:16px;padding:6px 10px"><img src="assets/app-icon-h.png" alt="" style="width:22px;height:22px"><span>Homa<b>Care</b></span></span>
+    <h5>Bạn ở xa. Sự quan tâm vẫn ở gần.</h5>
+    <p>Đặt một buổi tối có người đồng hành bên cha mẹ – 4 giờ tại nhà, có nhật ký sau ca.</p>
+    <a class="btn" href="https://homacare-demo.pages.dev" target="_blank" rel="noopener">Mở webapp</a>
+    <small>📞 0338 031 425 · ✉️ homacare@gmail.com</small>
+  </div>
+</div></aside>
+</div>
+<footer>© 2026 HomaCare · Dự án sinh viên Đại học Kinh tế Quốc dân</footer>
+</body>
+</html>

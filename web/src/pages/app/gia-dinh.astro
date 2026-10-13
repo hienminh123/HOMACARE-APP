@@ -1,0 +1,56 @@
+---
+// Không gian gia đình (thay family.html). Giai đoạn 2: khung + dữ liệu thật ở chế độ xem.
+import AppLayout from '../../layouts/AppLayout.astro';
+const nav = [
+  { href: '#tong-quan', label: 'Tổng quan', icon: 'home' },
+  { href: '#lich', label: 'Lịch', icon: 'calendar' },
+  { href: '#nhat-ky', label: 'Nhật ký', icon: 'book' },
+  { href: '#tai-khoan', label: 'Tài khoản', icon: 'user' },
+];
+---
+<AppLayout role="family" title="Không gian gia đình" nav={nav}>
+  <script>
+    import { boot, accountSection } from '../../scripts/workspace';
+    import { empty, familyVisit, careLog, relativeName } from '../../scripts/render';
+    import { esc } from '../../lib/html';
+
+    boot('family', ({ profile, data }) => {
+      const open = data.visits.filter(v => v.status !== 'completed');
+      const logs = data.visits.filter(v => v.status === 'completed')
+        .sort((a, b) => +new Date(b.completed_at || 0) - +new Date(a.completed_at || 0));
+      const next = open[0];
+      const person = data.relatives[0];
+
+      const relatives = data.relatives.length
+        ? `<ul class="app-list app-list--2">${data.relatives.map(r => `<li class="hc-card hc-stack" style="--stack-gap:var(--space-3)">
+            <div class="hc-person"><span class="hc-avatar hc-avatar--lg" data-role="relative" aria-hidden="true">${esc(r.full_name.trim().split(/\s+/).slice(-2).map(w => w[0]).join('').toUpperCase())}</span><span class="hc-person__text"><span class="hc-person__name">${esc(relativeName(r))}</span><span class="hc-person__role">${r.age} tuổi · ${esc(r.area)}</span></span></div>
+            <div class="hc-visit__note"><strong>Thói quen & mong muốn</strong>${esc(r.preferences || 'Chưa ghi nhận thêm')}</div>
+          </li>`).join('')}</ul>`
+        : empty('users', 'Chưa có hồ sơ người thân', 'Thêm hồ sơ cha mẹ để đặt buổi chăm sóc đầu tiên.');
+
+      return `
+        <div class="app-greeting" id="tong-quan">
+          <h1>Chào ${esc(profile.full_name)}</h1>
+          <p>${person ? `Lịch và nhật ký chăm sóc của ${esc(relativeName(person))}.` : 'Đây là lịch và nhật ký chăm sóc của gia đình bạn.'}</p>
+        </div>
+        <section class="app-section" aria-labelledby="next-title">
+          <div class="app-section__head"><h2 id="next-title">Ca sắp tới</h2></div>
+          ${next ? familyVisit(next, next.status === 'pending' ? 'Yêu cầu mới' : 'Ca sắp tới') : empty('calendar', 'Chưa có ca nào sắp tới', 'Khi bạn đặt ca, lịch và tên chuyên viên sẽ hiện ở đây.')}
+        </section>
+        <section class="app-section" id="lich" aria-labelledby="lich-title">
+          <div class="app-section__head"><h2 id="lich-title">Lịch chăm sóc</h2><span class="hc-pill hc-pill--plain">${open.length} ca</span></div>
+          ${open.length > 1 ? `<ul class="app-list app-list--2">${open.slice(1).map(v => `<li>${familyVisit(v, 'Ca đã đặt')}</li>`).join('')}</ul>` : empty('calendar', open.length ? 'Không còn ca nào khác' : 'Chưa có lịch chăm sóc', 'Các ca đã đặt sẽ hiện ở đây theo thứ tự ngày.', true)}
+        </section>
+        <section class="app-section" id="nhat-ky" aria-labelledby="nhat-ky-title">
+          <div class="app-section__head"><h2 id="nhat-ky-title">Nhật ký sau ca</h2><span class="hc-pill hc-pill--plain">${logs.length}</span></div>
+          ${logs.length ? `<ul class="app-list app-list--2">${logs.map(v => `<li>${careLog(v)}</li>`).join('')}</ul>` : empty('book', 'Chưa có nhật ký nào', 'Sau mỗi ca, chuyên viên ghi lại việc đã làm và điều cần lưu ý. Nhật ký sẽ hiện ở đây.')}
+          <p class="hc-hint" style="margin-top:var(--space-3)">Nhật ký ghi nhận sinh hoạt. HomaCare không đưa ra chẩn đoán hoặc quyết định điều trị.</p>
+        </section>
+        <section class="app-section" id="nguoi-than" aria-labelledby="nguoi-than-title">
+          <div class="app-section__head"><h2 id="nguoi-than-title">Người thân</h2></div>
+          ${relatives}
+        </section>
+        ${accountSection(profile, 'Tài khoản gia đình')}`;
+    });
+  </script>
+</AppLayout>

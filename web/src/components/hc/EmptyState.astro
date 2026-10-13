@@ -1,0 +1,13 @@
+---
+// .hc-empty — nói vì sao trống và việc tiếp theo. Slot mặc định cho nút (tùy chọn).
+import Icon from './Icon.astro';
+interface Props { icon?: string; title: string; text?: string; compact?: boolean; card?: boolean; headingLevel?: 2 | 3 | 4 }
+const { icon = 'heart', title, text, compact, card = true, headingLevel = 3 } = Astro.props;
+const H = `h${headingLevel}`;
+---
+<div class:list={[card && 'hc-card', 'hc-empty', compact && 'hc-empty--compact']}>
+  <span class="hc-empty__icon"><Icon name={icon} /></span>
+  <H class="hc-empty__title">{title}</H>
+  {text && <p class="hc-empty__text">{text}</p>}
+  <slot />
+</div>

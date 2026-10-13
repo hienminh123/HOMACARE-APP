@@ -1,0 +1,16 @@
+---
+// .hc-person — avatar + tên + vai trò. `boxed` đặt trong khối lõm (thay cho thẻ lồng thẻ).
+// Slot mặc định dành cho một nút ở cuối dòng (ví dụ nút gọi điện).
+import Avatar from './Avatar.astro';
+type AvatarRole = 'family' | 'caregiver' | 'coordinator' | 'relative';
+interface Props {
+  name: string; detail?: string; role?: AvatarRole; size?: 'sm' | 'md' | 'lg' | 'xl';
+  boxed?: boolean; pending?: boolean; pendingIcon?: string; initialsOf?: string; class?: string;
+}
+const { name, detail, role, size = 'md', boxed, pending, pendingIcon, initialsOf, class: extra } = Astro.props;
+---
+<div class:list={['hc-person', boxed && 'hc-person--boxed', extra]}>
+  <Avatar name={initialsOf ?? name} role={role} size={size} pending={pending} pendingIcon={pendingIcon} />
+  <span class="hc-person__text"><span class="hc-person__name">{name}</span>{detail && <span class="hc-person__role">{detail}</span>}</span>
+  <slot />
+</div>

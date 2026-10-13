@@ -1,0 +1,12 @@
+---
+// .hc-pill[data-status] — trạng thái ca theo giá trị DB, luôn có icon + chữ.
+// Không truyền `status` thì là nhãn thường (`tone` brand/accent), nội dung qua slot.
+import Icon from './Icon.astro';
+import { STATUS, type VisitStatus } from '../../lib/status';
+interface Props { status?: VisitStatus; size?: 'sm'; tone?: 'brand' | 'accent'; class?: string }
+const { status, size, tone, class: extra } = Astro.props;
+const s = status ? STATUS[status] : null;
+---
+{s
+  ? <span class:list={['hc-pill', size === 'sm' && 'hc-pill--sm', extra]} data-status={status}>{s.icon ? <Icon name={s.icon} /> : <span class="hc-live" aria-hidden="true"></span>}{s.label}</span>
+  : <span class:list={['hc-pill', 'hc-pill--plain', size === 'sm' && 'hc-pill--sm', extra]} data-tone={tone}><slot /></span>}

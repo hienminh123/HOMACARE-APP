@@ -1,0 +1,20 @@
+---
+// dialog.hc-sheet — điện thoại: trượt từ dưới lên; từ 640px: hộp giữa màn hình.
+// Mở bằng data-hc-open="id" hoặc HC.openSheet(id); đóng bằng data-hc-close, Esc, chạm nền tối.
+// Chỉ dùng khi cần tập trung xác nhận. Slot mặc định = thân, slot "foot" = nút cuối.
+import Button from './Button.astro';
+interface Props { id: string; title: string; description?: string }
+const { id, title, description } = Astro.props;
+---
+<dialog class="hc-sheet" id={id} aria-labelledby={`${id}-title`} aria-describedby={description ? `${id}-desc` : undefined}>
+  <div class="hc-sheet__grab" aria-hidden="true"></div>
+  <div class="hc-sheet__head">
+    <div>
+      <h2 class="hc-sheet__title" id={`${id}-title`}>{title}</h2>
+      {description && <p class="hc-sheet__desc" id={`${id}-desc`}>{description}</p>}
+    </div>
+    <Button variant="ghost" iconOnly icon="x" data-hc-close aria-label="Đóng" />
+  </div>
+  <div class="hc-sheet__body"><slot /></div>
+  {Astro.slots.has('foot') && <div class="hc-sheet__foot"><slot name="foot" /></div>}
+</dialog>

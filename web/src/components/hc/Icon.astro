@@ -1,0 +1,10 @@
+---
+// Icon từ sprite /icons.svg (nét 1,75px, lưới 24px). Có `label` thì đọc được bằng trình đọc màn hình.
+import { ICON_SPRITE } from '../../lib/html';
+interface Props { name: string; size?: 'sm' | 'lg'; label?: string; class?: string }
+const { name, size, label, class: extra } = Astro.props;
+const cls = ['hc-icon', size && `hc-icon--${size}`, extra].filter(Boolean).join(' ');
+---
+{label
+  ? <svg class={cls} role="img" aria-label={label}><use href={`${ICON_SPRITE}#${name}`} /></svg>
+  : <svg class={cls} aria-hidden="true"><use href={`${ICON_SPRITE}#${name}`} /></svg>}

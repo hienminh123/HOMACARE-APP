@@ -1,0 +1,223 @@
+---
+// "Cách sử dụng": 6 bước của gia đình + một khung minh họa dùng chung.
+// Máy tính: khung minh họa dính bên phải, bấm bước nào hiện màn hình bước đó.
+// Điện thoại (đã chốt ở bản cũ): khung mở ngay dưới bước vừa bấm (trượt xuống 0,5s), bấm lại bước đang mở
+// thì thu lại; không tự cuộn, không tự chuyển bước; khi khung phía trên bị gỡ thì bù cuộn để bước vừa bấm đứng yên.
+import Icon from '../hc/Icon.astro';
+import StatusPill from '../hc/StatusPill.astro';
+import Person from '../hc/Person.astro';
+import Chip from '../hc/Chip.astro';
+import VisitCard from '../hc/VisitCard.astro';
+import CareLogCard from '../hc/CareLogCard.astro';
+import Rating from '../hc/Rating.astro';
+import Button from '../hc/Button.astro';
+
+const steps = [
+  { title: 'Tạo tài khoản gia đình', badge: 'Xác nhận email', text: 'Chọn vai trò Gia đình, đăng ký bằng email của bạn rồi xác nhận qua thư HomaCare gửi.' },
+  { title: 'Thêm người thân', badge: 'Thói quen & mong muốn', text: 'Ghi tên, tuổi, khu vực của cha mẹ, cùng những thói quen và mong muốn chuyên viên nên biết.' },
+  { title: 'Chọn ngày và xem lại yêu cầu', badge: 'Xem lại trước khi gửi', text: 'Chọn ngày và ghi điều cần lưu ý. Trước khi gửi, bạn xem lại toàn bộ thông tin của ca.' },
+  { title: 'Theo dõi lịch và phân công', badge: '4 trạng thái ca', text: 'Ca đi từ Chờ phân công → Đã phân công → Đang chăm sóc → Hoàn thành. Có người nhận là tên chuyên viên hiện trong lịch.' },
+  { title: 'Đọc nhật ký sau ca', badge: '4 hoạt động', text: 'Đọc 4 việc chuyên viên đã làm, vài dòng về buổi hôm đó và điều cần lưu ý cho lần sau.' },
+  { title: 'Đánh giá và sắp xếp buổi tiếp theo', badge: 'Đánh giá 1–5 sao', text: 'Chấm từ 1 đến 5 sao cho buổi vừa xong. Cần thêm buổi thì đặt tiếp ngay trong app.' },
+];
+const screenTitles = ['Tạo tài khoản', 'Hồ sơ người thân', 'Xem lại yêu cầu', 'Lịch chăm sóc', 'Nhật ký sau ca', 'Đánh giá ca'];
+---
+<div class="journey" data-journey>
+  <div class="journey__steps">
+    <p class="journey__hint">Chạm vào từng bước để xem màn hình minh họa.</p>
+    <ol class="journey__list">
+      {steps.map((step, i) => (
+        <li class="journey__item" data-step-item={i}>
+          <button class="journey__step" type="button" data-step={i} aria-controls="journey-stage" aria-expanded={i === 0 ? 'true' : 'false'}>
+            <span class="journey__num" aria-hidden="true">{i + 1}</span>
+            <span class="journey__body">
+              <span class="journey__title">{step.title}</span>
+              <span class="journey__text">{step.text}</span>
+              <span class="journey__meta">
+                <StatusPill tone="brand" size="sm">{step.badge}</StatusPill>
+                <span class="journey__toggle"><span data-open-label>Đang xem minh họa</span><span data-closed-label>Xem minh họa</span><Icon name="chevron-down" size="sm" /></span>
+              </span>
+            </span>
+          </button>
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <div class="journey__stage" id="journey-stage" data-stage>
+    <div class="journey__screen" inert>
+      <div class="journey__bar">
+        <span class="hc-wordmark"><b>Homa</b><i>Care</i></span>
+        <span class="demo-flag">Minh họa giao diện</span>
+      </div>
+      {screenTitles.map((title, i) => (
+        <div class="journey__panel" data-panel={i} hidden={i !== 0}>
+          <p class="journey__panel-title">Bước {i + 1} · {title}</p>
+          {i === 0 && (
+            <div class="hc-stack" style="--stack-gap: var(--space-3)">
+              <div class="hc-field"><span class="hc-label">Họ và tên</span><span class="hc-input journey__fake-input">Trần Lan Anh</span></div>
+              <div class="hc-field"><span class="hc-label">Email</span><span class="hc-input journey__fake-input">lananh@example.com</span></div>
+              <div class="hc-cluster"><span class="hc-label">Vai trò</span><StatusPill tone="accent">Gia đình</StatusPill></div>
+              <span class="hc-btn hc-btn--block">Tạo tài khoản</span>
+              <p class="hc-hint">HomaCare gửi thư xác nhận đến email của bạn.</p>
+            </div>
+          )}
+          {i === 1 && (
+            <div class="hc-stack" style="--stack-gap: var(--space-4)">
+              <Person size="lg" role="relative" name="Bác Trần Văn An" detail="78 tuổi · Láng Thượng, Đống Đa" initialsOf="Văn An" />
+              <div class="hc-visit__habits">
+                <Chip icon="cup">Trà sen sau bữa tối</Chip>
+                <Chip icon="walk">Đi bộ lúc 19:30</Chip>
+                <Chip icon="book">Thích nghe đọc báo</Chip>
+              </div>
+              <div class="hc-visit__note"><strong>Mong muốn</strong>Có người trò chuyện, đi dạo cùng bố.</div>
+              <span class="hc-btn hc-btn--block">Lưu hồ sơ người thân</span>
+            </div>
+          )}
+          {i === 2 && (
+            <div class="hc-stack" style="--stack-gap: var(--space-4)">
+              <dl class="journey__dl">
+                <div><dt>Người thân</dt><dd>Bác Trần Văn An</dd></div>
+                <div><dt>Ngày</dt><dd>Thứ Sáu, 16/10</dd></div>
+                <div><dt>Khung giờ</dt><dd>18:00–22:00 · 4 giờ</dd></div>
+                <div><dt>Gói</dt><dd>Ân cần</dd></div>
+                <div><dt>Giá đề xuất</dt><dd class="hc-num">320.000đ/buổi</dd></div>
+              </dl>
+              <div class="hc-visit__note"><strong>Lưu ý</strong>Hỗ trợ bữa tối và đi dạo 20 phút.</div>
+              <p class="hc-hint">Gửi yêu cầu chưa tính phí. Điều phối viên sẽ tiếp nhận và sắp xếp chuyên viên.</p>
+              <span class="hc-btn hc-btn--block">Xác nhận và gửi yêu cầu</span>
+            </div>
+          )}
+          {i === 3 && <VisitCard label="Ca sắp tới" status="assigned" date="Thứ Sáu, 16/10" meta="18:00–22:00 · Gói Ân cần" caregiver="Nguyễn Thanh Trúc" />}
+          {i === 4 && <CareLogCard id="journey-log" label="Nhật ký sau ca · 09/10" note="Bác ăn ngon miệng, đi dạo sân 20 phút và nghe đọc báo thời sự. Lần tới bác muốn nghe tiếp sách lịch sử." author="Nguyễn Thanh Trúc" time="21:52" />}
+          {i === 5 && (
+            <div class="hc-stack" style="--stack-gap: var(--space-4)">
+              <Rating id="journey-rate" label="Gia đình đã đánh giá" value={5} readonly />
+              <p class="hc-hint">Đánh giá của bạn giúp HomaCare nâng cao chất lượng đồng hành.</p>
+              <span class="hc-btn hc-btn--block"><Icon name="plus" />Đặt ca cho buổi tiếp theo</span>
+            </div>
+          )}
+        </div>
+      ))}
+      <p class="demo-flag journey__flag">Tên người là dữ liệu minh họa.</p>
+    </div>
+    <div class="journey__aside">
+      <p>Tài khoản gia đình chỉ xem được hồ sơ và lịch của chính gia đình mình. Quyền này được kiểm tra trên máy chủ.</p>
+      <Button href="/app/" variant="quiet" iconEnd="arrow-right">Mở ứng dụng HomaCare</Button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .journey { display: grid; gap: var(--space-6); align-items: start; }
+  .journey__hint { font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-3); }
+  .journey__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+  .journey__step {
+    width: 100%; display: flex; gap: var(--space-4); align-items: flex-start; text-align: left;
+    padding: var(--space-4); border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+    background: var(--color-surface); color: inherit; cursor: pointer;
+    transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+  }
+  .journey__step:hover { border-color: var(--color-border-strong); }
+  .journey__step[aria-expanded="true"] { border-color: var(--teal-300); box-shadow: var(--elevation-raised); }
+  .journey__num {
+    flex: none; width: 36px; height: 36px; border-radius: var(--radius-full); display: grid; place-items: center;
+    background: var(--color-action-subtle); color: var(--color-text-brand);
+    font-family: var(--font-display); font-weight: var(--weight-display); font-variant-numeric: tabular-nums;
+  }
+  .journey__step[aria-expanded="true"] .journey__num { background: var(--color-action); color: var(--color-on-action); }
+  .journey__body { display: grid; gap: var(--space-2); min-width: 0; }
+  .journey__title { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--text-lg); line-height: var(--leading-snug); }
+  .journey__text { color: var(--color-text-muted); }
+  .journey__meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); }
+  .journey__toggle { display: inline-flex; align-items: center; gap: 4px; font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text-brand); }
+  .journey__toggle :global(.hc-icon) { transition: transform var(--duration-base) var(--ease-out); }
+  .journey__step[aria-expanded="true"] .journey__toggle :global(.hc-icon) { transform: rotate(180deg); }
+  .journey__step[aria-expanded="true"] [data-closed-label], .journey__step[aria-expanded="false"] [data-open-label] { display: none; }
+
+  .journey__stage { display: grid; gap: var(--space-4); overflow: hidden; }
+  .journey__item > .journey__stage { margin-top: var(--space-3); }
+  .journey__screen {
+    padding: var(--space-4); border-radius: var(--radius-lg);
+    background: var(--color-surface-sunken); border: 1px solid var(--color-divider);
+  }
+  .journey__bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+  .journey__bar .hc-wordmark { font-size: var(--text-base); }
+  .journey__panel-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text-muted); margin-bottom: var(--space-3); }
+  .journey__panel > .hc-stack { padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-border); }
+  .journey__fake-input { display: flex; align-items: center; background: var(--color-surface-sunken); border-color: var(--color-border); }
+  .journey__dl { margin: 0; display: grid; gap: var(--space-2); }
+  .journey__dl div { display: flex; justify-content: space-between; gap: var(--space-4); padding-bottom: var(--space-2); border-bottom: 1px solid var(--color-divider); }
+  .journey__dl dt { color: var(--color-text-muted); font-size: var(--text-sm); }
+  .journey__dl dd { margin: 0; font-weight: var(--weight-medium); text-align: right; }
+  .journey__flag { margin-top: var(--space-3); }
+  .journey__aside { display: grid; gap: var(--space-3); justify-items: start; color: var(--color-text-muted); font-size: var(--text-sm); }
+  .journey__aside:not(:only-child) { padding-inline: var(--space-1); }
+
+  @media (min-width: 900px) {
+    .journey { grid-template-columns: minmax(0, 1fr) minmax(0, 440px); gap: var(--space-10); }
+    .journey__hint, .journey__toggle { display: none; }
+    .journey__stage { position: sticky; top: 96px; }
+    .journey__list { padding-bottom: var(--space-12); }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-journey]');
+  if (root) {
+    const stage = root.querySelector<HTMLElement>('[data-stage]')!;
+    const steps = [...root.querySelectorAll<HTMLButtonElement>('[data-step]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-panel]')];
+    const items = [...root.querySelectorAll<HTMLElement>('[data-step-item]')];
+    const desktop = matchMedia('(min-width: 900px)');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const homeSlot = stage.parentElement!;
+    let active = 0;
+    let open = true;
+
+    const showPanel = (i: number) => panels.forEach((p, n) => (p.hidden = n !== i));
+    const mark = () => steps.forEach((s, n) => s.setAttribute('aria-expanded', String(open && n === active)));
+    const animate = (frames: Keyframe[]) =>
+      reduced.matches ? Promise.resolve() : stage.animate(frames, { duration: 500, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }).finished.catch(() => {});
+
+    function placeForViewport() {
+      if (desktop.matches) {
+        homeSlot.appendChild(stage);
+        stage.hidden = false;
+        open = true;
+      } else {
+        items[active].appendChild(stage);
+        stage.hidden = !open;
+      }
+      showPanel(active);
+      mark();
+    }
+
+    async function select(i: number) {
+      if (desktop.matches) { active = i; showPanel(i); mark(); return; }
+      if (open && i === active) {
+        // Thu lại khung đang mở
+        open = false; mark();
+        const h = stage.offsetHeight;
+        await animate([{ height: `${h}px`, opacity: 1 }, { height: '0px', opacity: 0 }]);
+        if (!open) stage.hidden = true;
+        return;
+      }
+      // Mở dưới bước vừa bấm; giữ bước đó đứng yên trên màn hình
+      const target = steps[i];
+      const before = target.getBoundingClientRect().top;
+      active = i; open = true;
+      items[i].appendChild(stage);
+      stage.hidden = false;
+      showPanel(i); mark();
+      const shift = target.getBoundingClientRect().top - before;
+      if (shift) window.scrollTo({ top: window.scrollY + shift, behavior: 'instant' });
+      const h = stage.offsetHeight;
+      await animate([{ height: '0px', opacity: 0 }, { height: `${h}px`, opacity: 1 }]);
+    }
+
+    steps.forEach((s, i) => s.addEventListener('click', () => select(i)));
+    desktop.addEventListener('change', placeForViewport);
+    placeForViewport();
+  }
+</script>

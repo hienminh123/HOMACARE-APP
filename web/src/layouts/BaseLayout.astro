@@ -1,0 +1,48 @@
+---
+// Khung HTML chung: meta, icon, manifest, design system theo đúng thứ tự nạp
+// tokens → fonts → base → components, rồi hành vi components.js.
+import '../styles/tokens.css';
+import '../styles/fonts.css';
+import '../styles/base.css';
+import '../styles/components.css';
+import lexendLatin from '../assets/fonts/lexend-latin.woff2?url';
+
+interface Props { title: string; description?: string; noindex?: boolean; bodyClass?: string }
+const {
+  title,
+  description = 'HomaCare kết nối gia đình với chuyên viên chăm sóc tại địa phương, sắp xếp những buổi đồng hành bên người cao tuổi và ghi nhận nhật ký sau mỗi ca.',
+  noindex,
+  bodyClass,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/assets/og-image.png', Astro.site);
+---
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="vi_VN" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <link rel="preload" href={lexendLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" type="image/png" href="/assets/app-icon-h.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#0F4C46" />
+    <meta name="apple-mobile-web-app-title" content="HomaCare" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <slot name="head" />
+  </head>
+  <body class={bodyClass}>
+    <slot />
+    <script>
+      import '../scripts/components.js';
+    </script>
+  </body>
+</html>

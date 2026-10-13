@@ -1,0 +1,15 @@
+---
+// .hc-visit-row — hàng gọn cho danh sách điều phối; tự xếp thành 3 dòng khi khung hẹp hơn 620px
+// (container query). Đặt nhiều hàng trong <Card variant="flush">. Slot mặc định là nút thao tác.
+import Person from './Person.astro';
+import StatusPill from './StatusPill.astro';
+import type { VisitStatus } from '../../lib/status';
+interface Props { name: string; detail?: string; day: string; time?: string; status: VisitStatus }
+const { name, detail, day, time = '18:00–22:00', status } = Astro.props;
+---
+<div class="hc-visit-row"><div class="hc-visit-row__inner">
+  <Person class="hc-visit-row__who" size="sm" role="relative" name={name} detail={detail} />
+  <div class="hc-visit-row__when"><strong>{day}</strong><span>{time}</span></div>
+  <StatusPill status={status} />
+  <slot />
+</div></div>
