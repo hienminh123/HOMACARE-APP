@@ -23,7 +23,8 @@ declare global {
       toast(text: string, opts?: { tone?: string; title?: string; duration?: number }): void;
       init(root?: ParentNode): void;
       openSheet(id: string | HTMLElement, opener?: Element | null): void;
-      closeSheet(dialog: HTMLDialogElement | null, value?: string): void;
+      /** Xong khi sheet đã đóng hẳn (sau hiệu ứng) và focus đã trả về nút mở. */
+      closeSheet(dialog: HTMLDialogElement | null, value?: string): Promise<void>;
     };
   }
 }

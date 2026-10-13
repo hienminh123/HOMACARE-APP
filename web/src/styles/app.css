@@ -59,7 +59,7 @@ html { scroll-padding-top: 80px; }
 }
 
 /* Hai ô cạnh nhau (mối quan hệ · tuổi), xuống hàng khi quá hẹp */
-.app-row2 { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--space-3); }
+.app-row2 { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--space-3); align-items: start; }
 
 /* Khối gói dịch vụ trong sheet đặt ca */
 .app-package { display: grid; gap: var(--space-2); justify-items: start; padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-surface-sunken); }

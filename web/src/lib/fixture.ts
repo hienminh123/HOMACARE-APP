@@ -1,18 +1,21 @@
 // Client Supabase GIẢ LẬP, chỉ nạp khi chạy `npm run dev:fixture` (astro dev --mode fixture).
 // Bản build thật không chứa file này. Dữ liệu nằm trong sessionStorage của trình duyệt, không gửi đi đâu.
-// Tên người là dữ liệu minh họa (Bác Trần Văn An, Nguyễn Thanh Trúc, Trần Lan Anh).
-// Đăng nhập: email bắt đầu bằng "caregiver" → chuyên viên, "coordinator" → điều phối, còn lại → gia đình; mật khẩu bất kỳ.
+// Tên người là dữ liệu minh họa (Bác Trần Văn An, Nguyễn Thanh Trúc, Trần Lan Anh, Đỗ Thu Hà).
+// Đăng nhập: email bắt đầu bằng "caregiver" → chuyên viên, "coordinator" → điều phối, "family-new" → gia đình
+// chưa có người thân (thử luồng bắt đầu), còn lại → gia đình có sẵn lịch; mật khẩu bất kỳ.
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { SESSION_STORAGE_KEY } from './config';
 
 type Row = Record<string, any>;
 type Listener = (event: string, session: unknown) => void;
 
+// key: giá trị lưu ở localStorage (SESSION_STORAGE_KEY) cho biết đang đăng nhập tài khoản nào
 const PROFILES: Row[] = [
-  { id: 'fx-family', full_name: 'Trần Lan Anh', role: 'family' },
-  { id: 'fx-caregiver', full_name: 'Nguyễn Thanh Trúc', role: 'caregiver' },
+  { id: 'fx-family', full_name: 'Trần Lan Anh', role: 'family', key: 'family' },
+  { id: 'fx-family-new', full_name: 'Đỗ Thu Hà', role: 'family', key: 'family-new' },
+  { id: 'fx-caregiver', full_name: 'Nguyễn Thanh Trúc', role: 'caregiver', key: 'caregiver' },
   { id: 'fx-caregiver-2', full_name: 'Lê Minh Hà', role: 'caregiver' },
-  { id: 'fx-coordinator', full_name: 'Phạm Quốc Bảo', role: 'coordinator' },
+  { id: 'fx-coordinator', full_name: 'Phạm Quốc Bảo', role: 'coordinator', key: 'coordinator' },
 ];
 
 function day(offset: number): string {
@@ -51,7 +54,7 @@ function save(db: Record<string, Row[]>) { try { sessionStorage.setItem(DATA_KEY
 export function createFixtureClient(): SupabaseClient {
   const db = load();
   const listeners: Listener[] = [];
-  const current = (): Row | null => PROFILES.find(p => p.role === localStorage.getItem(SESSION_STORAGE_KEY)) || null;
+  const current = (): Row | null => PROFILES.find(p => p.key && p.key === localStorage.getItem(SESSION_STORAGE_KEY)) || null;
   const session = () => (current() ? { user: { id: current()!.id }, access_token: 'fixture' } : null);
   const emit = (event: string) => listeners.forEach(fn => fn(event, session()));
   const delay = <T>(value: T) => new Promise<T>(resolve => setTimeout(() => resolve(value), 250));
@@ -109,8 +112,8 @@ export function createFixtureClient(): SupabaseClient {
     getSession: async () => ({ data: { session: session() }, error: null }),
     onAuthStateChange: (fn: Listener) => { listeners.push(fn); return { data: { subscription: { unsubscribe() {} } } }; },
     signInWithPassword: async ({ email }: { email: string }) => {
-      const role = email.startsWith('caregiver') ? 'caregiver' : email.startsWith('coordinator') ? 'coordinator' : 'family';
-      localStorage.setItem(SESSION_STORAGE_KEY, role); emit('SIGNED_IN');
+      const key = ['caregiver', 'coordinator', 'family-new'].find(k => email.startsWith(k)) || 'family';
+      localStorage.setItem(SESSION_STORAGE_KEY, key); emit('SIGNED_IN');
       return delay({ data: { session: session(), user: { id: current()!.id } }, error: null });
     },
     signUp: async () => delay({ data: { session: null, user: { identities: [{}] } }, error: null }),

@@ -69,7 +69,7 @@ export function careLog(v: Visit, { rateable = false } = {}): string {
   const rating = v.rating
     ? `<div class="hc-rating" data-readonly><span class="hc-rating__label">Gia đình đã đánh giá</span><div class="hc-rating__stars" role="img" aria-label="${v.rating} trên 5 sao">${stars}</div></div>`
     : rateable ? rateForm(v) : '<p class="hc-card__meta">Gia đình chưa đánh giá</p>';
-  return `<article class="hc-card hc-log" aria-label="Nhật ký ca ${esc(dayLabel(v.care_date))}">
+  return `<article class="hc-card hc-log" data-visit="${esc(v.id)}" aria-label="Nhật ký ca ${esc(dayLabel(v.care_date))}">
     <div class="hc-card__head"><span class="hc-card__label">Nhật ký sau ca · ${esc(dayLabel(v.care_date))}</span>${pill('completed')}</div>
     <ul class="hc-log__acts">${acts}</ul>
     ${v.report_text ? `<blockquote class="hc-log__note">${esc(v.report_text)}<footer>${esc(cg?.full_name || 'Chuyên viên')}${v.completed_at ? ` ghi lúc <time>${esc(timeText(v.completed_at))}</time>` : ''}</footer></blockquote>` : ''}

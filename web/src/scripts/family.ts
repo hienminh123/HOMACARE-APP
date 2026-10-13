@@ -11,7 +11,19 @@ export function setContext(next: Context) { ctx = next; }
 const $ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => root.querySelector<T>(sel);
 const toast = (text: string, opts: { tone?: string; title?: string } = {}) => window.HC?.toast(text, opts);
 const sheet = (id: string) => document.getElementById(id) as HTMLDialogElement;
-const close = (id: string) => window.HC?.closeSheet(sheet(id));
+/** Đóng sheet; Promise xong khi sheet đóng hẳn, để focus đặt sau đó không bị closeSheet ghi đè. */
+const close = (id: string) => window.HC.closeSheet(sheet(id));
+
+/** Sau khi vẽ lại, nút vừa bấm đã bị thay: đưa focus tới phần tử đầu tiên tìm thấy trong giao diện mới. */
+function refocus(...selectors: string[]) {
+  for (const sel of selectors) {
+    const el = $<HTMLElement>(sel);
+    if (!el) continue;
+    if (!el.matches('a[href], button, input, select, textarea, [tabindex]')) el.tabIndex = -1;
+    el.focus();
+    return;
+  }
+}
 
 /* ---------- Lỗi đặt cạnh ô nhập ---------- */
 function setError(field: HTMLElement, message: string | null) {
@@ -20,7 +32,8 @@ function setError(field: HTMLElement, message: string | null) {
   if (!message) {
     field.removeAttribute('aria-invalid');
     box?.remove();
-    field.setAttribute('aria-describedby', (field.getAttribute('aria-describedby') || '').replace(`${id}-error`, '').trim());
+    const rest = (field.getAttribute('aria-describedby') || '').split(' ').filter(x => x && x !== `${id}-error`);
+    if (rest.length) field.setAttribute('aria-describedby', rest.join(' ')); else field.removeAttribute('aria-describedby');
     return;
   }
   if (!box) {
@@ -104,10 +117,10 @@ document.addEventListener('submit', async e => {
     await addRelative(ctx.client, ctx.profile.id, {
       full_name: fields.full_name, relationship: fields.relationship, age: Number(fields.age), area: fields.area, preferences: fields.preferences || '',
     });
-    close('relative-sheet');
-    await ctx.reload();
+    await Promise.all([close('relative-sheet'), ctx.reload()]);
     toast(`Chuyên viên sẽ đọc hồ sơ của ${fields.relationship.toLowerCase()} trước mỗi buổi.`, { tone: 'success', title: 'Đã lưu hồ sơ người thân' });
-    if (bookAfterRelative) { bookAfterRelative = false; setTimeout(() => openBooking(), 450); }
+    if (bookAfterRelative) { bookAfterRelative = false; openBooking($('[data-action="book"]')); }
+    else refocus('#nguoi-than [data-action="add-relative"]', '[data-action="book"]');
   } catch (error) {
     formError(form, issue(error));
   } finally {
@@ -129,13 +142,15 @@ function addDays(iso: string, n: number): string {
 const takenDates = (relativeId: string) =>
   new Set((ctx?.data.visits || []).filter(v => v.relative_id === relativeId).map(v => v.care_date));
 
-/** Hàng chọn ngày: 21 ngày tới, hiển thị dd/mm, khóa ngày người thân đã có ca (DB chỉ cho một ca mỗi ngày). */
-function renderDays(relativeId: string, keep?: string) {
+/** Hàng chọn ngày: 21 ngày tới, hiển thị dd/mm, khóa ngày người thân đã có ca (DB chỉ cho một ca mỗi ngày).
+ *  `keep`: giữ ngày đang chọn nếu còn trống; null = không chọn sẵn ngày nào (để gia đình tự chọn lại). */
+function renderDays(relativeId: string, keep?: string | null) {
   const box = $<HTMLElement>('[data-days]')!;
   const start = today();
   const taken = takenDates(relativeId);
   const days = Array.from({ length: DAYS_AHEAD }, (_, i) => addDays(start, i));
-  const preferred = keep && !taken.has(keep) ? keep : days.find((d, i) => i > 0 && !taken.has(d)) || days.find(d => !taken.has(d));
+  const preferred = keep === null ? null
+    : keep && !taken.has(keep) ? keep : days.find((d, i) => i > 0 && !taken.has(d)) || days.find(d => !taken.has(d));
   box.innerHTML = days.map((d, i) => {
     const off = taken.has(d);
     const top = i === 0 ? 'Hôm nay' : i === 1 ? 'Ngày mai' : WEEKDAY[new Date(d + 'T00:00:00Z').getUTCDay()];
@@ -227,6 +242,7 @@ document.addEventListener('submit', async e => {
     setStep('details');
     dayError.hidden = false;
     dayError.innerHTML = `${icon('alert')}${esc(text)}`;
+    ($<HTMLInputElement>('[data-days] input:checked') || $<HTMLInputElement>('[data-days] input:not(:disabled)'))?.focus();
     dayError.scrollIntoView({ block: 'nearest' });
   };
 
@@ -242,12 +258,16 @@ document.addEventListener('submit', async e => {
   busy(button, true);
   try {
     await bookVisit(ctx.client, relative!.id, date!, note);
-    close('booking-sheet');
-    await ctx.reload();
+    await Promise.all([close('booking-sheet'), ctx.reload()]);
     toast(`Ca ${dayLabel(date!)} đang chờ điều phối viên phân công chuyên viên.`, { tone: 'success', title: 'Đã gửi yêu cầu chăm sóc' });
+    refocus('[data-action="book"]');
   } catch (error) {
     const err = error as { code?: string; message?: string };
-    if (err?.code === '23505') showDayError('Người thân này đã có ca vào ngày đó. Hãy chọn ngày khác.');
+    if (err?.code === '23505') {
+      // Dữ liệu trên máy đã cũ (ca được đặt từ nơi khác): tải lại để khóa đúng ngày đã có ca
+      if (await ctx.reload()) renderDays(relative!.id, null);
+      showDayError(`${relative!.relationship} đã có ca vào ${dayLabel(date!)}. Hãy chọn một ngày khác còn trống.`);
+    }
     else if (/invalid_date/.test(String(err?.message))) showDayError('Hãy chọn ngày từ hôm nay trở đi.');
     else formError(form, issue(error));
   } finally {
@@ -284,6 +304,7 @@ document.addEventListener('click', async e => {
       await rateVisit(ctx.client, box.dataset.rateVisit!, value);
       await ctx.reload();
       toast(`Bạn chấm ${value}/5 sao cho ca ${visit ? dayLabel(visit.care_date) : ''}.`, { tone: 'success', title: 'Cảm ơn đánh giá của bạn' });
+      refocus(`[data-visit="${CSS.escape(box.dataset.rateVisit!)}"] .hc-rating`);
     } catch (error) {
       toast(issue(error), { tone: 'danger' });
       busy(action as HTMLButtonElement, false);

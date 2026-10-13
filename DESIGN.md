@@ -290,6 +290,15 @@ Mọi lớp có tiền tố `hc-` để sống chung với CSS cũ (`.btn`, `.pi
 - Gợi ý `.hc-hint`, lỗi `.hc-error` (có icon). Ô lỗi đặt `aria-invalid="true"` và `aria-describedby` trỏ tới câu lỗi.
 - Focus: viền Teal + vòng Teal nhạt 4px. Ô chỉ đọc (`readonly`) có nền lõm.
 - `.hc-check`: dòng chọn cao 56px cho bốn hoạt động của chuyên viên. Dùng `:has(input:checked)` để tô nền.
+- Lỗi xuất hiện khi bấm gửi (không báo khi đang gõ), đặt ngay dưới ô liên quan, focus vào ô lỗi đầu tiên; gõ lại thì lỗi của ô đó mất. Lỗi không gắn với ô nào (mạng, quyền) đặt cuối biểu mẫu trong `.app-form-error` có `role="alert"`.
+- Hai ô cạnh nhau dùng `.app-row2` (`align-items: start`, để câu lỗi dưới một ô không kéo cao ô bên cạnh).
+
+### Chọn ngày — `.app-days` > `label.app-day` (khu app, giai đoạn 3)
+
+- Không dùng `<input type="date">`: máy cài tiếng Anh hiện mm/dd. Thay bằng `fieldset` + hàng thẻ cuộn ngang, mỗi thẻ là một `input type="radio"` thật (trong suốt, phủ cả thẻ), nên phím mũi tên, Tab và trình đọc màn hình chạy sẵn.
+- Thẻ 72 × 68px: dòng trên "Hôm nay" / "Ngày mai" / thứ viết tắt (T2…CN), dòng dưới dd/mm (`.hc-num`). Chọn: nền Teal chữ trắng. Focus: viền `--color-focus` trên cả thẻ (`:has(input:focus-visible)`).
+- Ngày không đặt được (người thân đã có ca) để `disabled` + `.is-taken` + chữ "Đã có ca"; nhãn đọc `aria-label` đủ thứ, ngày/tháng/năm và ", đã có ca".
+- Hàng tràn ra sát mép sheet (margin âm bằng padding sheet) để thấy rõ còn cuộn được; mở ra thì cuộn thẻ đang chọn vào giữa. Dưới hàng: một dòng gợi ý "Đã chọn: …" và chỗ báo lỗi riêng của ngày.
 
 ### Cards / Containers — `.hc-card`
 
@@ -317,7 +326,7 @@ Mọi lớp có tiền tố `hc-` để sống chung với CSS cũ (`.btn`, `.pi
 
 - Luôn hiện **đủ bốn hoạt động**; mục không làm ghi "Không thực hiện" (`.is-skipped`), không ẩn đi.
 - Lời ghi của chuyên viên dùng `--text-md` (18px) trong khối Sand, kèm tên và giờ ghi.
-- Đánh giá: 5 nút sao dạng `radiogroup`, dùng phím mũi tên được, phát sự kiện `hc:rate`. Đã đánh giá thì `data-readonly`.
+- Đánh giá: 5 nút sao dạng `radiogroup`, dùng phím mũi tên và Home/End, phát sự kiện `hc:rate`. Đã đánh giá thì `data-readonly`. Trong app, chọn sao chưa gửi ngay: nút "Gửi đánh giá" chỉ bật khi đã chọn, gửi xong hiện chỉ đọc + toast.
 
 ### Avatar · Person — `.hc-avatar[data-role]`, `.hc-person`
 
@@ -329,6 +338,8 @@ Mọi lớp có tiền tố `hc-` để sống chung với CSS cũ (`.btn`, `.pi
 - Dùng `<dialog>` gốc của trình duyệt (bẫy focus, phím Esc có sẵn). Điện thoại: trượt từ dưới lên, có thanh kéo; từ 640px: hộp giữa màn hình rộng 560px.
 - Mở bằng `data-hc-open="id"` hoặc `HC.openSheet(id)`; đóng bằng `data-hc-close`, Esc, chạm nền tối. Focus quay về nút đã mở.
 - Chỉ dùng khi cần tập trung xác nhận (xem lại trước khi gửi yêu cầu, phân công chuyên viên). Không dùng sheet cho nội dung đọc thường.
+- `HC.closeSheet(dialog)` trả về Promise xong khi sheet đã đóng hẳn. Nếu sau khi lưu trang vẽ lại (nút đã mở sheet bị thay), chờ cả việc đóng và tải lại rồi mới đặt focus vào phần tử tương ứng mới (`refocus()` trong `family.ts`).
+- **Mẫu sheet 2 bước** (đặt ca): một `<form>` chứa hai khối `[data-step="details"]` và `[data-step="review"]`; mô tả sheet ghi "Bước 1 trên 2 · …" / "Bước 2 trên 2 · …". Nút cuối đổi chữ theo bước: "Để sau" / "Xem lại yêu cầu" → "Quay lại sửa" / "Xác nhận và gửi yêu cầu". Chỉ gọi RPC ở bước 2; sang bước 2 thì focus vào khối xem lại (`tabindex="-1"`, có `aria-label`). Lỗi của một ô ở bước 1 (ví dụ trùng ngày) đưa về bước 1 và báo dưới ô đó. Đóng rồi mở lại luôn về bước 1.
 
 ### Toast — `HC.toast(text, { tone, title, duration })`
 

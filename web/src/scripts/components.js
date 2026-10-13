@@ -1,7 +1,8 @@
 /* ==========================================================================
    HomaCare Components · hành vi · v1.0 (bản Astro)
-   Chép từ preview/ds/components.js. Khác biệt duy nhất: trạng thái ca, icon và
-   esc lấy từ src/lib (dùng chung với component .astro), sprite icon ở /icons.svg.
+   Chép từ preview/ds/components.js. Khác biệt: trạng thái ca, icon và esc lấy từ
+   src/lib (dùng chung với component .astro), sprite icon ở /icons.svg; đánh giá sao
+   nhận thêm phím Home/End (giai đoạn 3).
    Nạp một lần trong layout; đặt window.HC giống bản gốc:
      HC.STATUS, HC.ORDER, HC.icon(), HC.pill(), HC.timeline()
      HC.toast(text, opts?)  hiện thông báo ngắn
@@ -62,17 +63,29 @@ import { STATUS, ORDER, pill, timeline } from '../lib/status';
     d.classList.remove('is-closing');
     d.showModal();
   }
+  /** Trả về Promise xong khi sheet đã đóng hẳn (sau hiệu ứng), để trang đặt focus sau đó. */
   function closeSheet(d, value) {
-    if (!d || !d.open || d.classList.contains('is-closing')) return;
-    const finish = () => {
-      d.classList.remove('is-closing');
-      d.close(value);
-      if (d._opener && document.contains(d._opener)) d._opener.focus();
-    };
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return finish();
-    d.classList.add('is-closing');
-    d.addEventListener('animationend', finish, { once: true });
-    setTimeout(() => d.open && finish(), 450);
+    if (!d || !d.open) return Promise.resolve();
+    if (d._closing) return d._closing;
+    let finish;
+    const closed = new Promise(resolve => {
+      finish = () => {
+        if (d._closing !== closed) return;
+        d._closing = null;
+        d.classList.remove('is-closing');
+        d.close(value);
+        if (d._opener && document.contains(d._opener)) d._opener.focus();
+        resolve();
+      };
+    });
+    d._closing = closed;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) finish();
+    else {
+      d.classList.add('is-closing');
+      d.addEventListener('animationend', finish, { once: true });
+      setTimeout(finish, 450);
+    }
+    return closed;
   }
   function initSheet(d) {
     if (d._hc) return; d._hc = true;
@@ -135,6 +148,7 @@ import { STATUS, ORDER, pill, timeline } from '../lib/status';
       const n = current() || 0;
       if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { e.preventDefault(); set(Math.min(5, n + 1), true); }
       if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); set(Math.max(1, n - 1), true); }
+      if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); set(e.key === 'Home' ? 1 : 5, true); }
     });
     set(current());
   }

@@ -6,7 +6,7 @@
 - Repo đã chuyển từ OneDrive sang `C:\dev\homacare`. Làm trên nhánh **`thiet-ke-lai`**. Tag **`ban-cu-v1`** = bản đang chạy trên homacare-demo.pages.dev.
 - **Không sửa, không merge vào `main`. Không push nếu chưa hỏi người dùng.** Commit cục bộ sau mỗi giai đoạn là được phép.
 - Cloudflare Pages chỉ build `main`, nên mọi thay đổi trên nhánh này chưa ảnh hưởng web thật.
-- Lộ trình đầy đủ: (0) dọn repo → (1) design system → (2) chuyển sang Astro, tách trang giới thiệu khỏi app → (3) app gia đình, ưu tiên điện thoại → (4) app chuyên viên và điều phối → (5) realtime + chế độ demo cho giám khảo → (6) kiểm thử toàn bộ. **Đã xong 0, 1 và 2.**
+- Lộ trình đầy đủ: (0) dọn repo → (1) design system → (2) chuyển sang Astro, tách trang giới thiệu khỏi app → (3) app gia đình, ưu tiên điện thoại → (4) app chuyên viên và điều phối → (5) realtime + chế độ demo cho giám khảo → (6) kiểm thử toàn bộ. **Đã xong 0, 1, 2 và 3.**
 
 ### Giai đoạn 0 · Dọn repo (commit `468af26`)
 - Xóa: `landing.html`, `landing-v2.html`, `landing-v3.html`, `home-classic.html`, 3 ảnh .jpg cũ trong `preview/`, `netlify.toml`, hai thư mục rỗng `tmp/`, `audit-assets/`. Tất cả vẫn lấy lại được từ tag `ban-cu-v1` (`git checkout ban-cu-v1 -- <file>`).
@@ -55,17 +55,29 @@
 4. Thử trên iPhone thật: font Lora/Nunito, "Cách sử dụng", sheet, BottomNav.
 5. Giữ `preview/` cho tới khi giai đoạn 3–4 xong rồi mới quyết định bỏ.
 
-### Việc tiếp theo — Giai đoạn 3 · App gia đình, ưu tiên điện thoại
-- Dựng lại thao tác trong `web/src/pages/app/gia-dinh.astro`: thêm/sửa người thân (Sheet + Field), đặt ca Ân cần 2 bước (Thông tin ca → Xác nhận, giữ dữ liệu khi quay lại, như bản cũ), đánh giá sao bằng sự kiện `hc:rate` → `rateVisit`, mở `?booking=1` thẳng vào đặt ca. Dùng hàm sẵn trong `src/lib/visits.ts`, `HC.toast` cho xác nhận, lỗi đặt cạnh ô nhập.
-- Ô chọn ngày hiển thị dd/mm (máy tiếng Anh hiện mm/dd với `type="date"`).
-- Khi cả ba không gian đủ thao tác thì gỡ dòng ghi chú "Khung app mới (giai đoạn 2)" trong `AppLayout.astro`.
+### Giai đoạn 3 · App gia đình, ưu tiên điện thoại (commit `40c3d13` phần 1 + commit "Giai đoạn 3 (phần 2)")
+- Thao tác nằm trong `web/src/scripts/family.ts`; trang `web/src/pages/app/gia-dinh.astro` chỉ vẽ HTML và khai báo hai sheet. Gọi đúng RPC/bảng qua `src/lib/visits.ts`, **không đổi `backend/schema.sql`**.
+  - **Thêm người thân** (sheet `#relative-sheet`): kiểm tra từng ô (tên ≥ 2 ký tự, tuổi 18–120, khu vực), lỗi đặt dưới đúng ô và gắn `aria-describedby`, focus vào ô lỗi đầu tiên, gõ lại thì lỗi tự mất.
+  - **Đặt ca 2 bước** (sheet `#booking-sheet`): bước 1 chọn người thân (chỉ hiện khi có ≥ 2), hàng thẻ 21 ngày dd/mm (`.app-day`, radio thật nên phím mũi tên chạy sẵn; ngày người thân đã có ca bị khóa vì DB chỉ cho một ca mỗi ngày), lưu ý + bộ đếm; bước 2 xem lại rồi mới gọi `book_homa_visit`. Trùng ngày (23505) → tải lại dữ liệu, khóa ngày đó, bỏ chọn, báo "Bố đã có ca vào Thứ Sáu, 16/10…" dưới hàng ngày; ngày đã qua → báo dưới hàng ngày. Đóng sheet rồi mở lại luôn về bước 1.
+  - **Đánh giá sao** trong nhật ký: radiogroup (`hc:rate`), nút "Gửi đánh giá" chỉ bật khi đã chọn sao → `rate_homa_visit` → hiện chỉ đọc + toast. Phím ←/→/↑/↓ và Home/End (Home/End thêm ở phần 2 trong `components.js`).
+  - `?booking=1` mở thẳng đặt ca rồi xóa tham số; chưa có người thân thì mở thêm người thân trước, lưu xong tự mở đặt ca.
+  - Chưa có người thân: chỉ một thẻ "Bắt đầu bằng hồ sơ người thân" ở đầu (mục Người thân ẩn để không lặp). Đổi/hủy ca và sửa hồ sơ: hướng dẫn gọi 0338 031 425.
+- Phần 2 sửa thêm: `HC.closeSheet()` trả về Promise xong khi sheet đóng hẳn (không dựa vào sự kiện `close`, vốn bị treo khi khung trình duyệt ẩn); sau khi lưu/đặt/đánh giá, trang vẽ lại nên focus được đưa về phần tử tương ứng mới (`refocus()` trong `family.ts`: nút Đặt ca mới, nút Thêm người thân, hoặc khối đánh giá chỉ đọc của đúng ca). Ô "Mối quan hệ" không còn bị kéo cao khi ô Tuổi báo lỗi (`.app-row2 { align-items: start }`).
+- Fixture: thêm tài khoản gia đình chưa có người thân — đăng nhập email bắt đầu bằng `family-new` hoặc đặt localStorage `homa-session-fixture` = `family-new` (giá trị khóa giờ là `key` của hồ sơ, không còn là vai trò). Fixture cũng báo trùng ngày (23505) và ngày đã qua như DB thật.
+- **Đã kiểm tra** (fixture, Chrome headless qua DevTools với phím thật, ở 375px và 1280px): mở đặt ca bằng Enter; ←/→ trong hàng ngày bỏ qua ngày đã có ca, vòng về cuối, có viền focus, thẻ luôn nằm trong vùng nhìn thấy; Esc đóng sheet ở cả bước 1 và 2, focus về nút "Đặt ca mới"; bước 2 focus vào vùng xem lại; đặt ca thành công → toast, "3 ca đang mở", focus về nút; trùng ngày như trên; đánh giá bằng phím → Tab tới "Gửi đánh giá" → Enter → "3 trên 5 sao" chỉ đọc + toast, focus ở khối đánh giá; thêm người thân báo đủ 3 lỗi, Esc trả focus về "Thêm người thân"; tài khoản `family-new` + `?booking=1` → sheet người thân + toast nhắc → lưu → sheet đặt ca tự mở (ẩn ô chọn người thân vì chỉ có 1). Ở 1280px sheet là hộp 560px giữa màn hình, hàng ngày vẫn cuộn ngang. Không tràn ngang ở cả hai cỡ (kể cả khi mở sheet), không lỗi console. `npm --prefix web run build` sạch, bản build không chứa fixture.
+- **Cần người dùng duyệt (chưa làm):** cho gia đình tự sửa hồ sơ người thân cần thêm policy UPDATE cho bảng `relatives` trong `backend/schema.sql` (chỉ chủ hồ sơ, `family_id = auth.uid()`) rồi chạy trên Supabase. Hiện app hướng dẫn gọi 0338 031 425.
+
+### Việc tiếp theo — Giai đoạn 4 · App chuyên viên và điều phối
+- Chuyên viên (`web/src/pages/app/chuyen-vien.astro`): bắt đầu ca (`start_homa_visit`), ghi nhật ký sau ca với đủ 4 hoạt động + ghi nhận chung + lời nhắn lần tới (`complete_homa_visit`, lỗi `incomplete_tasks`/`invalid_report` đặt dưới ô). Ưu tiên điện thoại như app gia đình.
+- Điều phối (`web/src/pages/app/dieu-phoi.astro`): phân công chuyên viên cho ca chờ (`assign_homa_visit`) ngay trong sheet chi tiết, xử lý 23505 (chuyên viên đã có ca tối đó).
+- Tái dùng mẫu của giai đoạn 3: sheet nhiều bước, `HC.closeSheet()` trả Promise + `refocus()` sau khi vẽ lại, lỗi cạnh ô (có thể tách `setError`/`refocus` từ `family.ts` ra file dùng chung).
+- Khi cả hai không gian đủ thao tác thì gỡ prop `notice` (dòng ghi chú giai đoạn) trong `chuyen-vien.astro` và `dieu-phoi.astro`.
 
 ### Còn để ngỏ
 - Cal Sans (TTF 100 KB) trong bản Astro chỉ còn cho chữ logo và trang `/tinh-nang`; nên chuyển sang woff2 (cần `woff2_compress` hoặc fonttools, máy chưa có).
 - `tinh-nang.html` vẫn dùng CSS nội tuyến riêng (cả bản chép trong `web/public/`), chưa chuyển sang design system.
 - Chưa có trang tài liệu design system cho bản Astro (`preview/design-system.html` vẫn mô tả v1.0 với Cal Sans); có thể làm trang `/thiet-ke` noindex.
 - Chưa kiểm kiểu TypeScript (`astro check` cần cài thêm `@astrojs/check` và `typescript`, phải hỏi người dùng).
-- Ô `type="date"` hiển thị theo ngôn ngữ của máy (máy tiếng Anh sẽ ra mm/dd); khi làm app có thể cần ô chọn ngày riêng hiển thị dd/mm.
 - Chưa tạo file phụ `.impeccable/design.json` cho bảng điều khiển của skill impeccable (không bắt buộc).
 - Việc cũ còn treo: bật lại Confirm email hoặc cấu hình Custom SMTP; thử hiệu ứng trên iPhone thật.
 

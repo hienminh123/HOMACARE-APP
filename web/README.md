@@ -14,7 +14,7 @@ npm --prefix web run build        # xuất ra web/dist
 npm --prefix web run preview      # phục vụ web/dist để kiểm tra bản build
 ```
 
-Chế độ `dev:fixture` (`astro dev --mode fixture`) thay client Supabase bằng `src/lib/fixture.ts`: dữ liệu minh họa nằm trong sessionStorage của trình duyệt. Đăng nhập bằng email bắt đầu bằng `family`, `caregiver` hoặc `coordinator` (ví dụ `caregiver@example.invalid`) với mật khẩu bất kỳ. Bản build thật không chứa file này.
+Chế độ `dev:fixture` (`astro dev --mode fixture`) thay client Supabase bằng `src/lib/fixture.ts`: dữ liệu minh họa nằm trong sessionStorage của trình duyệt. Đăng nhập bằng email bắt đầu bằng `family`, `caregiver` hoặc `coordinator` (ví dụ `caregiver@example.invalid`) với mật khẩu bất kỳ; email bắt đầu bằng `family-new` là tài khoản gia đình chưa có người thân (thử luồng bắt đầu, ví dụ `/app/gia-dinh/?booking=1`). Bản build thật không chứa file này.
 
 Lưu ý: chạy `dev` (không fixture) thì đăng ký, đặt ca… ghi vào Supabase thật như `preview/`.
 
