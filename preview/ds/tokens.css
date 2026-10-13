@@ -1,0 +1,335 @@
+/* ==========================================================================
+   HomaCare Design Tokens · v0.1 (bản nháp chờ duyệt)
+   CSS thuần, không phụ thuộc framework. Dùng được cho trang tĩnh hiện tại
+   (<link rel="stylesheet" href="ds/tokens.css">) và cho Astro sau này
+   (import "../styles/tokens.css").
+
+   Hai tầng:
+   1. Primitive  — dải màu, thang số. KHÔNG dùng trực tiếp trong component.
+   2. Semantic   — vai trò (--color-action, --status-pending-bg…). Component
+                   chỉ đọc tầng này, để đổi giao diện chỉ cần đổi một chỗ.
+   ========================================================================== */
+
+:root {
+  /* ---------- 1. PRIMITIVE · màu ------------------------------------------
+     Dải 50→950 dựng theo OKLCH, neo vào 5 màu thương hiệu (đánh dấu ★). */
+
+  /* Teal — màu chính, hành động, thương hiệu "Homa" */
+  --teal-50:  #EEFAF8;
+  --teal-100: #DFF3F0;
+  --teal-200: #C5E6E1;
+  --teal-300: #A1D3CC;
+  --teal-400: #76BCB2;
+  --teal-500: #4AA096;
+  --teal-600: #22847A;
+  --teal-700: #016860;
+  --teal-800: #0F4C46; /* ★ Teal */
+  --teal-900: #023631;
+  --teal-950: #002421;
+
+  /* Apricot — điểm nhấn ấm, thương hiệu "Care". Không dùng làm chữ dưới 600. */
+  --apricot-50:  #FEF4F1;
+  --apricot-100: #FEE9E1;
+  --apricot-200: #FFD3C4;
+  --apricot-300: #FBB49B;
+  --apricot-400: #F28C68; /* ★ Apricot */
+  --apricot-500: #D76C46;
+  --apricot-600: #B94D23;
+  --apricot-700: #983405;
+  --apricot-800: #742400;
+  --apricot-900: #521801;
+  --apricot-950: #390E00;
+
+  /* Sand — nền ấm */
+  --sand-50:  #FEF9F4;
+  --sand-100: #F6EDE3; /* ★ Sand */
+  --sand-200: #EEE1D2;
+  --sand-300: #DECEBC;
+  --sand-400: #C6B4A0;
+  --sand-500: #A69582;
+  --sand-600: #867867;
+  --sand-700: #675B4E;
+  --sand-800: #4D4338;
+  --sand-900: #362F27;
+  --sand-950: #241E18;
+
+  /* Sky — nền mát, thông tin phụ */
+  --sky-50:  #F2F8FC;
+  --sky-100: #E6EFF6;
+  --sky-200: #C9D8E3; /* ★ Sky */
+  --sky-300: #B4CBDC;
+  --sky-400: #90B1C9;
+  --sky-500: #6D95B0;
+  --sky-600: #4E7895;
+  --sky-700: #375E79;
+  --sky-800: #25465D;
+  --sky-900: #143143;
+  --sky-950: #0A202F;
+
+  /* Navy — chữ chính, nền tối */
+  --navy-50:  #F3F7FD;
+  --navy-100: #E8EEF8;
+  --navy-200: #D5DFEE;
+  --navy-300: #B9C8DF;
+  --navy-400: #9AAECC;
+  --navy-500: #7A90B3;
+  --navy-600: #5E7496;
+  --navy-700: #465A79;
+  --navy-800: #32435D;
+  --navy-900: #1B2A41; /* ★ Navy */
+  --navy-950: #141E2E;
+
+  /* Xám — phương án A "Mực": ngả xanh navy, sạch và mát.
+     Phương án B "Đất" (ngả ấm) nằm ở khối [data-neutral="warm"] bên dưới. */
+  --gray-50:  #F7F9FC;
+  --gray-100: #F0F3F7;
+  --gray-200: #E3E6EC;
+  --gray-300: #D0D5DD;
+  --gray-400: #AAB2BD;
+  --gray-500: #7D8795;
+  --gray-600: #626D7C;
+  --gray-700: #495566;
+  --gray-800: #344053;
+  --gray-900: #1D2A3E;
+  --gray-950: #0E1928;
+
+  /* Màu trạng thái và phản hồi */
+  --amber-50:  #FEF5EB;
+  --amber-100: #FDEBD4;
+  --amber-200: #F7D8B3;
+  --amber-500: #C27F05;
+  --amber-600: #9D6603;
+  --amber-700: #7B4F02;
+
+  --blue-50:  #F1F8FE;
+  --blue-100: #E2F0FE;
+  --blue-200: #C8E1FA;
+  --blue-500: #5894CC;
+  --blue-600: #3877B0;
+  --blue-700: #1F5D91;
+
+  --green-50:  #EFFAF1;
+  --green-100: #E0F4E5;
+  --green-200: #C7E8CF;
+  --green-500: #53A36C;
+  --green-600: #2F874E;
+  --green-700: #136B38;
+
+  --red-50:  #FFF4F3;
+  --red-100: #FEE8E6;
+  --red-200: #FED2CE;
+  --red-500: #E15F5C;
+  --red-600: #C33D3F;
+  --red-700: #A02228;
+
+  --white: #FFFFFF;
+
+  /* ---------- 1. PRIMITIVE · chữ ------------------------------------------ */
+  --font-display: 'Cal Sans', 'Be Vietnam Pro', system-ui, sans-serif;
+  --font-body: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Mono', 'SF Mono', Consolas, monospace;
+
+  /* 8 cỡ chữ. Cỡ ≤ 14px chỉ cho nhãn, metadata; nội dung đọc tối thiểu 16px. */
+  --text-xs:   0.75rem;   /* 12 · nhãn nhỏ, chú thích hình */
+  --text-sm:   0.875rem;  /* 14 · metadata, chữ phụ, nhãn nút nhỏ */
+  --text-base: 1rem;      /* 16 · nội dung, ô nhập */
+  --text-md:   1.125rem;  /* 18 · đoạn dẫn, nội dung nhật ký */
+  --text-lg:   1.25rem;   /* 20 · tiêu đề thẻ */
+  --text-xl:   1.5rem;    /* 24 · tiêu đề mục trong app */
+  --text-2xl:  2rem;      /* 32 · tiêu đề trang */
+  --text-3xl:  clamp(2.25rem, 1.6rem + 2.8vw, 3.5rem); /* 36→56 · tiêu đề lớn trang giới thiệu */
+
+  /* Khoảng dòng: chữ tiếng Việt có dấu chồng nên rộng hơn tiếng Anh một nấc */
+  --leading-tight:  1.15;  /* tiêu đề lớn Cal Sans */
+  --leading-snug:   1.3;   /* tiêu đề nhỏ, nhãn nhiều dòng */
+  --leading-normal: 1.6;   /* nội dung */
+
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  /* Cal Sans chỉ có một độ đậm (400). Không đặt font-weight khác cho tiêu đề. */
+
+  --tracking-display: -0.01em;
+  --tracking-caps:    0.04em;
+
+  /* ---------- 1. PRIMITIVE · khoảng cách (bội số 4px) --------------------- */
+  --space-0:  0;
+  --space-1:  0.25rem;  /*  4 */
+  --space-2:  0.5rem;   /*  8 */
+  --space-3:  0.75rem;  /* 12 */
+  --space-4:  1rem;     /* 16 */
+  --space-5:  1.25rem;  /* 20 */
+  --space-6:  1.5rem;   /* 24 */
+  --space-8:  2rem;     /* 32 */
+  --space-10: 2.5rem;   /* 40 */
+  --space-12: 3rem;     /* 48 */
+  --space-16: 4rem;     /* 64 */
+  --space-20: 5rem;     /* 80 */
+  --space-24: 6rem;     /* 96 */
+
+  /* ---------- 1. PRIMITIVE · bo góc (4 mức) ------------------------------- */
+  --radius-sm:   8px;    /* chip, ô nhỏ, ảnh thu nhỏ */
+  --radius-md:   12px;   /* nút, ô nhập, thẻ con */
+  --radius-lg:   20px;   /* thẻ, sheet, modal */
+  --radius-full: 999px;  /* pill trạng thái, avatar */
+
+  /* ---------- 1. PRIMITIVE · đổ bóng (3 mức) ------------------------------
+     Luôn có độ lệch dọc + nhòe mềm, nhuộm Navy. Không dùng quầng màu. */
+  --shadow-1: 0 1px 2px rgb(27 42 65 / 0.06), 0 1px 3px rgb(27 42 65 / 0.06);
+  --shadow-2: 0 2px 4px rgb(27 42 65 / 0.04), 0 6px 16px -4px rgb(27 42 65 / 0.12);
+  --shadow-3: 0 4px 12px rgb(27 42 65 / 0.08), 0 20px 48px -12px rgb(27 42 65 / 0.24);
+
+  /* ---------- 1. PRIMITIVE · chuyển động ---------------------------------- */
+  --duration-fast:   150ms;  /* hover, nhấn, đổi màu */
+  --duration-base:   250ms;  /* mở/đóng thành phần nhỏ, toast */
+  --duration-slow:   400ms;  /* sheet, modal, chuyển bước */
+  --duration-reveal: 1100ms; /* hiện dần khi cuộn — chỉ trang giới thiệu */
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ---------- 1. PRIMITIVE · bố cục --------------------------------------- */
+  --tap-min: 44px;          /* vùng chạm tối thiểu */
+  --gutter: var(--space-4); /* lề hai bên trên điện thoại */
+  --container: 1120px;
+  --measure: 68ch;          /* độ rộng tối đa một đoạn văn */
+  --z-header: 50;
+  --z-nav: 60;
+  --z-overlay: 100;
+  --z-toast: 200;
+
+
+}
+
+/* Tầng semantic khai báo lại trong mọi vùng có data-neutral/data-canvas để
+   phép so sánh cạnh nhau trên trang design-system tính lại đúng màu. */
+:root, [data-neutral], [data-canvas] {
+  /* ==========================================================================
+     2. SEMANTIC — component chỉ dùng tầng này
+     ========================================================================== */
+
+  /* Nền và bề mặt */
+  --color-canvas:         var(--canvas-choice, var(--sand-50)); /* nền trang (đang so sánh 3 phương án) */
+  --color-surface:        var(--white);     /* thẻ, sheet, ô nhập */
+  --color-surface-sunken: var(--gray-50);   /* vùng lõm trong thẻ, hàng xen kẽ */
+  --color-surface-warm:   var(--sand-100);  /* khối nhấn ấm: lời nhắn gia đình */
+  --color-surface-cool:   var(--sky-50);    /* khối thông tin trung tính */
+  --color-surface-brand:  var(--teal-800);  /* khối nền teal (chữ trắng) */
+  --color-surface-inverse: var(--navy-900);
+
+  /* Chữ */
+  --color-text:          var(--navy-900);
+  --color-text-muted:    var(--gray-600);
+  --color-text-subtle:   var(--gray-500);  /* chỉ cho chữ ≥ 18px hoặc trang trí; không cho nội dung */
+  --color-text-on-brand: var(--white);
+  --color-text-brand:    var(--teal-800);
+  --color-text-accent:   var(--apricot-600); /* chữ màu Apricot đạt 4.5:1 */
+  --color-link:          var(--teal-700);
+
+  /* Viền */
+  --color-border:        var(--gray-200);
+  --color-border-strong: var(--gray-300);  /* viền thẻ nhấn, đường chia đậm */
+  --color-border-input:  var(--gray-500);  /* viền ô nhập, checkbox: ≥ 3:1 với nền trắng */
+  --color-placeholder:   var(--gray-600);  /* chữ gợi ý trong ô: ≥ 4.5:1 */
+  --color-divider:       var(--gray-100);
+
+  /* Hành động */
+  --color-action:            var(--teal-800);
+  --color-action-hover:      var(--teal-700);
+  --color-action-pressed:    var(--teal-900);
+  --color-action-subtle:     var(--teal-50);
+  --color-action-subtle-hover: var(--teal-100);
+  --color-on-action:         var(--white);
+  --color-accent:            var(--apricot-400); /* nền điểm nhấn: chữ đặt lên phải là Navy */
+  --color-accent-hover:      var(--apricot-300);
+  --color-on-accent:         var(--navy-900);
+  --color-accent-subtle:     var(--apricot-50);
+
+  --color-focus:    var(--teal-600);
+  --color-selection: var(--apricot-200);
+  --color-disabled-bg:   var(--gray-100);
+  --color-disabled-text: var(--gray-500);
+  --color-scrim: rgb(20 30 46 / 0.48);
+
+  /* Phản hồi */
+  --color-success:        var(--green-700);
+  --color-success-subtle: var(--green-50);
+  --color-warning:        var(--amber-700);
+  --color-warning-subtle: var(--amber-50);
+  --color-danger:         var(--red-700);
+  --color-danger-hover:   var(--red-600);
+  --color-danger-subtle:  var(--red-50);
+  --color-info:           var(--blue-700);
+  --color-info-subtle:    var(--blue-50);
+
+  /* Trạng thái ca: Chờ phân công → Đã phân công → Đang chăm sóc → Hoàn thành.
+     Mỗi trạng thái có bg (nền pill), fg (chữ, ≥ 4.5:1 trên bg), dot (chấm/icon). */
+  --status-pending-bg:  var(--amber-50);
+  --status-pending-fg:  var(--amber-700);
+  --status-pending-dot: var(--amber-500);
+  --status-pending-border: var(--amber-200);
+
+  --status-assigned-bg:  var(--blue-50);
+  --status-assigned-fg:  var(--blue-700);
+  --status-assigned-dot: var(--blue-500);
+  --status-assigned-border: var(--blue-200);
+
+  --status-in-progress-bg:  var(--teal-50);
+  --status-in-progress-fg:  var(--teal-800);
+  --status-in-progress-dot: var(--teal-600);
+  --status-in-progress-border: var(--teal-200);
+
+  --status-completed-bg:  var(--green-50);
+  --status-completed-fg:  var(--green-700);
+  --status-completed-dot: var(--green-600);
+  --status-completed-border: var(--green-200);
+
+
+  /* Bóng theo vai trò */
+  --elevation-card:    var(--shadow-1);
+  --elevation-raised:  var(--shadow-2);
+  --elevation-overlay: var(--shadow-3);
+}
+
+[data-canvas="sand"]       { --canvas-choice: var(--sand-100); }
+[data-canvas="sand-light"] { --canvas-choice: var(--sand-50); }
+[data-canvas="white"]      { --canvas-choice: var(--white); }
+
+/* Phương án xám A "Mực" khai báo lại để vùng so sánh lồng nhau không thừa hưởng B */
+[data-neutral="ink"] {
+  --gray-50:  #F7F9FC;
+  --gray-100: #F0F3F7;
+  --gray-200: #E3E6EC;
+  --gray-300: #D0D5DD;
+  --gray-400: #AAB2BD;
+  --gray-500: #7D8795;
+  --gray-600: #626D7C;
+  --gray-700: #495566;
+  --gray-800: #344053;
+  --gray-900: #1D2A3E;
+  --gray-950: #0E1928;
+}
+
+/* Phương án xám B "Đất": ngả ấm, hòa với nền Sand. Bật bằng
+   <html data-neutral="warm">. Sau khi duyệt sẽ giữ một phương án. */
+[data-neutral="warm"] {
+  --gray-50:  #FBF9F6;
+  --gray-100: #F5F2EE;
+  --gray-200: #EAE5E1;
+  --gray-300: #DAD4CE;
+  --gray-400: #B7B0A9;
+  --gray-500: #8C857E;
+  --gray-600: #716A64;
+  --gray-700: #59534D;
+  --gray-800: #443F39;
+  --gray-900: #302A25;
+  --gray-950: #1D1915;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+    --duration-reveal: 0ms;
+  }
+}

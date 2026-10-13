@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="vi" data-neutral="ink" data-canvas="sand-light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>HomaCare · Hệ thống thiết kế</title>
+<link rel="icon" href="assets/app-icon-h.png">
+<link rel="preload" href="assets/CalSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
+<!-- Chỉ để so sánh. Font được chọn sẽ tự lưu trữ trong assets/ như Cal Sans. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Lexend:wght@400;500;600&family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,600&display=swap">
+<link rel="stylesheet" href="ds/tokens.css">
+<link rel="stylesheet" href="ds/base.css">
+<style>
+/* ---------- Font đang so sánh ---------- */
+[data-font="bvp"]    { --font-body: 'Be Vietnam Pro', system-ui, sans-serif; }
+[data-font="lexend"] { --font-body: 'Lexend', system-ui, sans-serif; }
+[data-font="nunito"] { --font-body: 'Nunito Sans', system-ui, sans-serif; }
+.f-bvp    { font-family: 'Be Vietnam Pro', system-ui, sans-serif; }
+.f-lexend { font-family: 'Lexend', system-ui, sans-serif; }
+.f-nunito { font-family: 'Nunito Sans', system-ui, sans-serif; }
+
+/* ---------- Khung trang tài liệu (tiền tố ds-) ---------- */
+body { padding-bottom: 120px; }
+.ds-wrap { width: min(100% - 2 * var(--gutter), var(--container)); margin-inline: auto; }
+
+.ds-top {
+  position: sticky; top: 0; z-index: var(--z-header);
+  background: color-mix(in srgb, var(--color-canvas) 88%, transparent);
+  backdrop-filter: saturate(1.4) blur(10px);
+  -webkit-backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--color-border);
+}
+.ds-top .ds-wrap { display: flex; align-items: center; gap: var(--space-4); min-height: 60px; }
+.ds-brand { display: flex; align-items: center; gap: var(--space-2); text-decoration: none; color: inherit; }
+.ds-brand img { width: 32px; height: 32px; border-radius: var(--radius-sm); }
+.ds-word { font-family: var(--font-display); font-size: var(--text-lg); letter-spacing: var(--tracking-display); line-height: 1; }
+.ds-word b { font-weight: 400; color: var(--teal-800); }
+.ds-word i { font-style: normal; color: var(--apricot-500); }
+.ds-top nav { margin-left: auto; display: flex; gap: var(--space-1); }
+.ds-top nav a {
+  color: var(--color-text-muted); text-decoration: none; font-size: var(--text-sm); font-weight: var(--weight-medium);
+  padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm);
+  transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+}
+.ds-top nav a:hover { background: var(--color-action-subtle); color: var(--color-text-brand); }
+@media (max-width: 760px) { .ds-top nav { display: none; } }
+
+.ds-hero { padding: var(--space-16) 0 var(--space-10); }
+.ds-hero h1 { font-size: var(--text-3xl); max-width: 16ch; }
+.ds-hero h1 span { color: var(--color-text-brand); }
+.ds-lead { font-size: var(--text-md); color: var(--color-text-muted); max-width: 60ch; margin-top: var(--space-5); }
+.ds-meta { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); margin-top: var(--space-6); font-size: var(--text-sm); color: var(--color-text-muted); }
+.ds-meta strong { color: var(--color-text); font-weight: var(--weight-semibold); }
+
+.ds-section { padding: var(--space-16) 0; border-top: 1px solid var(--color-border); }
+.ds-section > .ds-wrap > h2 { font-size: var(--text-2xl); }
+.ds-section > .ds-wrap > .ds-intro { color: var(--color-text-muted); max-width: 62ch; margin-top: var(--space-3); }
+.ds-sub { margin-top: var(--space-12); }
+.ds-sub > h3 { font-size: var(--text-xl); }
+.ds-sub > p { color: var(--color-text-muted); max-width: 62ch; margin-top: var(--space-2); }
+.ds-block { margin-top: var(--space-6); }
+
+.ds-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); box-shadow: var(--elevation-card);
+}
+.ds-note { font-size: var(--text-sm); color: var(--color-text-muted); }
+code, .ds-code {
+  font-family: var(--font-mono); font-size: 0.84em;
+  background: var(--color-surface-sunken); border: 1px solid var(--color-divider);
+  padding: 0.1em 0.4em; border-radius: 6px; color: var(--gray-800);
+}
+
+/* ---------- Thanh chọn (dock) ---------- */
+.ds-dock {
+  position: fixed; inset: auto 0 0 0; z-index: var(--z-nav);
+  padding: var(--space-3) var(--gutter) calc(var(--space-3) + env(safe-area-inset-bottom));
+  background: var(--color-surface-inverse); color: var(--white);
+  box-shadow: 0 -8px 32px -8px rgb(20 30 46 / 0.35);
+}
+.ds-dock-inner { max-width: var(--container); margin: 0 auto; display: flex; gap: var(--space-5); align-items: center; overflow-x: auto; scrollbar-width: none; }
+.ds-dock-inner::-webkit-scrollbar { display: none; }
+.ds-dock-title { flex: none; font-family: var(--font-display); font-size: var(--text-md); line-height: 1.2; }
+.ds-dock-title small { display: block; font-family: var(--font-body); font-size: var(--text-xs); color: var(--navy-300); letter-spacing: 0; }
+.ds-group { flex: none; display: flex; align-items: center; gap: var(--space-2); }
+.ds-group > span { font-size: var(--text-xs); color: var(--navy-300); font-weight: var(--weight-medium); white-space: nowrap; }
+.ds-seg { display: flex; background: rgb(255 255 255 / 0.08); border-radius: var(--radius-md); padding: 3px; }
+.ds-seg button {
+  min-height: 38px; padding: 0 var(--space-3); border: 0; border-radius: 9px; background: transparent; color: var(--navy-100);
+  font-size: var(--text-sm); font-weight: var(--weight-medium); cursor: pointer; white-space: nowrap;
+  transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+}
+.ds-seg button:hover { background: rgb(255 255 255 / 0.1); }
+.ds-seg button[aria-pressed="true"] { background: var(--white); color: var(--navy-900); }
+.ds-seg button:focus-visible { outline-color: var(--apricot-300); }
+.ds-copy {
+  flex: none; margin-left: auto; min-height: var(--tap-min); padding: 0 var(--space-4); border: 0; border-radius: var(--radius-md);
+  background: var(--color-accent); color: var(--color-on-accent); font-weight: var(--weight-semibold); font-size: var(--text-sm); cursor: pointer;
+}
+.ds-copy:hover { background: var(--color-accent-hover); }
+.ds-dock-toggle { display: none; }
+@media (max-width: 1180px) {
+  .ds-dock-inner { flex-wrap: wrap; overflow: visible; gap: var(--space-3); }
+  .ds-dock-title { flex: 1; min-width: 0; }
+  .ds-dock-toggle { display: inline-flex; align-items: center; flex: none; min-height: var(--tap-min); padding: 0 var(--space-4); border-radius: var(--radius-md); border: 1px solid rgb(255 255 255 / 0.24); background: transparent; color: var(--white); font-weight: var(--weight-semibold); font-size: var(--text-sm); cursor: pointer; }
+  .ds-group, .ds-copy { display: none; }
+  .ds-dock[data-open] .ds-group { display: grid; gap: var(--space-1); width: 100%; }
+  .ds-dock[data-open] .ds-seg { overflow-x: auto; }
+  .ds-dock[data-open] .ds-seg button { flex: 1; min-height: var(--tap-min); }
+  .ds-dock[data-open] .ds-copy { display: block; width: 100%; margin: var(--space-1) 0 0; }
+}
+
+/* ---------- Chữ: so sánh 3 font ---------- */
+.ds-fonts { display: grid; gap: var(--space-4); grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 980px) { .ds-fonts { grid-template-columns: 1fr; } }
+.ds-font { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); position: relative; transition: box-shadow var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-out); }
+.ds-font[aria-current="true"] { border-color: var(--teal-600); box-shadow: 0 0 0 2px var(--teal-600), var(--elevation-raised); }
+.ds-font-head { display: flex; justify-content: space-between; align-items: start; gap: var(--space-3); }
+.ds-font-name { font-size: var(--text-lg); font-weight: var(--weight-semibold); line-height: 1.2; }
+.ds-font-why { font-size: var(--text-sm); color: var(--color-text-muted); margin-top: var(--space-1); }
+.ds-font hr { border: 0; border-top: 1px solid var(--color-divider); margin: 0; width: 100%; }
+.ds-font h3 { font-size: var(--text-xl); }
+.ds-font .t-md { font-size: var(--text-md); line-height: 1.55; }
+.ds-font .t-base { font-size: var(--text-base); }
+.ds-font .t-sm { font-size: var(--text-sm); color: var(--color-text-muted); }
+.ds-font .t-xs { font-size: var(--text-xs); color: var(--color-text-muted); font-weight: var(--weight-medium); letter-spacing: var(--tracking-caps); text-transform: uppercase; }
+.ds-font .t-num { font-variant-numeric: tabular-nums; font-size: var(--text-lg); font-weight: var(--weight-semibold); }
+.ds-font .t-weights { display: flex; gap: var(--space-4); font-size: var(--text-base); }
+.ds-pick {
+  flex: none; white-space: nowrap; min-height: var(--tap-min); padding: 0 var(--space-4); border-radius: var(--radius-md); cursor: pointer;
+  border: 1px solid var(--color-border-strong); background: var(--color-surface); color: var(--color-text); font-weight: var(--weight-semibold); font-size: var(--text-sm);
+  transition: background var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+}
+.ds-pick:hover { border-color: var(--teal-600); background: var(--color-action-subtle); }
+.ds-font[aria-current="true"] .ds-pick { background: var(--color-action); border-color: var(--color-action); color: var(--color-on-action); }
+
+/* ---------- Chữ: thang cỡ ---------- */
+.ds-scale { padding: var(--space-2) var(--space-6); }
+.ds-scale-row { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: var(--space-4); align-items: baseline; padding: var(--space-4) 0; border-bottom: 1px solid var(--color-divider); }
+.ds-scale-row:last-child { border-bottom: 0; }
+.ds-scale-row dt { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.5; }
+.ds-scale-row dt code { font-size: var(--text-xs); }
+.ds-scale-row dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 600px) { .ds-scale-row { grid-template-columns: 1fr; gap: var(--space-1); } }
+
+/* ---------- Màu ---------- */
+.ds-brand-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-3); }
+@media (max-width: 860px) { .ds-brand-row { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ds-brand-row > :first-child { grid-column: 1 / -1; } }
+.ds-brand-sw { border-radius: var(--radius-lg); padding: var(--space-5); min-height: 168px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgb(27 42 65 / 0.08); }
+.ds-brand-sw strong { font-family: var(--font-display); font-weight: 400; font-size: var(--text-xl); line-height: 1; }
+.ds-brand-sw span { font-size: var(--text-sm); display: block; }
+.ds-brand-sw .hex { font-family: var(--font-mono); font-size: var(--text-xs); opacity: 0.85; margin-top: var(--space-2); }
+
+.ds-ramps { display: grid; gap: var(--space-3); }
+.ds-ramp { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: var(--space-3); align-items: center; }
+.ds-ramp-name { font-size: var(--text-sm); font-weight: var(--weight-semibold); }
+.ds-ramp-name small { display: block; font-weight: 400; color: var(--color-text-muted); font-size: var(--text-xs); }
+.ds-chips { display: grid; grid-template-columns: repeat(11, minmax(0, 1fr)); border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgb(27 42 65 / 0.06); }
+.ds-chip { min-height: 56px; padding: 6px; display: flex; flex-direction: column; justify-content: flex-end; font-size: 10px; line-height: 1.25; font-variant-numeric: tabular-nums; }
+.ds-chip b { font-weight: var(--weight-semibold); font-size: 11px; }
+.ds-chip.anchor b::after { content: " ★"; }
+@media (max-width: 720px) {
+  .ds-ramp { grid-template-columns: 1fr; gap: var(--space-1); }
+  .ds-chips { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .ds-chip { min-height: 48px; }
+}
+
+.ds-compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+.ds-compare.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 860px) { .ds-compare, .ds-compare.three { grid-template-columns: 1fr; } }
+.ds-opt { border-radius: var(--radius-lg); border: 1px solid var(--color-border); overflow: hidden; background: var(--color-canvas); transition: box-shadow var(--duration-base) var(--ease-out); }
+.ds-opt[aria-current="true"] { box-shadow: 0 0 0 2px var(--teal-600), var(--elevation-raised); border-color: var(--teal-600); }
+.ds-opt-head { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); padding: var(--space-4) var(--space-5); background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
+.ds-opt-head strong { font-weight: var(--weight-semibold); }
+.ds-opt-head small { display: block; color: var(--color-text-muted); font-size: var(--text-sm); }
+.ds-opt-body { padding: var(--space-5); display: grid; gap: var(--space-4); }
+.ds-grays { display: grid; grid-template-columns: repeat(11, minmax(0, 1fr)); border-radius: var(--radius-sm); overflow: hidden; }
+.ds-grays i { display: block; height: 28px; }
+
+/* Mẫu UI nhỏ trong phần so sánh */
+.mini { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4); box-shadow: var(--elevation-card); }
+.mini + .mini { margin-top: 0; }
+.mini-title { font-family: var(--font-display); font-size: var(--text-lg); line-height: 1.25; }
+.mini-sub { color: var(--color-text-muted); font-size: var(--text-sm); margin-top: 2px; }
+.mini-row { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); padding-top: var(--space-3); margin-top: var(--space-3); border-top: 1px solid var(--color-divider); font-size: var(--text-sm); }
+.mini-input { margin-top: var(--space-3); border: 1px solid var(--color-border-input); border-radius: var(--radius-md); min-height: var(--tap-min); padding: 0 var(--space-3); display: flex; align-items: center; color: var(--color-placeholder); font-size: var(--text-base); background: var(--color-surface); }
+
+.ds-tokens { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+.ds-tokens th { text-align: left; font-weight: var(--weight-semibold); color: var(--color-text-muted); font-size: var(--text-xs); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-border); }
+.ds-tokens td { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-divider); vertical-align: middle; }
+.ds-tokens tr:last-child td { border-bottom: 0; }
+.ds-tokens .sw { width: 28px; height: 28px; border-radius: var(--radius-sm); border: 1px solid rgb(27 42 65 / 0.1); }
+.ds-tokens .cr { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ds-pass { color: var(--color-success); font-weight: var(--weight-semibold); }
+.ds-fail { color: var(--color-danger); font-weight: var(--weight-semibold); }
+.ds-table-scroll { overflow-x: auto; }
+@media (max-width: 640px) { .ds-tokens .use { display: none; } }
+
+/* ---------- Pill trạng thái (bản nháp; thành component ở bước sau) ---------- */
+.pill { display: inline-flex; align-items: center; gap: 6px; min-height: 28px; padding: 0 var(--space-3) 0 var(--space-2); border-radius: var(--radius-full); font-size: var(--text-sm); font-weight: var(--weight-medium); white-space: nowrap; border: 1px solid; line-height: 1; }
+.pill svg { width: 16px; height: 16px; flex: none; }
+.pill[data-status="pending"]     { background: var(--status-pending-bg); color: var(--status-pending-fg); border-color: var(--status-pending-border); }
+.pill[data-status="assigned"]    { background: var(--status-assigned-bg); color: var(--status-assigned-fg); border-color: var(--status-assigned-border); }
+.pill[data-status="in_progress"] { background: var(--status-in-progress-bg); color: var(--status-in-progress-fg); border-color: var(--status-in-progress-border); }
+.pill[data-status="completed"]   { background: var(--status-completed-bg); color: var(--status-completed-fg); border-color: var(--status-completed-border); }
+.pill .live { width: 8px; height: 8px; margin: 0 4px; border-radius: 50%; background: var(--status-in-progress-dot); box-shadow: 0 0 0 0 var(--status-in-progress-dot); animation: live 2.4s var(--ease-out) infinite; }
+@keyframes live { 0% { box-shadow: 0 0 0 0 rgb(34 132 122 / 0.45); } 70%, 100% { box-shadow: 0 0 0 7px rgb(34 132 122 / 0); } }
+.ds-pills { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+.ds-arrow { color: var(--color-text-subtle); width: 18px; height: 18px; }
+
+.ds-feedback { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-3); }
+@media (max-width: 860px) { .ds-feedback { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.fb { border-radius: var(--radius-md); padding: var(--space-4); font-size: var(--text-sm); display: flex; gap: var(--space-3); align-items: start; }
+.fb svg { width: 20px; height: 20px; flex: none; margin-top: 1px; }
+.fb strong { display: block; font-weight: var(--weight-semibold); }
+
+/* ---------- Khoảng cách, bo góc, bóng, chuyển động ---------- */
+.ds-spaces { display: grid; gap: var(--space-2); }
+.ds-space { display: grid; grid-template-columns: 120px 56px minmax(0, 1fr); gap: var(--space-3); align-items: center; font-size: var(--text-sm); }
+.ds-space code { font-size: var(--text-xs); justify-self: start; }
+.ds-space span { color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+.ds-space i { display: block; height: 16px; background: var(--teal-300); border-radius: 4px; }
+.ds-trio { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); }
+.ds-trio.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 760px) { .ds-trio, .ds-trio.three { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.ds-radius { aspect-ratio: 4 / 3; background: var(--color-action-subtle); border: 1px solid var(--teal-200); display: flex; flex-direction: column; justify-content: flex-end; padding: var(--space-4); font-size: var(--text-sm); }
+.ds-radius strong, .ds-shadow strong { font-weight: var(--weight-semibold); display: block; }
+.ds-radius span, .ds-shadow span { color: var(--color-text-muted); font-size: var(--text-xs); }
+.ds-shadow { background: var(--color-surface); border-radius: var(--radius-lg); padding: var(--space-6) var(--space-5); min-height: 140px; display: flex; flex-direction: column; justify-content: flex-end; font-size: var(--text-sm); }
+.ds-motion { display: grid; gap: var(--space-3); }
+.ds-motion-row { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: var(--space-4); align-items: center; font-size: var(--text-sm); }
+.ds-motion-row span { color: var(--color-text-muted); font-size: var(--text-xs); display: block; }
+.ds-track { position: relative; height: 40px; background: var(--color-surface-sunken); border-radius: var(--radius-full); border: 1px solid var(--color-divider); }
+.ds-ball { position: absolute; top: 5px; left: 5px; width: 28px; height: 28px; border-radius: 50%; background: var(--color-accent); box-shadow: var(--shadow-1); transition-property: left; transition-timing-function: var(--ease-out); }
+.ds-track.go .ds-ball { left: calc(100% - 33px); }
+@media (max-width: 600px) { .ds-motion-row { grid-template-columns: 1fr; gap: var(--space-2); } .ds-space { grid-template-columns: 96px 48px minmax(0,1fr); } }
+.ds-btn-ghost { min-height: var(--tap-min); padding: 0 var(--space-4); border-radius: var(--radius-md); border: 1px solid var(--color-border-strong); background: var(--color-surface); font-weight: var(--weight-semibold); font-size: var(--text-sm); cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-2); }
+.ds-btn-ghost:hover { border-color: var(--teal-600); background: var(--color-action-subtle); }
+.ds-btn-ghost svg { width: 18px; height: 18px; }
+
+/* ---------- Ngữ cảnh: điện thoại ---------- */
+.ds-context { display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: var(--space-10); align-items: start; }
+@media (max-width: 1080px) { .ds-context { grid-template-columns: 1fr; justify-items: center; } }
+.phone {
+  width: 100%; max-width: 390px; border-radius: 44px; padding: 10px; background: var(--navy-950);
+  box-shadow: var(--shadow-3);
+}
+.screen { border-radius: 35px; overflow: hidden; background: var(--color-canvas); height: 780px; display: flex; flex-direction: column; position: relative; }
+.scr-body { flex: 1; overflow-y: auto; padding: var(--space-5) var(--space-4) var(--space-6); scrollbar-width: none; }
+.scr-body::-webkit-scrollbar { display: none; }
+.scr-head { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-6) var(--space-4) var(--space-2); }
+.scr-head .who { min-width: 0; }
+.scr-head h3 { font-size: var(--text-xl); line-height: 1.2; }
+.scr-head p { font-size: var(--text-sm); color: var(--color-text-muted); }
+.icon-btn { margin-left: auto; width: var(--tap-min); height: var(--tap-min); flex: none; border-radius: var(--radius-full); border: 1px solid var(--color-border); background: var(--color-surface); display: grid; place-items: center; color: var(--color-text); cursor: pointer; }
+.icon-btn svg { width: 20px; height: 20px; }
+.av { width: 44px; height: 44px; border-radius: var(--radius-full); display: grid; place-items: center; flex: none; font-weight: var(--weight-semibold); font-size: var(--text-sm); background: var(--apricot-100); color: var(--apricot-700); }
+.av.teal { background: var(--teal-100); color: var(--teal-800); }
+.av.sm { width: 36px; height: 36px; font-size: var(--text-xs); }
+
+.card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--elevation-card); padding: var(--space-5); }
+.card + .card { margin-top: var(--space-4); }
+.card-top { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); }
+.card-label { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text-muted); }
+.when { margin-top: var(--space-3); }
+.when strong { font-family: var(--font-display); font-weight: 400; font-size: var(--text-xl); line-height: 1.2; display: block; }
+.when span { color: var(--color-text-muted); font-size: var(--text-sm); }
+
+.tl { list-style: none; padding: 0; margin: var(--space-5) 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); position: relative; }
+.tl li { position: relative; display: grid; justify-items: center; gap: var(--space-2); text-align: center; font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.3; }
+.tl li::before { content: ""; position: absolute; top: 11px; left: -50%; width: 100%; height: 2px; background: var(--color-border); z-index: 0; }
+.tl li:first-child::before { display: none; }
+.tl li.done::before, .tl li.now::before { background: var(--teal-600); }
+.tl .node { position: relative; z-index: 1; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--color-surface); border: 2px solid var(--color-border-strong); }
+.tl .node svg { width: 14px; height: 14px; }
+.tl li.done .node { background: var(--teal-600); border-color: var(--teal-600); color: var(--white); }
+.tl li.now .node { border-color: var(--teal-600); box-shadow: 0 0 0 4px var(--teal-100); }
+.tl li.now .node::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--teal-600); }
+.tl li.now { color: var(--color-text); font-weight: var(--weight-semibold); }
+
+.person { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-5); padding: var(--space-3); border-radius: var(--radius-md); background: var(--color-surface-sunken); }
+.person strong { display: block; font-weight: var(--weight-semibold); font-size: var(--text-base); line-height: 1.3; }
+.person span { font-size: var(--text-sm); color: var(--color-text-muted); }
+
+.btn { min-height: var(--tap-min); padding: 0 var(--space-5); border-radius: var(--radius-md); border: 1px solid transparent; font-weight: var(--weight-semibold); font-size: var(--text-base); display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); cursor: pointer; text-decoration: none; transition: background var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out); }
+.btn svg { width: 20px; height: 20px; }
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--color-action); color: var(--color-on-action); }
+.btn-primary:hover { background: var(--color-action-hover); }
+.btn-quiet { background: var(--color-action-subtle); color: var(--color-text-brand); }
+.btn-quiet:hover { background: var(--color-action-subtle-hover); }
+.btn-block { width: 100%; }
+.card .btn-block { margin-top: var(--space-4); }
+
+.log-acts { list-style: none; margin: var(--space-4) 0 0; padding: 0; display: grid; gap: var(--space-2); }
+.log-acts li { display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-base); }
+.log-acts .ic { width: 32px; height: 32px; border-radius: var(--radius-sm); background: var(--color-success-subtle); color: var(--color-success); display: grid; place-items: center; flex: none; }
+.log-acts .ic svg { width: 18px; height: 18px; }
+.log-note { margin-top: var(--space-4); padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-surface-warm); font-size: var(--text-base); line-height: var(--leading-normal); }
+.log-note footer { margin-top: var(--space-2); font-size: var(--text-sm); color: var(--sand-700); }
+.stars { display: flex; gap: var(--space-1); margin-top: var(--space-4); align-items: center; }
+.stars button { width: var(--tap-min); height: var(--tap-min); border: 0; background: none; padding: 0; display: grid; place-items: center; color: var(--gray-300); cursor: pointer; border-radius: var(--radius-sm); }
+.stars button svg { width: 28px; height: 28px; }
+.stars button.on { color: var(--apricot-400); }
+
+.bnav { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--color-surface); border-top: 1px solid var(--color-border); padding: var(--space-1) var(--space-2) var(--space-5); }
+.bnav a { min-height: 56px; display: grid; justify-items: center; align-content: center; gap: 2px; font-size: var(--text-xs); font-weight: var(--weight-medium); color: var(--color-text-muted); text-decoration: none; border-radius: var(--radius-md); }
+.bnav a svg { width: 24px; height: 24px; }
+.bnav a[aria-current="page"] { color: var(--color-text-brand); }
+.bnav a[aria-current="page"] svg { stroke-width: 2.25; }
+
+.demo-flag { font-size: var(--text-xs); color: var(--color-text-muted); text-align: center; margin-top: var(--space-3); }
+
+/* Bảng điều phối */
+.queue { overflow: hidden; container: queue / inline-size; }
+.queue-head { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); padding: var(--space-5) var(--space-6); border-bottom: 1px solid var(--color-border); flex-wrap: wrap; }
+.queue-head h3 { font-size: var(--text-xl); }
+.tabs { display: flex; gap: var(--space-1); padding: 3px; background: var(--color-surface-sunken); border-radius: var(--radius-md); border: 1px solid var(--color-divider); overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs button { min-height: 36px; padding: 0 var(--space-3); border: 0; background: none; border-radius: 9px; font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text-muted); cursor: pointer; white-space: nowrap; }
+.tabs button[aria-selected="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-1); }
+.tabs .count { font-variant-numeric: tabular-nums; color: var(--color-text-muted); margin-left: 4px; }
+.q-row { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 168px 104px; gap: var(--space-4); align-items: center; padding: var(--space-4) var(--space-6); border-bottom: 1px solid var(--color-divider); }
+.q-row:last-child { border-bottom: 0; }
+.q-row:hover { background: var(--color-surface-sunken); }
+.q-row > .pill { justify-self: start; }
+.q-row > .btn { justify-self: end; }
+.q-who { display: flex; gap: var(--space-3); align-items: center; min-width: 0; }
+.q-who strong { display: block; font-weight: var(--weight-semibold); line-height: 1.3; }
+.q-who span, .q-when span { font-size: var(--text-sm); color: var(--color-text-muted); }
+.q-when { font-variant-numeric: tabular-nums; }
+.q-when strong { font-weight: var(--weight-medium); display: block; line-height: 1.3; }
+.btn-sm { min-height: 36px; padding: 0 var(--space-3); font-size: var(--text-sm); }
+@container queue (max-width: 640px) {
+  .q-row { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "who who" "when when" "pill btn"; padding: var(--space-4); row-gap: var(--space-2); }
+  .q-who { grid-area: who; }
+  .q-when { grid-area: when; padding-left: calc(36px + var(--space-3)); }
+  .q-when strong, .q-when span { display: inline; }
+  .q-when span::before { content: " · "; }
+  .q-row .pill { grid-area: pill; justify-self: start; margin-left: calc(36px + var(--space-3)); }
+  .q-row .btn { grid-area: btn; justify-self: end; }
+  .queue-head { padding: var(--space-4); }
+}
+.ds-context-side { display: grid; gap: var(--space-6); width: 100%; min-width: 0; }
+.ds-checklist { padding: var(--space-6); }
+.ds-checklist h3 { font-size: var(--text-lg); }
+.ds-checklist ul { margin: var(--space-3) 0 0; padding-left: 1.2em; color: var(--color-text-muted); }
+.ds-checklist li + li { margin-top: var(--space-2); }
+
+.ds-foot { padding: var(--space-12) 0; color: var(--color-text-muted); font-size: var(--text-sm); border-top: 1px solid var(--color-border); }
+
+.ds-toast { position: fixed; left: 50%; bottom: 96px; transform: translate(-50%, 12px); opacity: 0; pointer-events: none; z-index: var(--z-toast); background: var(--navy-900); color: var(--white); padding: var(--space-3) var(--space-5); border-radius: var(--radius-md); font-size: var(--text-sm); box-shadow: var(--shadow-3); transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out); }
+.ds-toast.show { opacity: 1; transform: translate(-50%, 0); }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.8-4.9"/></symbol>
+    <symbol id="i-hourglass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3.5h11M6.5 20.5h11M7.5 3.5c0 4.5 4.5 5.5 4.5 8.5s-4.5 4-4.5 8.5M16.5 3.5c0 4.5-4.5 5.5-4.5 8.5s4.5 4 4.5 8.5"/></symbol>
+    <symbol id="i-user-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9.5" cy="8" r="3.75"/><path d="M3 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M15.5 11l2 2 4-4"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.5L12 3.5l8.5 7V19a1.5 1.5 0 0 1-1.5 1.5h-4v-6h-6v6H5A1.5 1.5 0 0 1 3.5 19z"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 4.5A1.5 1.5 0 0 1 7 3h12v15H7a1.5 1.5 0 0 0-1.5 1.5v0A1.5 1.5 0 0 0 7 21h12"/><path d="M5.5 4.5v15M9.5 7.5h6M9.5 11h4"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15z"/><path d="M10 21h4"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></symbol>
+    <symbol id="i-utensils" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v6a2.5 2.5 0 0 0 5 0V3M7.5 3v18M17.5 21V3c-2.2 1-3.5 3.6-3.5 7v3.5h3.5"/></symbol>
+    <symbol id="i-walk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="4.5" r="1.75"/><path d="M9.5 21l2.5-6.5 3 3V21M7.5 11.5l3-3h3l2 3 2.5 1M12.5 8.5l-1 6"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.5a8 8 0 0 1-11.7 7.1L3.5 20l1.4-4.6A8 8 0 1 1 20.5 11.5z"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v5.5c0 4.7-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.8-7.5-9.5V6z"/><path d="M9 12l2.2 2.2L15.5 10"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.1"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 4.2L2.8 17.5A2 2 0 0 0 4.5 20.5h15a2 2 0 0 0 1.7-3L13.7 4.2a2 2 0 0 0-3.4 0z"/><path d="M12 9.5v4.5M12 17.2v.1"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z"/></symbol>
+  </defs>
+</svg>
+
+<header class="ds-top">
+  <div class="ds-wrap">
+    <a class="ds-brand" href="index.html" aria-label="HomaCare — về trang chủ">
+      <img src="assets/app-icon-h.png" alt="" width="32" height="32">
+      <span class="ds-word"><b>Homa</b><i>Care</i></span>
+    </a>
+    <nav aria-label="Mục lục">
+      <a href="#chu">Chữ</a>
+      <a href="#mau">Màu</a>
+      <a href="#nhip">Nhịp & chiều sâu</a>
+      <a href="#ngu-canh">Trong ngữ cảnh</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="ds-hero">
+    <div class="ds-wrap">
+      <h1>Một ngôn ngữ chung cho <span>mọi màn hình</span> HomaCare.</h1>
+      <p class="ds-lead">Trang này gom 132 mã màu, 85 cỡ chữ, 37 kiểu bo góc và 40 kiểu đổ bóng hiện có về một bộ token duy nhất. Hãy chọn font nội dung, tông xám và màu nền ở thanh dưới cùng; mọi phần trên trang đổi theo ngay.</p>
+      <div class="ds-meta">
+        <span>Phiên bản <strong>0.1 · bản nháp</strong></span>
+        <span>Trạng thái <strong>chờ duyệt font và màu</strong></span>
+        <span>Token <strong>ds/tokens.css</strong></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CHỮ ===================== -->
+  <section class="ds-section" id="chu">
+    <div class="ds-wrap">
+      <h2>Chữ</h2>
+      <p class="ds-intro">Cal Sans giữ vai trò tiêu đề, đúng như nhận diện hiện tại. Nội dung cần một font khác: Cal Sans chỉ có một độ đậm, hơi chặt khi đọc đoạn dài, và các chỗ đang đặt <code>font-weight: 700</code> cho nó thực chất là chữ đậm giả do trình duyệt tự tô. Cả ba font dưới đây đều có đủ dấu tiếng Việt, mã nguồn mở và tự lưu trữ được.</p>
+
+      <div class="ds-sub">
+        <h3>So sánh ba font nội dung</h3>
+        <p>Cùng một nội dung thật của app: lịch ca, nhật ký sau ca, số liệu giờ và giá. Để ý các dấu chồng (ặ, ỗ, ữ), chữ số và chữ cỡ 14px.</p>
+        <div class="ds-fonts ds-block" id="font-cards"></div>
+      </div>
+
+      <div class="ds-sub">
+        <h3>Thang cỡ chữ</h3>
+        <p>Tám cỡ, hiển thị bằng font đang chọn. Nội dung đọc tối thiểu 16px; 12–14px chỉ dành cho nhãn và thông tin phụ.</p>
+        <dl class="ds-card ds-scale ds-block" id="type-scale"></dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MÀU ===================== -->
+  <section class="ds-section" id="mau">
+    <div class="ds-wrap">
+      <h2>Màu</h2>
+      <p class="ds-intro">Năm màu thương hiệu giữ nguyên mã gốc và được mở rộng thành dải 50–950 theo không gian màu OKLCH, để các bậc sáng tối đều nhau giữa các màu. Component chỉ đọc token ngữ nghĩa, không đọc mã màu trực tiếp.</p>
+
+      <div class="ds-sub">
+        <h3>Năm màu thương hiệu</h3>
+        <div class="ds-brand-row ds-block">
+          <div class="ds-brand-sw" style="background:var(--teal-800);color:var(--white)"><strong>Teal</strong><div><span>Hành động chính, "Homa"</span><span class="hex">#0F4C46 · teal-800</span></div></div>
+          <div class="ds-brand-sw" style="background:var(--apricot-400);color:var(--navy-900)"><strong>Apricot</strong><div><span>Điểm nhấn ấm, "Care"</span><span class="hex">#F28C68 · apricot-400</span></div></div>
+          <div class="ds-brand-sw" style="background:var(--sand-100);color:var(--navy-900)"><strong>Sand</strong><div><span>Nền ấm, lời nhắn</span><span class="hex">#F6EDE3 · sand-100</span></div></div>
+          <div class="ds-brand-sw" style="background:var(--sky-200);color:var(--navy-900)"><strong>Sky</strong><div><span>Nền mát, thông tin</span><span class="hex">#C9D8E3 · sky-200</span></div></div>
+          <div class="ds-brand-sw" style="background:var(--navy-900);color:var(--white)"><strong>Navy</strong><div><span>Chữ chính, nền tối</span><span class="hex">#1B2A41 · navy-900</span></div></div>
+        </div>
+      </div>
+
+      <div class="ds-sub">
+        <h3>Dải màu</h3>
+        <p>★ là mã gốc. Apricot ở bậc 400 chỉ đạt 2,4:1 trên nền trắng, nên khi làm chữ phải dùng từ bậc 600 trở lên; khi làm nền nút, chữ trên đó phải là Navy.</p>
+        <div class="ds-ramps ds-block" id="ramps"></div>
+      </div>
+
+      <div class="ds-sub">
+        <h3>Chọn tông xám</h3>
+        <p>Hiện code dùng lẫn ba họ xám: xám xanh slate (#64748B), xám ngả lục (#56625F) và xám thường. Cần chọn một họ. Bấm vào khung để chọn.</p>
+        <div class="ds-compare ds-block" id="neutral-compare"></div>
+      </div>
+
+      <div class="ds-sub">
+        <h3>Chọn nền trang</h3>
+        <p>Thẻ luôn là nền trắng có viền mảnh. Nền trang quyết định cảm giác chung: ấm rõ, ấm nhẹ hay trung tính.</p>
+        <div class="ds-compare three ds-block" id="canvas-compare"></div>
+      </div>
+
+      <div class="ds-sub">
+        <h3>Trạng thái ca</h3>
+        <p>Bốn trạng thái có màu riêng, nhưng luôn đi kèm icon và chữ, không chỉ dựa vào màu. Riêng "Đang chăm sóc" có chấm nhịp chậm để gia đình biết có người đang ở bên bố mẹ.</p>
+        <div class="ds-card ds-block" style="padding:var(--space-6)">
+          <div class="ds-pills">
+            <span class="pill" data-status="pending"><svg><use href="#i-hourglass"/></svg>Chờ phân công</span>
+            <svg class="ds-arrow" aria-hidden="true"><use href="#i-chevron"/></svg>
+            <span class="pill" data-status="assigned"><svg><use href="#i-user-check"/></svg>Đã phân công</span>
+            <svg class="ds-arrow" aria-hidden="true"><use href="#i-chevron"/></svg>
+            <span class="pill" data-status="in_progress"><span class="live" aria-hidden="true"></span>Đang chăm sóc</span>
+            <svg class="ds-arrow" aria-hidden="true"><use href="#i-chevron"/></svg>
+            <span class="pill" data-status="completed"><svg><use href="#i-check-circle"/></svg>Hoàn thành</span>
+          </div>
+        </div>
+        <div class="ds-feedback ds-block">
+          <div class="fb" style="background:var(--color-success-subtle);color:var(--color-success)"><svg><use href="#i-check-circle"/></svg><div><strong>Thành công</strong>Đã gửi yêu cầu đặt ca.</div></div>
+          <div class="fb" style="background:var(--color-info-subtle);color:var(--color-info)"><svg><use href="#i-info"/></svg><div><strong>Thông tin</strong>Bấm Cập nhật để tải lịch mới.</div></div>
+          <div class="fb" style="background:var(--color-warning-subtle);color:var(--color-warning)"><svg><use href="#i-alert"/></svg><div><strong>Lưu ý</strong>Ca này chưa có chuyên viên.</div></div>
+          <div class="fb" style="background:var(--color-danger-subtle);color:var(--color-danger)"><svg><use href="#i-alert"/></svg><div><strong>Lỗi</strong>Không kết nối được. Thử lại sau ít phút.</div></div>
+        </div>
+      </div>
+
+      <div class="ds-sub">
+        <h3>Token ngữ nghĩa</h3>
+        <p>Độ tương phản được đo trực tiếp trên trang với nền thực tế mà token đó nằm lên, nên thay đổi khi bạn đổi tông xám hoặc màu nền.</p>
+        <div class="ds-card ds-block ds-table-scroll">
+          <table class="ds-tokens">
+            <thead><tr><th></th><th>Token</th><th class="use">Dùng cho</th><th>Tương phản</th></tr></thead>
+            <tbody id="semantic"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== NHỊP ===================== -->
+  <section class="ds-section" id="nhip">
+    <div class="ds-wrap">
+      <h2>Nhịp và chiều sâu</h2>
+      <p class="ds-intro">Khoảng cách theo bội số 4px, 4 mức bo góc, 3 mức đổ bóng nhuộm Navy (luôn có độ lệch dọc, không dùng quầng màu) và 4 thời lượng chuyển động.</p>
+
+      <div class="ds-sub">
+        <h3>Khoảng cách</h3>
+        <div class="ds-card ds-block" style="padding:var(--space-6)"><div class="ds-spaces" id="spaces"></div></div>
+      </div>
+
+      <div class="ds-sub">
+        <h3>Bo góc</h3>
+        <div class="ds-trio ds-block">
+          <div class="ds-radius" style="border-radius:var(--radius-sm)"><strong>sm · 8px</strong><span>Chip, ảnh nhỏ, ô icon</span></div>
+          <div class="ds-radius" style="border-radius:var(--radius-md)"><strong>md · 12px</strong><span>Nút, ô nhập, khối con</span></div>
+          <div class="ds-radius" style="border-radius:var(--radius-lg)"><strong>lg · 20px</strong><span>Thẻ, sheet, modal</span></div>
+          <div class="ds-radius" style="border-radius:var(--radius-full)"><strong>full</strong><span>Pill, avatar</span></div>
+        </div>
+      </div>
+
+      <div class="ds-sub">
+        <h3>Đổ bóng</h3>
+        <div class="ds-trio three ds-block">
+          <div class="ds-shadow" style="box-shadow:var(--shadow-1)"><strong>shadow-1 · thẻ</strong><span>Tách thẻ khỏi nền, gần như phẳng</span></div>
+          <div class="ds-shadow" style="box-shadow:var(--shadow-2)"><strong>shadow-2 · nổi</strong><span>Thẻ đang chọn, menu, hover</span></div>
+          <div class="ds-shadow" style="box-shadow:var(--shadow-3)"><strong>shadow-3 · lớp phủ</strong><span>Sheet, modal, toast</span></div>
+        </div>
+      </div>
+
+      <div class="ds-sub">
+        <h3>Chuyển động</h3>
+        <p>Đường cong ease-out mặc định <code>cubic-bezier(0.22, 1, 0.36, 1)</code>: bắt đầu nhanh, dừng êm. Khi người dùng bật "giảm chuyển động", mọi thời lượng về 0.</p>
+        <div class="ds-card ds-block" style="padding:var(--space-6)">
+          <div class="ds-motion" id="motion"></div>
+          <button class="ds-btn-ghost" type="button" id="play" style="margin-top:var(--space-5)"><svg><use href="#i-play"/></svg>Chạy thử</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== NGỮ CẢNH ===================== -->
+  <section class="ds-section" id="ngu-canh">
+    <div class="ds-wrap">
+      <h2>Trong ngữ cảnh</h2>
+      <p class="ds-intro">Màn hình tổng quan của gia đình trên điện thoại và hàng đợi của điều phối viên, dựng hoàn toàn bằng token ở trên. Đây mới là bản phác để duyệt font và màu; component hoàn chỉnh sẽ làm sau khi bạn chọn.</p>
+
+      <div class="ds-context ds-block">
+        <div>
+          <div class="phone">
+            <div class="screen">
+              <div class="scr-head">
+                <span class="av" aria-hidden="true">LA</span>
+                <div class="who">
+                  <h3>Chào chị Lan Anh</h3>
+                  <p>Bác Trần Văn An · 78 tuổi · Đống Đa</p>
+                </div>
+                <button class="icon-btn" type="button" aria-label="Cập nhật"><svg><use href="#i-bell"/></svg></button>
+              </div>
+              <div class="scr-body">
+                <article class="card" aria-labelledby="next-title">
+                  <div class="card-top">
+                    <span class="card-label" id="next-title">Ca sắp tới</span>
+                    <span class="pill" data-status="assigned"><svg><use href="#i-user-check"/></svg>Đã phân công</span>
+                  </div>
+                  <div class="when">
+                    <strong>Thứ Năm, 16/10</strong>
+                    <span><time>18:00–22:00</time> · Gói Ân cần · <data value="320000">320.000đ</data></span>
+                  </div>
+                  <ol class="tl" aria-label="Tiến trình ca">
+                    <li class="done"><span class="node"><svg><use href="#i-check"/></svg></span>Chờ phân công</li>
+                    <li class="now" aria-current="step"><span class="node"></span>Đã phân công</li>
+                    <li><span class="node"></span>Đang chăm sóc</li>
+                    <li><span class="node"></span>Hoàn thành</li>
+                  </ol>
+                  <div class="person">
+                    <span class="av teal sm" aria-hidden="true">TT</span>
+                    <div><strong>Nguyễn Thanh Trúc</strong><span>Chuyên viên chăm sóc</span></div>
+                  </div>
+                  <a class="btn btn-quiet btn-block" href="#ngu-canh">Xem chi tiết ca</a>
+                </article>
+
+                <article class="card" aria-labelledby="log-title">
+                  <div class="card-top">
+                    <span class="card-label" id="log-title">Nhật ký sau ca · 09/10</span>
+                    <span class="pill" data-status="completed"><svg><use href="#i-check-circle"/></svg>Hoàn thành</span>
+                  </div>
+                  <ul class="log-acts">
+                    <li><span class="ic"><svg><use href="#i-utensils"/></svg></span>Hỗ trợ bữa tối</li>
+                    <li><span class="ic"><svg><use href="#i-walk"/></svg></span>Đồng hành vận động nhẹ</li>
+                    <li><span class="ic"><svg><use href="#i-chat"/></svg></span>Trò chuyện, nhắc lịch sinh hoạt</li>
+                    <li><span class="ic"><svg><use href="#i-shield"/></svg></span>Kiểm tra an toàn trước khi về</li>
+                  </ul>
+                  <blockquote class="log-note" style="margin-inline:0">
+                    Bác ăn hết bát cháo cá, đi bộ hai vòng sân chung cư. Bác kể chuyện hồi dạy học và dặn lần sau mang bàn cờ tướng.
+                    <footer>Chuyên viên Nguyễn Thanh Trúc ghi lúc <time>21:52</time></footer>
+                  </blockquote>
+                  <div class="stars" role="group" aria-label="Đánh giá ca">
+                    <button class="on" type="button" aria-label="1 sao"><svg><use href="#i-star"/></svg></button>
+                    <button class="on" type="button" aria-label="2 sao"><svg><use href="#i-star"/></svg></button>
+                    <button class="on" type="button" aria-label="3 sao"><svg><use href="#i-star"/></svg></button>
+                    <button class="on" type="button" aria-label="4 sao"><svg><use href="#i-star"/></svg></button>
+                    <button type="button" aria-label="5 sao"><svg><use href="#i-star"/></svg></button>
+                  </div>
+                </article>
+
+                <a class="btn btn-primary btn-block" href="#ngu-canh" style="margin-top:var(--space-5)"><svg><use href="#i-plus"/></svg>Đặt ca mới</a>
+              </div>
+              <nav class="bnav" aria-label="Điều hướng chính">
+                <a href="#ngu-canh" aria-current="page"><svg><use href="#i-home"/></svg>Tổng quan</a>
+                <a href="#ngu-canh"><svg><use href="#i-calendar"/></svg>Lịch</a>
+                <a href="#ngu-canh"><svg><use href="#i-book"/></svg>Nhật ký</a>
+                <a href="#ngu-canh"><svg><use href="#i-user"/></svg>Tài khoản</a>
+              </nav>
+            </div>
+          </div>
+          <p class="demo-flag">Tên người và nội dung nhật ký là dữ liệu minh họa.</p>
+        </div>
+
+        <div class="ds-context-side">
+          <div class="ds-card queue">
+            <div class="queue-head">
+              <h3>Yêu cầu chăm sóc</h3>
+              <div class="tabs" role="tablist" aria-label="Lọc theo trạng thái">
+                <button role="tab" aria-selected="true">Tất cả<span class="count">4</span></button>
+                <button role="tab" aria-selected="false">Chờ phân công<span class="count">1</span></button>
+                <button role="tab" aria-selected="false">Đang chăm sóc<span class="count">1</span></button>
+              </div>
+            </div>
+            <div class="q-row">
+              <div class="q-who"><span class="av sm" aria-hidden="true">TA</span><div><strong>Bác Trần Văn An</strong><span>Gia đình: Trần Lan Anh</span></div></div>
+              <div class="q-when"><strong>Thứ Sáu, 17/10</strong><span>18:00–22:00</span></div>
+              <span class="pill" data-status="pending"><svg><use href="#i-hourglass"/></svg>Chờ phân công</span>
+              <button class="btn btn-primary btn-sm" type="button">Phân công</button>
+            </div>
+            <div class="q-row">
+              <div class="q-who"><span class="av sm" aria-hidden="true">TA</span><div><strong>Bác Trần Văn An</strong><span>Chuyên viên: Nguyễn Thanh Trúc</span></div></div>
+              <div class="q-when"><strong>Thứ Năm, 16/10</strong><span>18:00–22:00</span></div>
+              <span class="pill" data-status="assigned"><svg><use href="#i-user-check"/></svg>Đã phân công</span>
+              <button class="btn btn-quiet btn-sm" type="button">Chi tiết</button>
+            </div>
+            <div class="q-row">
+              <div class="q-who"><span class="av sm" aria-hidden="true">TA</span><div><strong>Bác Trần Văn An</strong><span>Chuyên viên: Nguyễn Thanh Trúc</span></div></div>
+              <div class="q-when"><strong>Hôm nay, 13/10</strong><span>18:00–22:00</span></div>
+              <span class="pill" data-status="in_progress"><span class="live" aria-hidden="true"></span>Đang chăm sóc</span>
+              <button class="btn btn-quiet btn-sm" type="button">Chi tiết</button>
+            </div>
+            <div class="q-row">
+              <div class="q-who"><span class="av sm" aria-hidden="true">TA</span><div><strong>Bác Trần Văn An</strong><span>Chuyên viên: Nguyễn Thanh Trúc</span></div></div>
+              <div class="q-when"><strong>Thứ Năm, 09/10</strong><span>18:00–22:00</span></div>
+              <span class="pill" data-status="completed"><svg><use href="#i-check-circle"/></svg>Hoàn thành</span>
+              <button class="btn btn-quiet btn-sm" type="button">Nhật ký</button>
+            </div>
+          </div>
+          <div class="ds-card ds-checklist">
+            <h3>Khi duyệt, nên để ý</h3>
+            <ul>
+              <li>Chữ 14px (giờ, tên chuyên viên) còn dễ đọc trên điện thoại không.</li>
+              <li>Dấu chồng ở "Thứ Năm", "Đống Đa", "lịch sinh hoạt" có bị chạm dòng trên không.</li>
+              <li>Tiêu đề Cal Sans và font nội dung có hợp nhau không, hay một bên lấn át.</li>
+              <li>Nền trang và tông xám: ấm và gần gũi, hay sạch và chuyên nghiệp hơn.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="ds-foot">
+  <div class="ds-wrap">HomaCare · Hệ thống thiết kế v0.1. Trang nội bộ để duyệt, không liên kết từ trang chủ. Tên người trong trang là dữ liệu minh họa.</div>
+</footer>
+
+<div class="ds-dock" id="dock" role="region" aria-label="Lựa chọn để duyệt">
+  <div class="ds-dock-inner">
+    <div class="ds-dock-title">Chọn để duyệt<small id="dock-summary"></small></div>
+    <button class="ds-dock-toggle" type="button" id="dock-toggle" aria-expanded="false" aria-controls="dock">Đổi lựa chọn</button>
+    <div class="ds-group"><span id="g-font">Font nội dung</span><div class="ds-seg" role="group" aria-labelledby="g-font" data-key="font"></div></div>
+    <div class="ds-group"><span id="g-neutral">Tông xám</span><div class="ds-seg" role="group" aria-labelledby="g-neutral" data-key="neutral"></div></div>
+    <div class="ds-group"><span id="g-canvas">Nền trang</span><div class="ds-seg" role="group" aria-labelledby="g-canvas" data-key="canvas"></div></div>
+    <button class="ds-copy" type="button" id="copy">Chép lựa chọn</button>
+  </div>
+</div>
+<div class="ds-toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  const OPTIONS = {
+    font: [
+      { id: 'bvp', label: 'Be Vietnam Pro', cls: 'f-bvp', why: 'Do người Việt thiết kế cho tiếng Việt. Dấu chồng gọn, độ cao dòng chuẩn; trung tính, nghiêm túc mà vẫn ấm.' },
+      { id: 'lexend', label: 'Lexend', cls: 'f-lexend', why: 'Thiết kế để đọc dễ: chữ rộng, khoảng cách thoáng. Rất rõ ở cỡ nhỏ nhưng tốn chỗ ngang hơn.' },
+      { id: 'nunito', label: 'Nunito Sans', cls: 'f-nunito', why: 'Nét mềm, đầu nét tròn, cảm giác thân thiện và gần gũi. Hẹp hơn Lexend, hợp màn hình nhiều chữ.' }
+    ],
+    neutral: [
+      { id: 'ink', label: 'Mực', note: 'Xám ngả xanh Navy. Sạch, mát, tách bạch với nền cát.' },
+      { id: 'warm', label: 'Đất', note: 'Xám ngả ấm. Hòa vào nền cát, mềm và gần gũi hơn.' }
+    ],
+    canvas: [
+      { id: 'sand', label: 'Cát', note: 'Sand #F6EDE3 gốc. Ấm rõ, dấu ấn thương hiệu mạnh.' },
+      { id: 'sand-light', label: 'Cát nhạt', note: 'sand-50 #FEF9F4. Ấm nhẹ, thẻ trắng vẫn nổi.' },
+      { id: 'white', label: 'Trắng', note: 'Trung tính. Thẻ tách nền bằng viền và bóng.' }
+    ]
+  };
+  const DEFAULT = { font: 'bvp', neutral: 'ink', canvas: 'sand-light' };
+  const KEY = 'homacare-ds-choice';
+  const root = document.documentElement;
+  let state = { ...DEFAULT };
+  try { Object.assign(state, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) {}
+  for (const k in OPTIONS) if (!OPTIONS[k].some(o => o.id === state[k])) state[k] = DEFAULT[k];
+
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const label = (k, id) => OPTIONS[k].find(o => o.id === id).label;
+
+  /* ---------- Thẻ so sánh font ---------- */
+  $('#font-cards').innerHTML = OPTIONS.font.map(f => `
+    <article class="ds-card ds-font ${f.cls}" data-pick="font:${f.id}">
+      <div class="ds-font-head">
+        <div><div class="ds-font-name">${f.label}</div><p class="ds-font-why">${f.why}</p></div>
+      </div>
+      <hr>
+      <h3>Bác An đã ăn tối và đi dạo cùng chuyên viên</h3>
+      <p class="t-md">Bác ăn hết bát cháo cá, đi bộ hai vòng sân chung cư rồi ngồi uống trà. Bác kể chuyện hồi dạy học ở Hưng Yên và dặn lần sau mang bàn cờ tướng.</p>
+      <p class="t-base">Người thân ở Quận Đống Đa; ưu tiên uống trà sau bữa tối, không ăn đồ quá mặn. Nhắc bác đo huyết áp theo lịch gia đình đã ghi.</p>
+      <p class="t-sm">Chuyên viên Nguyễn Thanh Trúc · ghi lúc 21:52 · Thứ Năm, 09/10/2026</p>
+      <p class="t-xs">Nhật ký sau ca</p>
+      <p class="t-num">18:00–22:00 · 320.000đ · 0338 031 425</p>
+      <div class="t-weights"><span style="font-weight:400">Thường 400</span><span style="font-weight:500">Vừa 500</span><span style="font-weight:600">Đậm 600</span></div>
+      <button class="ds-pick" type="button" data-set="font:${f.id}">Chọn ${f.label}</button>
+    </article>`).join('');
+
+  /* ---------- Thang cỡ chữ ---------- */
+  const SCALE = [
+    ['--text-3xl', '36→56 · 1.15', 'Bạn ở xa. Sự quan tâm vẫn ở gần.', 'display'],
+    ['--text-2xl', '32 · 1.15', 'Lịch chăm sóc của bác An', 'display'],
+    ['--text-xl', '24 · 1.3', 'Ca sắp tới', 'display'],
+    ['--text-lg', '20 · 1.3', 'Nhật ký sau ca · 09/10', 'display'],
+    ['--text-md', '18 · 1.55', 'Bác ăn hết bát cháo cá, đi bộ hai vòng sân chung cư.', 'body'],
+    ['--text-base', '16 · 1.6', 'Ưu tiên uống trà sau bữa tối, không ăn đồ quá mặn. Ô nhập và nội dung chính dùng cỡ này.', 'body'],
+    ['--text-sm', '14 · 1.5', 'Chuyên viên Nguyễn Thanh Trúc · 18:00–22:00', 'muted'],
+    ['--text-xs', '12 · 1.45', 'Nhãn nhỏ, chú thích ảnh, số đếm trên tab', 'muted']
+  ];
+  $('#type-scale').innerHTML = SCALE.map(([t, m, s, kind]) => `
+    <div class="ds-scale-row"><dt><code>${t}</code><br>${m}${kind === 'display' ? ' · Cal Sans' : ''}</dt>
+    <dd style="font-size:var(${t});${kind === 'display' ? 'font-family:var(--font-display);line-height:var(--leading-snug);letter-spacing:var(--tracking-display)' : ''}${kind === 'muted' ? 'color:var(--color-text-muted)' : ''}">${s}</dd></div>`).join('');
+
+  /* ---------- Dải màu ---------- */
+  const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+  const RAMPS = [
+    ['teal', 'Teal', 800], ['apricot', 'Apricot', 400], ['sand', 'Sand', 100], ['sky', 'Sky', 200], ['navy', 'Navy', 900], ['gray', 'Xám', null]
+  ];
+  const STATUS_RAMPS = [['amber', 'Hổ phách'], ['blue', 'Lam'], ['green', 'Lục'], ['red', 'Đỏ']];
+  const cs = getComputedStyle(root);
+  const hexOf = el => { const m = getComputedStyle(el).backgroundColor.match(/\d+(\.\d+)?/g).map(Number); return '#' + m.slice(0, 3).map(v => Math.round(v).toString(16).padStart(2, '0')).join('').toUpperCase(); };
+  function lum(rgb) { return rgb.map(v => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0); }
+  function rgbOf(str) { const m = str.match(/[\d.]+/g).map(Number); return m.slice(0, 3); }
+  function ratio(a, b) { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); }
+
+  function renderRamps() {
+    const rows = RAMPS.map(([k, name, anchor]) => `
+      <div class="ds-ramp"><div class="ds-ramp-name">${name}<small>--${k}-*</small></div>
+      <div class="ds-chips">${STEPS.map(s => `<div class="ds-chip ${s === anchor ? 'anchor' : ''}" style="background:var(--${k}-${s});color:${s >= 500 ? 'var(--white)' : 'var(--navy-900)'}"><b>${s}</b><span data-hex></span></div>`).join('')}</div></div>`);
+    const st = STATUS_RAMPS.map(([k, name]) => `
+      <div class="ds-ramp"><div class="ds-ramp-name">${name}<small>trạng thái</small></div>
+      <div class="ds-chips" style="grid-template-columns:repeat(6,minmax(0,1fr))">${[50, 100, 200, 500, 600, 700].map(s => `<div class="ds-chip" style="background:var(--${k}-${s});color:${s >= 500 ? 'var(--white)' : 'var(--navy-900)'}"><b>${s}</b><span data-hex></span></div>`).join('')}</div></div>`);
+    $('#ramps').innerHTML = rows.join('') + st.join('');
+    document.querySelectorAll('#ramps .ds-chip').forEach(c => { c.querySelector('[data-hex]').textContent = hexOf(c); });
+  }
+
+  /* ---------- So sánh xám và nền ---------- */
+  const miniUI = `
+    <div class="mini">
+      <div class="mini-title">Thứ Năm, 16/10</div>
+      <div class="mini-sub">18:00–22:00 · Gói Ân cần · Chuyên viên Nguyễn Thanh Trúc</div>
+      <div class="mini-input">Ghi chú cho chuyên viên (không bắt buộc)</div>
+      <div class="mini-row"><span style="color:var(--color-text-muted)">Đã gửi yêu cầu lúc 20:14</span><span class="pill" data-status="assigned"><svg><use href="#i-user-check"/></svg>Đã phân công</span></div>
+    </div>`;
+  $('#neutral-compare').innerHTML = OPTIONS.neutral.map(o => `
+    <div class="ds-opt" data-neutral="${o.id}" data-pick="neutral:${o.id}">
+      <div class="ds-opt-head"><div><strong>Xám ${o.label}</strong><small>${o.note}</small></div><button class="ds-pick" type="button" data-set="neutral:${o.id}">Chọn</button></div>
+      <div class="ds-opt-body">
+        <div class="ds-grays">${STEPS.map(s => `<i style="background:var(--gray-${s})" title="gray-${s}"></i>`).join('')}</div>
+        ${miniUI}
+      </div>
+    </div>`).join('');
+  $('#canvas-compare').innerHTML = OPTIONS.canvas.map(o => `
+    <div class="ds-opt" data-canvas="${o.id}" data-pick="canvas:${o.id}">
+      <div class="ds-opt-head"><div><strong>${o.label}</strong><small>${o.note}</small></div><button class="ds-pick" type="button" data-set="canvas:${o.id}">Chọn</button></div>
+      <div class="ds-opt-body">${miniUI}</div>
+    </div>`).join('');
+
+  /* ---------- Token ngữ nghĩa + tương phản đo trực tiếp ---------- */
+  const SEM = [
+    ['--color-text', 'Chữ chính', '--color-surface'],
+    ['--color-text-muted', 'Chữ phụ, metadata', '--color-canvas'],
+    ['--color-text-brand', 'Chữ teal, tiêu đề nhấn', '--color-surface'],
+    ['--color-text-accent', 'Chữ Apricot (giá, nhấn ấm)', '--color-surface'],
+    ['--color-link', 'Liên kết', '--color-surface'],
+    ['--color-action', 'Nền nút chính (chữ trắng)', '--color-on-action', true],
+    ['--color-accent', 'Nền nút điểm nhấn (chữ Navy)', '--color-on-accent', true],
+    ['--status-pending-fg', 'Chờ phân công', '--status-pending-bg'],
+    ['--status-assigned-fg', 'Đã phân công', '--status-assigned-bg'],
+    ['--status-in-progress-fg', 'Đang chăm sóc', '--status-in-progress-bg'],
+    ['--status-completed-fg', 'Hoàn thành', '--status-completed-bg'],
+    ['--color-danger', 'Lỗi', '--color-danger-subtle'],
+    ['--color-border-input', 'Viền ô nhập, checkbox (≥ 3:1)', '--color-surface', false, 3],
+    ['--color-placeholder', 'Chữ gợi ý trong ô nhập', '--color-surface'],
+    ['--color-focus', 'Vòng focus (≥ 3:1)', '--color-canvas', false, 3]
+  ];
+  const probe = document.createElement('span'); probe.style.display = 'none'; document.body.appendChild(probe);
+  const resolve = v => { probe.style.color = `var(${v})`; return rgbOf(getComputedStyle(probe).color); };
+  function renderSemantic() {
+    $('#semantic').innerHTML = SEM.map(([t, use, on, isBg, min = 4.5]) => {
+      const r = ratio(resolve(t), resolve(on));
+      const ok = r >= min;
+      return `<tr><td><div class="sw" style="background:var(${t})"></div></td><td><code>${t}</code><div class="ds-note">trên <code>${on}</code></div></td><td class="use">${use}</td>
+        <td class="cr"><span class="${ok ? 'ds-pass' : 'ds-fail'}">${r.toFixed(2)}:1</span> <span class="ds-note">${ok ? 'đạt' : 'chưa đạt'} ${min}:1</span></td></tr>`;
+    }).join('');
+  }
+
+  /* ---------- Khoảng cách, chuyển động ---------- */
+  $('#spaces').innerHTML = [1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24].map(n => `<div class="ds-space"><code>--space-${n}</code><span>${n * 4}px</span><i style="width:var(--space-${n})"></i></div>`).join('');
+  const MOTION = [['--duration-fast', '150ms', 'Hover, nhấn, đổi màu'], ['--duration-base', '250ms', 'Toast, mở thành phần nhỏ'], ['--duration-slow', '400ms', 'Sheet, modal, chuyển bước'], ['--duration-reveal', '1100ms', 'Hiện dần khi cuộn, chỉ trang giới thiệu']];
+  $('#motion').innerHTML = MOTION.map(([t, ms, use]) => `<div class="ds-motion-row"><div><code>${t}</code> ${ms}<span>${use}</span></div><div class="ds-track"><div class="ds-ball" style="transition-duration:var(${t})"></div></div></div>`).join('');
+  $('#play').addEventListener('click', () => document.querySelectorAll('.ds-track').forEach(t => t.classList.toggle('go')));
+
+  /* ---------- Dock ---------- */
+  document.querySelectorAll('.ds-seg').forEach(seg => {
+    const k = seg.dataset.key;
+    seg.innerHTML = OPTIONS[k].map(o => `<button type="button" data-set="${k}:${o.id}">${o.label}</button>`).join('');
+  });
+
+  function apply() {
+    root.dataset.font = state.font;
+    root.dataset.neutral = state.neutral;
+    root.dataset.canvas = state.canvas;
+    document.querySelectorAll('.ds-seg button').forEach(b => { const [k, v] = b.dataset.set.split(':'); b.setAttribute('aria-pressed', String(state[k] === v)); });
+    document.querySelectorAll('[data-pick]').forEach(el => { const [k, v] = el.dataset.pick.split(':'); el.setAttribute('aria-current', String(state[k] === v)); });
+    document.querySelectorAll('.ds-pick').forEach(b => { const [k, v] = b.dataset.set.split(':'); if (k !== 'font') b.textContent = state[k] === v ? 'Đang chọn' : 'Chọn'; else b.textContent = state[k] === v ? 'Đang chọn' : 'Chọn ' + label('font', v); });
+    $('#dock-summary').textContent = `${label('font', state.font)} · Xám ${label('neutral', state.neutral)} · Nền ${label('canvas', state.canvas)}`;
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+    renderRamps();
+    renderSemantic();
+  }
+
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-set]');
+    if (!b) return;
+    const [k, v] = b.dataset.set.split(':');
+    state[k] = v;
+    apply();
+  });
+
+  const toast = $('#toast');
+  $('#copy').addEventListener('click', async () => {
+    const text = `Chọn: font nội dung ${label('font', state.font)}, xám ${label('neutral', state.neutral)}, nền ${label('canvas', state.canvas)}.`;
+    let done = false;
+    try { await navigator.clipboard.writeText(text); done = true; } catch (e) {}
+    toast.textContent = done ? 'Đã chép. Dán vào khung chat để gửi lựa chọn.' : text;
+    toast.classList.add('show');
+    clearTimeout(toast._t); toast._t = setTimeout(() => toast.classList.remove('show'), 3200);
+  });
+
+  const dock = $("#dock"), tog = $("#dock-toggle");
+  tog.addEventListener("click", () => { const open = !dock.hasAttribute("data-open"); dock.toggleAttribute("data-open", open); tog.setAttribute("aria-expanded", String(open)); tog.textContent = open ? "Xong" : "Đổi lựa chọn"; });
+
+  apply();
+  document.fonts && document.fonts.ready.then(renderSemantic);
+})();
+</script>
+</body>
+</html>
