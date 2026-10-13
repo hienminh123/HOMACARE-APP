@@ -5,7 +5,6 @@ import '../styles/tokens.css';
 import '../styles/fonts.css';
 import '../styles/base.css';
 import '../styles/components.css';
-import loraLatin from '../assets/fonts/lora-latin.woff2?url';
 import nunitoLatin from '../assets/fonts/nunito-latin.woff2?url';
 
 interface Props { title: string; description?: string; noindex?: boolean; bodyClass?: string }
@@ -31,7 +30,6 @@ const ogImage = new URL('/assets/og-image.png', Astro.site);
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
-    <link rel="preload" href={loraLatin} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={nunitoLatin} as="font" type="font/woff2" crossorigin />
     <link rel="icon" type="image/png" href="/assets/app-icon-h.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

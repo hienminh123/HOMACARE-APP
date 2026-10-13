@@ -45,7 +45,7 @@ web/
 ├── public/                 # file phục vụ nguyên trạng: icons.svg, ảnh logo, manifest, _redirects, trang chuyển hướng
 └── src/
     ├── styles/             # design system v1.2: tokens → fonts → base → components (+ site.css, app.css)
-    ├── assets/             # font Lora + Nunito, ảnh minh họa (Astro tự nén sang webp)
+    ├── assets/             # font Nunito, ảnh minh họa (Astro tự nén sang webp)
     ├── components/hc/      # 15 thành phần hc-* dạng .astro
     ├── components/site/    # header, footer, "Cách sử dụng" của trang giới thiệu
     ├── layouts/            # BaseLayout (meta + design system), AppLayout (khung ba không gian)

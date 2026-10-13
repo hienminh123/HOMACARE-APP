@@ -108,6 +108,15 @@
   - Không lỗi console, không tràn ngang. Các kịch bản giai đoạn 3–4 trên `dev:fixture` vẫn đạt.
 - Chưa kiểm được realtime với Supabase thật (chưa bật publication, và không được tạo dữ liệu thật).
 
+### Design system v1.3 · chỉ dùng Nunito (13/10, người dùng chốt)
+- Người dùng muốn thử Jost 700 + 400. Đã dựng trang chủ thử (`docs/thu-font/trang-chu-thu-font.html`, file HTML tự chứa, không commit) có nút đổi giữa Jost, League Spartan, Lora + Nunito và Nunito hết. Jost thiếu khoảng 40 trên 64 chữ có dấu của trang chủ (kể cả ơ, ư), nên bị loại như Outfit và Zain. League Spartan đủ dấu.
+- **Chốt: Nunito cho tất cả** (tiêu đề 700, nội dung 400–600); chữ logo vẫn Cal Sans.
+  - `tokens.css`: `--font-display` = Nunito, `--weight-display` 700, `--font-brand` dự phòng Nunito.
+  - Đã xóa `lora-*.woff2`, `Lora-OFL.txt`, `@font-face` Lora và preload Lora; trang nhẹ hơn khoảng 47 KB.
+  - DESIGN.md lên v1.3.
+- Đã kiểm tra: build sạch, bản build chỉ còn font Nunito + Cal Sans; mọi kịch bản (gia đình, chuyên viên/điều phối, demo hai tab) vẫn đạt; không tràn ngang ở 375/1280; không lỗi console.
+- homacaredemo.pages.dev **chưa** có bản v1.3 cho tới khi người dùng tải lại `web/dist`.
+
 ### Việc tiếp theo — Giai đoạn 6 · Kiểm thử toàn bộ
 - Chạy lại mọi kịch bản (`giai-doan-*` trong thư mục ghi chú chung có script) ở 375/768/1280, bàn phím, trình đọc màn hình (nhãn), giảm chuyển động; trang giới thiệu, đăng nhập, `/demo/`, ba không gian.
 - Kiểm với Supabase thật khi người dùng cho phép: tài khoản thử, realtime sau khi bật publication, link email.
