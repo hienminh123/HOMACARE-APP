@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "preview",
+      "runtimeExecutable": "npx.cmd",
+      "runtimeArgs": ["--yes", "http-server", "preview", "-a", "127.0.0.1", "-p", "4173", "-c-1", "-s"],
+      "port": 4173
+    }
+  ]
+}

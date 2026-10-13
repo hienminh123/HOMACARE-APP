@@ -15,7 +15,7 @@ Dự án hiện là MVP phục vụ trình diễn và kiểm chứng luồng ch�
 
 | Vai trò | Chức năng trong mã nguồn hiện tại |
 | --- | --- |
-| Khách truy cập | Xem Góc sức khỏe, giới thiệu, lộ trình chăm sóc, dịch vụ và đội ngũ; chọn vai trò để vào tài khoản. |
+| Khách truy cập | Xem giới thiệu, cách sử dụng, gói dịch vụ, phạm vi ca và hỏi đáp; xem trang tổng hợp tính năng; chọn vai trò để vào tài khoản. |
 | Gia đình | Đăng ký/đăng nhập; thêm người thân; đặt ca Ân cần; theo dõi lịch, nhật ký và đánh giá ca. |
 | Chuyên viên chăm sóc | Đăng ký/đăng nhập; xem ca được phân công; bắt đầu ca; ghi nhận bốn hoạt động; gửi nhật ký và xem lịch sử ca. |
 | Điều phối viên | Đăng nhập bằng email và mật khẩu riêng; xem yêu cầu; phân công chuyên viên trống lịch; lọc và theo dõi trạng thái ca. |
@@ -42,7 +42,7 @@ MVP hiện hỗ trợ đặt ca **Ân cần**, khung giờ **18:00–22:00**, gi
 | Giao diện | HTML, CSS và JavaScript thuần; nhiều trang, không dùng framework. |
 | Tài khoản | Supabase Auth, email và mật khẩu, xác nhận email và khôi phục mật khẩu. |
 | Dữ liệu | PostgreSQL của Supabase; RLS giới hạn dữ liệu theo tài khoản; RPC kiểm tra thao tác thay đổi ca. |
-| Hosting | Netlify, xuất bản folder `preview`. |
+| Hosting | Cloudflare Pages, xuất bản folder `preview` từ nhánh `main`. |
 | Quản lý mã nguồn | Git và GitHub. |
 | Kiểm thử cơ sở dữ liệu | PostgreSQL PGlite. |
 
@@ -62,13 +62,13 @@ Biểu tượng trình duyệt và màn hình chính chỉ có biểu tượng l
 
 ```text
 HOMACARE APP/
-├── preview/                     # Website được xuất bản lên Netlify
+├── preview/                     # Website được xuất bản lên Cloudflare Pages
 │   ├── index.html               # Trang chủ (landing page)
-│   ├── home-classic.html        # Trang chủ cũ: Góc sức khỏe, nhận diện phiên đăng nhập
 │   ├── auth.html                # Đăng ký, đăng nhập và khôi phục mật khẩu
 │   ├── family.html              # Không gian gia đình
 │   ├── caregiver.html           # Không gian chuyên viên
 │   ├── coordinator.html         # Không gian điều phối
+│   ├── tinh-nang.html           # Trang tổng hợp tính năng (ảnh trong assets/tinh-nang/)
 │   ├── auth.js                  # Xác thực, nhận diện phiên và điều hướng vai trò
 │   ├── workspace.js             # Dữ liệu và thao tác của ba dashboard
 │   ├── preview.js               # Icon, popup, menu và thông báo
@@ -85,7 +85,9 @@ HOMACARE APP/
 │   ├── ui-handlers.txt          # Nguồn các thao tác giao diện chung
 │   └── check-connection.cjs      # Kiểm tra kết nối chỉ đọc
 ├── tests/                       # Kiểm thử và máy chủ dữ liệu giả lập
-├── netlify.toml                 # Cấu hình Netlify cũ (không còn dùng)
+├── docs/                        # Tài liệu ý tưởng, logo gốc, nội dung lưu trữ, ảnh chụp kiểm thử
+├── Phu-luc-anh-chup/            # Ảnh chụp phụ lục (file ảnh, docx, pdf không đưa vào git)
+├── PRODUCT.md                   # Người dùng, định vị, cam kết thương hiệu
 ├── SUPABASE-SETUP.md
 ├── CONTINUE-HOMACARE.md
 └── README.md
@@ -166,7 +168,7 @@ Cloudflare tự triển khai miễn phí khi thay đổi được push lên `mai
 
 ### Tải folder thủ công
 
-Nếu chưa nối GitHub, tải nguyên folder `preview` mới lên Netlify. Các folder `backend`, `tests` và tài liệu gốc không nằm trong phần website công khai.
+Nếu cần triển khai thủ công, tải nguyên folder `preview` lên Cloudflare Pages (Direct Upload). Các folder `backend`, `tests` và tài liệu gốc không nằm trong phần website công khai.
 
 ## Tiếp tục phát triển bằng AI hoặc trình soạn thảo
 
@@ -256,7 +258,7 @@ Các máy chủ kiểm thử chỉ chạy trên localhost, không đưa vào fol
 
 ## Nguồn dự án
 
-- Tài liệu ý tưởng: `Ý tưởng HomaCare.pdf`.
-- Logo gốc: `HOMACARE - logo.png` do nhóm cung cấp.
+- Tài liệu ý tưởng: `docs/y-tuong-homacare.pdf`.
+- Logo gốc: `docs/thuong-hieu/homacare-logo-goc.png` do nhóm cung cấp; bản logo mới có tagline: `docs/thuong-hieu/logo-moi.jpg`.
 - Tham khảo cấu trúc nội dung: [Papa Resources](https://www.papa.com/resources).
-- Bài đọc sức khỏe trên trang chủ có liên kết đến nguồn Cục Dân số và WHO.
+- Nội dung "Góc sức khỏe" (bài đọc dẫn nguồn Cục Dân số và WHO) từ trang chủ cũ được lưu tại `docs/noi-dung/goc-suc-khoe.md`.

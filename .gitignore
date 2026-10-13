@@ -5,12 +5,18 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
-/account-ready.jpg
-/coordinator-email-login.jpg
-/home-session-ready.jpg
-/home-session-mobile.jpg
-/mobile-readable-header.jpg
 
+# Ảnh chụp kiểm thử có phiên giả lập (không đưa vào git)
+/docs/anh-chup-kiem-thu/
+
+# Phụ lục: ảnh chụp, chú thích và file xuất (docx/pdf/html) lưu ngoài git
 /Phu-luc-anh-chup/*.png
 /Phu-luc-anh-chup/chu-thich.txt
-.claude/skills/impeccable/scripts/bin/
+/Phu-luc-anh-chup/*.docx
+/Phu-luc-anh-chup/*.pdf
+/Phu-luc-anh-chup/*.html
+
+# Claude Code: bỏ skill bên thứ ba và cấu hình cá nhân; skill/hook riêng của dự án vẫn commit được
+.claude/skills/impeccable/
+.claude/agents/impeccable-*
+.claude/settings.local.json

@@ -21,36 +21,5 @@ for (const role of Object.keys(labels)) {
   const page = `${head(labels[role]).replace('</head>','<script src="workspace.js" defer></script></head>')}<body class="workspace" data-auth-required="${role}"><header class="site-header"><nav class="container nav workspace-nav">${brand}<a class="text-link workspace-home" href="index.html" style="margin:0">Trang chủ</a><div class="account-nav"><span class="pill">${labels[role]}</span><button class="plain-link" id="sign-out">Đăng xuất</button></div></nav></header><div class="access-state container" id="access-state" role="status"><span class="loading-dot"></span><h1>Đang kết nối tài khoản…</h1><p>Không gian chăm sóc của bạn đang được chuẩn bị.</p></div><main class="container workspace-content" hidden id="workspace-main"><div class="dashboard-layout"><aside class="sidebar">${sidebar}<div class="sidebar-note">Gửi trọn quan tâm,<br>vẹn tròn đạo hiếu.</div></aside><div id="workspace-view"></div></div></main><div id="workspace-modals"></div></body></html>`;
   fs.writeFileSync(path.join(root,`${role}.html`), page);
 }
-let home = fs.readFileSync(path.join(root,'home-classic.html'),'utf8');
-if (!home.includes('src="config.js"')) {
-home = home.replace('<script src="preview.js" defer></script>', scriptTags).replace('</head>','<link rel="stylesheet" href="account.css"></head>');
-home = home.replace(/<div class="demo-ribbon">.*?<\/div><\/div>\s*/,'');
-home = home.replaceAll('Trải nghiệm nền tảng','Đăng nhập / Đăng ký').replaceAll('Trải nghiệm bản mẫu','Bắt đầu đồng hành').replaceAll('GÓI TRẢI NGHIỆM TRONG BẢN XEM TRƯỚC','CHĂM SÓC THEO BUỔI');
-home = home.replaceAll('Hồ sơ mẫu','Chuyên viên HomaCare');
-home = home.replaceAll('Các bài đọc mẫu về người cao tuổi ở Việt Nam và trên thế giới, dẫn đến nguồn gốc để bạn tìm hiểu thêm.','Các bài đọc về người cao tuổi ở Việt Nam và trên thế giới, cùng nguồn tham khảo để bạn tìm hiểu thêm.');
-home = home.replaceAll('Mai Anh đang đồng hành','Chuyên viên đang đồng hành').replaceAll('Nguyễn Mai Anh','Người đồng hành HomaCare');
-home = home.replaceAll('Chuyên viên chăm sóc tại gia · Hà Nội','Lắng nghe · Chăm sóc · Kết nối');
-home = home.replace(/<p class="tiny-note">Hồ sơ minh họa.*?<\/p>/,'');
-home = home.replace(/<p class="tiny-note">Bài đọc minh họa.*?<\/p>/,'');
-home = home.replace(/<p>Khám phá cách một ca chăm sóc được kết nối, điều phối và cập nhật cho gia đình\.<\/p>/,'<p>Bắt đầu lộ trình chăm sóc và nhận nhật ký sau mỗi buổi đồng hành.</p>');
-home = home.replaceAll('Bản xem trước giao diện · 2026','© 2026 HomaCare');
-home = home.replaceAll('Bản xem trước tập trung vào ca chăm sóc Ân cần.','HomaCare hiện tập trung vào ca chăm sóc Ân cần.');
-home = home.replaceAll('Xem ca Ân cần mẫu','Đặt ca Ân cần').replaceAll('Xem nhật ký mẫu','Xem nhật ký chăm sóc').replaceAll('Khám phá ca Ân cần','Đặt ca Ân cần');
-home = home.replaceAll('Xem giao diện điều phối','Kết nối với HomaCare');
-home = home.replaceAll('href="coordinator.html"','href="auth.html?role=family"');
-home = home.replaceAll('href="family.html?booking=1"','href="auth.html?role=family&amp;booking=1"');
-home = home.replaceAll('href="family.html"','href="auth.html?role=family" data-modal="role-modal"');
-home = home.replace('<a href="#staff">Chuyên viên</a></div><a class="btn small"', '<a href="#staff">Chuyên viên</a><a class="mobile-account-entry" href="auth.html?role=family" data-modal="role-modal">Đăng nhập / Đăng ký</a></div><a class="btn small"');
-home = home.replace('</body>',roleDialog+'</body>');
-}
-home = home.replace('<a class="mobile-account-entry" href="auth.html?role=family" data-modal="role-modal">Đăng nhập / Đăng ký</a>', '<div class="mobile-account-entry" data-home-account="mobile"><a href="auth.html?role=family" data-modal="role-modal">Đăng nhập / Đăng ký</a></div>');
-const homeAccountEntry = '<div class="home-account-actions" data-home-account="desktop"><a class="btn small" href="auth.html?role=family" data-modal="role-modal"><span class="home-account-label">Đăng nhập / Đăng ký</span><span data-icon="arrow"></span></a></div>';
-if (!home.includes('data-home-account="desktop"')) home = home.replace('<a class="btn small" href="auth.html?role=family" data-modal="role-modal">Đăng nhập / Đăng ký <span data-icon="arrow"></span></a>', homeAccountEntry);
-// The account entry stays visible in the mobile header; no hamburger is needed.
-home = home.replace(/<div class="mobile-account-entry" data-home-account="mobile">[\s\S]*?<\/div>/, '');
-home = home.replace(/<button class="mobile-menu-button"[^>]*><\/button>/, '');
-// Normalize the end of the header so rebuilding cannot nest account wrappers.
-home = home.replace(/<div class="home-account-actions" data-home-account="desktop">[\s\S]*?<\/nav>/, homeAccountEntry + '</nav>');
-fs.writeFileSync(path.join(root,'home-classic.html'), home);
 const previous = fs.readFileSync(path.join(root,'preview.js'),'utf8');
 fs.writeFileSync(path.join(root,'preview.js'), previous.split(/\r?\n/).slice(0,2).join('\n') + '\n' + fs.readFileSync(path.join(__dirname,'ui-handlers.txt'),'utf8'));

@@ -51,7 +51,7 @@ Not a generic caregiver marketplace or a medical service: HomaCare is coordinate
 
 - **No real evidence yet:** no survey data, no confirmed caregivers or partner organisations, no real user reviews or testimonials. Future work must not fabricate statistics, testimonials, partner logos, certifications, ratings or customer counts.
 - Names in the UI and screenshots (Bác Trần Văn An, chuyên viên Nguyễn Thanh Trúc, Trần Lan Anh) are **illustrative demo data** and must be labelled as such.
-- Real assets: logo files in `preview/assets/`, AI-assisted illustration photos in `preview/assets/photos/`, mobile screenshots in `Phu-luc-anh-chup/`, idea document `Ý tưởng HomaCare.pdf`.
+- Real assets: logo files in `preview/assets/`, AI-assisted illustration photos in `preview/assets/photos/`, mobile screenshots in `Phu-luc-anh-chup/`, idea document `docs/y-tuong-homacare.pdf`, original logo `docs/thuong-hieu/`.
 - "Đào tạo căn bản 30 giờ" and staff vetting are **planned**, not in place; phrase them as dự kiến/định hướng.
 
 ## Product Principles
