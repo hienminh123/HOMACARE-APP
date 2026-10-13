@@ -1,56 +1,136 @@
 ---
-// Không gian gia đình (thay family.html). Giai đoạn 2: khung + dữ liệu thật ở chế độ xem.
+// Không gian gia đình (thay family.html). Giai đoạn 3: ưu tiên điện thoại, đủ vòng chăm sóc của gia đình:
+// thêm người thân → đặt ca Ân cần (2 bước) → theo dõi 4 trạng thái → đọc nhật ký → đánh giá sao.
 import AppLayout from '../../layouts/AppLayout.astro';
+import Sheet from '../../components/hc/Sheet.astro';
+import Field from '../../components/hc/Field.astro';
+import Input from '../../components/hc/Input.astro';
+import Select from '../../components/hc/Select.astro';
+import Textarea from '../../components/hc/Textarea.astro';
+import Button from '../../components/hc/Button.astro';
 const nav = [
   { href: '#tong-quan', label: 'Tổng quan', icon: 'home' },
   { href: '#lich', label: 'Lịch', icon: 'calendar' },
   { href: '#nhat-ky', label: 'Nhật ký', icon: 'book' },
   { href: '#tai-khoan', label: 'Tài khoản', icon: 'user' },
 ];
+const relationships = ['Mẹ', 'Bố', 'Bà', 'Ông', 'Người thân'];
 ---
 <AppLayout role="family" title="Không gian gia đình" nav={nav}>
+  <!-- Đặt ca: bước 1 Thông tin ca → bước 2 Xác nhận. Chỉ gọi RPC ở bước 2. -->
+  <Sheet id="booking-sheet" title="Đặt ca chăm sóc" description="Bước 1 trên 2 · Chọn người thân, ngày và điều cần lưu ý.">
+    <form id="booking-form" class="hc-stack" novalidate data-step="details" style="--stack-gap: var(--space-5)">
+      <div data-step="details" class="hc-stack" style="--stack-gap: var(--space-5)">
+        <div class="app-package">
+          <span class="hc-pill hc-pill--plain" data-tone="brand">Gói Ân cần</span>
+          <p><strong class="hc-num">18:00–22:00 · 4 giờ · 320.000đ/buổi</strong></p>
+          <p class="hc-hint">Trò chuyện, hỗ trợ bữa tối, vận động nhẹ, nhắc lịch sinh hoạt và kiểm tra an toàn. Hỗ trợ phi y tế.</p>
+        </div>
+        <Field label="Người thân" for="booking-relative" data-relative-field>
+          <Select id="booking-relative" name="relative_id" required />
+        </Field>
+        <fieldset class="hc-field app-days-field">
+          <legend class="hc-label">Ngày chăm sóc</legend>
+          <div class="app-days" data-days></div>
+          <span class="hc-hint" data-day-hint aria-live="polite"></span>
+          <span class="hc-error" data-day-error role="alert" hidden></span>
+        </fieldset>
+        <Field label="Điều bạn muốn chuyên viên lưu ý" for="booking-note" optional hint="Thói quen, sở thích hoặc hỗ trợ gia đình mong muốn trong ca.">
+          <Textarea id="booking-note" name="care_note" maxlength="2000" rows="3" placeholder="Ví dụ: nhờ nhắc bố uống đủ nước, bố thích nghe đọc báo" aria-describedby="booking-note-hint" />
+          <span class="hc-counter" data-counter-for="booking-note"></span>
+        </Field>
+      </div>
+      <section data-step="review" class="hc-stack" tabindex="-1" aria-label="Thông tin yêu cầu chăm sóc" style="--stack-gap: var(--space-4)" hidden></section>
+      <p class="app-form-error" data-form-error role="alert" hidden></p>
+    </form>
+    <Fragment slot="foot">
+      <Button variant="secondary" data-booking-back>Để sau</Button>
+      <Button type="submit" form="booking-form" data-booking-submit>Xem lại yêu cầu</Button>
+    </Fragment>
+  </Sheet>
+
+  <!-- Thêm hồ sơ người thân (RLS cho phép thêm, chưa cho sửa) -->
+  <Sheet id="relative-sheet" title="Thêm hồ sơ người thân" description="Chuyên viên đọc những thông tin này trước mỗi buổi.">
+    <form id="relative-form" class="hc-stack" novalidate style="--stack-gap: var(--space-4)">
+      <Field label="Họ và tên người thân" for="relative-name">
+        <Input id="relative-name" name="full_name" required minlength="2" maxlength="100" autocomplete="off" />
+      </Field>
+      <div class="app-row2">
+        <Field label="Mối quan hệ với bạn" for="relative-relationship">
+          <Select id="relative-relationship" name="relationship">{relationships.map(r => <option>{r}</option>)}</Select>
+        </Field>
+        <Field label="Tuổi" for="relative-age">
+          <Input id="relative-age" name="age" type="number" inputmode="numeric" min="18" max="120" required />
+        </Field>
+      </div>
+      <Field label="Khu vực chăm sóc" for="relative-area" hint="Quận/huyện, tỉnh/thành phố. Giai đoạn đầu HomaCare dự kiến thử nghiệm ở một khu vực tại Hà Nội.">
+        <Input id="relative-area" name="area" required minlength="2" maxlength="200" placeholder="Ví dụ: Láng Thượng, Đống Đa, Hà Nội" aria-describedby="relative-area-hint" />
+      </Field>
+      <Field label="Thói quen & mong muốn" for="relative-preferences" optional hint="Người thân thích làm gì, giờ giấc sinh hoạt, điều cần lưu ý.">
+        <Textarea id="relative-preferences" name="preferences" maxlength="2000" rows="3" placeholder="Ví dụ: thích trà sen sau bữa tối, đi bộ quanh sân lúc 19:30, ăn nhạt" aria-describedby="relative-preferences-hint" />
+        <span class="hc-counter" data-counter-for="relative-preferences"></span>
+      </Field>
+      <p class="app-form-error" data-form-error role="alert" hidden></p>
+    </form>
+    <Fragment slot="foot">
+      <Button variant="secondary" data-hc-close>Để sau</Button>
+      <Button type="submit" form="relative-form" data-relative-submit>Lưu người thân</Button>
+    </Fragment>
+  </Sheet>
+
   <script>
     import { boot, accountSection } from '../../scripts/workspace';
     import { empty, familyVisit, careLog, relativeName } from '../../scripts/render';
-    import { esc } from '../../lib/html';
+    import { setContext, handleBookingIntent } from '../../scripts/family';
+    import { esc, icon, initials } from '../../lib/html';
 
-    boot('family', ({ profile, data }) => {
+    boot('family', ctx => {
+      setContext(ctx);
+      const { profile, data } = ctx;
       const open = data.visits.filter(v => v.status !== 'completed');
       const logs = data.visits.filter(v => v.status === 'completed')
         .sort((a, b) => +new Date(b.completed_at || 0) - +new Date(a.completed_at || 0));
       const next = open[0];
-      const person = data.relatives[0];
+      const first = data.relatives[0];
+      const hasRelative = data.relatives.length > 0;
 
-      const relatives = data.relatives.length
+      const primary = hasRelative
+        ? `<button class="hc-btn hc-btn--lg app-primary" type="button" data-action="book">${icon('plus')}Đặt ca mới</button>`
+        : `<div class="hc-card hc-empty"><span class="hc-empty__icon">${icon('users')}</span><h2 class="hc-empty__title">Bắt đầu bằng hồ sơ người thân</h2><p class="hc-empty__text">Ghi tên, tuổi, khu vực và thói quen của cha mẹ. Chuyên viên đọc hồ sơ này trước mỗi buổi.</p><button class="hc-btn" type="button" data-action="add-relative">${icon('plus')}Thêm người thân</button></div>`;
+
+      const relatives = hasRelative
         ? `<ul class="app-list app-list--2">${data.relatives.map(r => `<li class="hc-card hc-stack" style="--stack-gap:var(--space-3)">
-            <div class="hc-person"><span class="hc-avatar hc-avatar--lg" data-role="relative" aria-hidden="true">${esc(r.full_name.trim().split(/\s+/).slice(-2).map(w => w[0]).join('').toUpperCase())}</span><span class="hc-person__text"><span class="hc-person__name">${esc(relativeName(r))}</span><span class="hc-person__role">${r.age} tuổi · ${esc(r.area)}</span></span></div>
+            <div class="hc-person"><span class="hc-avatar hc-avatar--lg" data-role="relative" aria-hidden="true">${esc(initials(r.full_name))}</span><span class="hc-person__text"><span class="hc-person__name">${esc(relativeName(r))}</span><span class="hc-person__role">${r.age} tuổi · ${esc(r.area)}</span></span></div>
             <div class="hc-visit__note"><strong>Thói quen & mong muốn</strong>${esc(r.preferences || 'Chưa ghi nhận thêm')}</div>
-          </li>`).join('')}</ul>`
-        : empty('users', 'Chưa có hồ sơ người thân', 'Thêm hồ sơ cha mẹ để đặt buổi chăm sóc đầu tiên.');
+          </li>`).join('')}</ul>
+          <div class="app-section__foot"><button class="hc-btn hc-btn--secondary" type="button" data-action="add-relative">${icon('plus')}Thêm người thân</button><p class="hc-hint">Cần sửa hồ sơ? Gọi <a href="tel:0338031425">0338 031 425</a>, HomaCare sẽ cập nhật giúp bạn.</p></div>`
+        : empty('users', 'Chưa có hồ sơ người thân', 'Thêm hồ sơ cha mẹ để đặt buổi chăm sóc đầu tiên.', true);
 
       return `
         <div class="app-greeting" id="tong-quan">
           <h1>Chào ${esc(profile.full_name)}</h1>
-          <p>${person ? `Lịch và nhật ký chăm sóc của ${esc(relativeName(person))}.` : 'Đây là lịch và nhật ký chăm sóc của gia đình bạn.'}</p>
+          <p>${first ? `Lịch và nhật ký chăm sóc của ${esc(relativeName(first))}.` : 'Đây là lịch và nhật ký chăm sóc của gia đình bạn.'}</p>
         </div>
-        <section class="app-section" aria-labelledby="next-title">
+        ${primary}
+        ${hasRelative ? `<section class="app-section" aria-labelledby="next-title">
           <div class="app-section__head"><h2 id="next-title">Ca sắp tới</h2></div>
-          ${next ? familyVisit(next, next.status === 'pending' ? 'Yêu cầu mới' : 'Ca sắp tới') : empty('calendar', 'Chưa có ca nào sắp tới', 'Khi bạn đặt ca, lịch và tên chuyên viên sẽ hiện ở đây.')}
-        </section>
+          ${next ? familyVisit(next, next.status === 'pending' ? 'Yêu cầu mới' : 'Ca sắp tới') : empty('calendar', 'Chưa có ca nào sắp tới', 'Bấm Đặt ca mới để chọn ngày. Lịch và tên chuyên viên sẽ hiện ở đây.', true)}
+        </section>` : ''}
         <section class="app-section" id="lich" aria-labelledby="lich-title">
-          <div class="app-section__head"><h2 id="lich-title">Lịch chăm sóc</h2><span class="hc-pill hc-pill--plain">${open.length} ca</span></div>
+          <div class="app-section__head"><h2 id="lich-title">Lịch chăm sóc</h2><span class="hc-pill hc-pill--plain">${open.length} ca đang mở</span></div>
           ${open.length > 1 ? `<ul class="app-list app-list--2">${open.slice(1).map(v => `<li>${familyVisit(v, 'Ca đã đặt')}</li>`).join('')}</ul>` : empty('calendar', open.length ? 'Không còn ca nào khác' : 'Chưa có lịch chăm sóc', 'Các ca đã đặt sẽ hiện ở đây theo thứ tự ngày.', true)}
+          <p class="hc-hint app-note">Cần đổi hoặc hủy ca? Gọi <a href="tel:0338031425">0338 031 425</a> hoặc email <a href="mailto:homacare@gmail.com">homacare@gmail.com</a>. App chưa có chức năng tự đổi, hủy ca.</p>
         </section>
         <section class="app-section" id="nhat-ky" aria-labelledby="nhat-ky-title">
           <div class="app-section__head"><h2 id="nhat-ky-title">Nhật ký sau ca</h2><span class="hc-pill hc-pill--plain">${logs.length}</span></div>
-          ${logs.length ? `<ul class="app-list app-list--2">${logs.map(v => `<li>${careLog(v)}</li>`).join('')}</ul>` : empty('book', 'Chưa có nhật ký nào', 'Sau mỗi ca, chuyên viên ghi lại việc đã làm và điều cần lưu ý. Nhật ký sẽ hiện ở đây.')}
-          <p class="hc-hint" style="margin-top:var(--space-3)">Nhật ký ghi nhận sinh hoạt. HomaCare không đưa ra chẩn đoán hoặc quyết định điều trị.</p>
+          ${logs.length ? `<ul class="app-list app-list--2">${logs.map(v => `<li>${careLog(v, { rateable: true })}</li>`).join('')}</ul>` : empty('book', 'Chưa có nhật ký nào', 'Sau mỗi ca, chuyên viên ghi lại việc đã làm và điều cần lưu ý. Nhật ký sẽ hiện ở đây.', true)}
+          <p class="hc-hint app-note">Nhật ký ghi nhận sinh hoạt. HomaCare không đưa ra chẩn đoán hoặc quyết định điều trị.</p>
         </section>
         <section class="app-section" id="nguoi-than" aria-labelledby="nguoi-than-title">
           <div class="app-section__head"><h2 id="nguoi-than-title">Người thân</h2></div>
           ${relatives}
         </section>
         ${accountSection(profile, 'Tài khoản gia đình')}`;
-    });
+    }, { ready: handleBookingIntent });
   </script>
 </AppLayout>

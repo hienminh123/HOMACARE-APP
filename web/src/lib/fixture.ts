@@ -91,6 +91,9 @@ export function createFixtureClient(): SupabaseClient {
   async function rpc(name: string, args: Row) {
     const now = new Date().toISOString();
     const v = db.visits.find(x => x.id === args.p_visit_id);
+    // Giống backend/schema.sql: không đặt ngày đã qua, mỗi người thân một ca mỗi ngày (unique index)
+    if (name === 'book_homa_visit' && args.p_care_date < day(0)) return delay({ data: null, error: { message: 'invalid_date' } });
+    if (name === 'book_homa_visit' && db.visits.some(x => x.relative_id === args.p_relative_id && x.care_date === args.p_care_date)) return delay({ data: null, error: { code: '23505', message: 'duplicate key value violates unique constraint "visits_unique_relative_evening"' } });
     if (name === 'book_homa_visit') db.visits.push({ id: 'fx-' + Date.now(), family_id: current()?.id, relative_id: args.p_relative_id, caregiver_id: null, care_date: args.p_care_date, status: 'pending', care_note: args.p_note || '', tasks: [false, false, false, false], mood: null, report_text: null, next_note: '', rating: null, created_at: now, assigned_at: null, started_at: null, completed_at: null });
     else if (!v) return delay({ data: null, error: { message: 'invalid_state' } });
     else if (name === 'assign_homa_visit') Object.assign(v, { status: 'assigned', caregiver_id: args.p_caregiver_id, assigned_at: now });

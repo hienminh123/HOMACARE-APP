@@ -6,11 +6,26 @@ import { getClient } from '../lib/supabase';
 import { loadWorkspace, issue, type Workspace } from '../lib/visits';
 import { esc, icon } from '../lib/html';
 
-export interface Context { client: SupabaseClient; profile: Profile; data: Workspace; view: HTMLElement }
+export interface Context {
+  client: SupabaseClient; profile: Profile; data: Workspace; view: HTMLElement;
+  /** Tải lại dữ liệu và vẽ lại; trả về false nếu tải lỗi (đã báo bằng toast). */
+  reload: () => Promise<boolean>;
+}
 export type Renderer = (ctx: Context) => string;
+export interface BootOptions {
+  /** Chạy một lần sau lần vẽ đầu tiên, ví dụ mở sẵn sheet đặt ca khi URL có ?booking=1. */
+  ready?: (ctx: Context) => void;
+}
 
 declare global {
-  interface Window { HC: { toast(text: string, opts?: { tone?: string; title?: string }): void; init(root?: ParentNode): void; openSheet(id: string | HTMLElement, opener?: Element | null): void } }
+  interface Window {
+    HC: {
+      toast(text: string, opts?: { tone?: string; title?: string; duration?: number }): void;
+      init(root?: ParentNode): void;
+      openSheet(id: string | HTMLElement, opener?: Element | null): void;
+      closeSheet(dialog: HTMLDialogElement | null, value?: string): void;
+    };
+  }
 }
 
 function blocked(view: HTMLElement, title: string, text: string, action = '') {
@@ -29,7 +44,7 @@ export function accountSection(p: Profile, roleLabel: string): string {
   </section>`;
 }
 
-export async function boot(role: Role, render: Renderer) {
+export async function boot(role: Role, render: Renderer, options: BootOptions = {}) {
   if (forwardAuthCallback()) return;
   const main = document.getElementById('workspace')!;
   const view = main.querySelector<HTMLElement>('[data-view]')!;
@@ -56,26 +71,31 @@ export async function boot(role: Role, render: Renderer) {
   if (current.role !== role) { go(current.role, booking); return; }
   const me = current;
 
-  async function load(announce = false) {
+  let ctx: Context;
+  /** initial: lần đầu (lỗi thì chặn trang) · refresh: nút Cập nhật (báo toast) · silent: sau khi ghi dữ liệu */
+  async function load(mode: 'initial' | 'refresh' | 'silent' = 'initial'): Promise<boolean> {
     try {
       const data = await loadWorkspace(client!, role);
-      view.innerHTML = render({ client: client!, profile: me, data, view });
+      ctx = { client: client!, profile: me, data, view, reload: () => load('silent') };
+      view.innerHTML = render(ctx);
       window.HC?.init(view);
-      if (announce) window.HC?.toast('Đã cập nhật lịch chăm sóc.', { tone: 'success' });
+      if (mode === 'refresh') window.HC?.toast('Đã cập nhật lịch chăm sóc.', { tone: 'success' });
+      return true;
     } catch (error) {
-      if (announce) window.HC?.toast(issue(error), { tone: 'danger' });
-      else blocked(view, 'Chưa tải được không gian chăm sóc.', 'Hãy kiểm tra kết nối rồi bấm Cập nhật.');
+      if (mode === 'initial') blocked(view, 'Chưa tải được không gian chăm sóc.', 'Hãy kiểm tra kết nối rồi bấm Cập nhật.');
+      else window.HC?.toast(issue(error), { tone: 'danger' });
+      return false;
     } finally {
       done();
     }
   }
 
-  await load();
+  if (await load()) options.ready?.(ctx!);
   if (refresh) {
     refresh.disabled = false;
     refresh.addEventListener('click', async () => {
       refresh.setAttribute('aria-busy', 'true');
-      await load(true);
+      await load('refresh');
       refresh.removeAttribute('aria-busy');
     });
   }

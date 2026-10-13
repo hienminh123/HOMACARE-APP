@@ -9,7 +9,7 @@ const nav = [
   { href: '#tai-khoan', label: 'Tài khoản', icon: 'user' },
 ];
 ---
-<AppLayout role="coordinator" title="Không gian điều phối" nav={nav}>
+<AppLayout role="coordinator" title="Không gian điều phối" nav={nav} notice="Khung app mới (giai đoạn 2): đang hiển thị dữ liệu thật ở chế độ xem. Các thao tác như bắt đầu ca, ghi nhật ký, phân công sẽ được dựng lại ở giai đoạn 4.">
   <Sheet id="visit-detail" title="Chi tiết ca" description="Thông tin ca, tiến trình và nhật ký nếu đã có.">
     <div data-detail-body class="hc-stack" style="--stack-gap: var(--space-4)"></div>
   </Sheet>

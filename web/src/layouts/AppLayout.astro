@@ -10,8 +10,8 @@ import Icon from '../components/hc/Icon.astro';
 import { DESTINATIONS, LABELS, type Role } from '../lib/auth';
 import '../styles/app.css';
 
-interface Props { role: Role; title: string; nav: NavItem[] }
-const { role, title, nav } = Astro.props;
+interface Props { role: Role; title: string; nav: NavItem[]; notice?: string }
+const { role, title, nav, notice } = Astro.props;
 ---
 <BaseLayout title={`${title} · HomaCare`} noindex>
   <Header brandHref={DESTINATIONS[role]} brandLabel={`HomaCare — ${LABELS[role]}`} nav={nav.map((n, i) => ({ href: n.href, label: n.label, current: i === 0 }))} navLabel={title}>
@@ -21,7 +21,7 @@ const { role, title, nav } = Astro.props;
   </Header>
 
   <main class="app-main" id="workspace" data-role={role} aria-busy="true">
-    <p class="app-notice"><Icon name="info" /><span>Khung app mới (giai đoạn 2): đang hiển thị dữ liệu thật ở chế độ xem. Các thao tác như đặt ca, phân công, ghi nhật ký sẽ được dựng lại ở giai đoạn tiếp theo.</span></p>
+    {notice && <p class="app-notice"><Icon name="info" /><span>{notice}</span></p>}
     <div data-view>
       <div class="hc-stack" style="--stack-gap: var(--space-4)">
         <span class="hc-visually-hidden">Đang tải không gian làm việc…</span>

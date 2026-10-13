@@ -41,3 +41,57 @@ html { scroll-padding-top: 80px; }
 
 /* Hàng điều phối được bọc để lọc theo trạng thái: giữ đường chia giữa các hàng */
 [data-row-status] + [data-row-status] .hc-visit-row { border-top: 1px solid var(--color-divider); }
+
+/* ---------- Không gian gia đình (giai đoạn 3) ---------- */
+
+/* Nút chính của màn hình: rộng hết trên điện thoại, trong tầm ngón cái */
+.app-primary { display: flex; width: 100%; margin-bottom: var(--space-10); }
+.app-greeting + .hc-empty { margin-bottom: var(--space-10); }
+@media (min-width: 640px) { .app-primary { display: inline-flex; width: auto; } }
+
+.app-section__foot { display: grid; gap: var(--space-2); justify-items: start; margin-top: var(--space-4); }
+.app-note { margin-top: var(--space-3); }
+
+/* Lỗi chung của biểu mẫu (lỗi gắn với ô nào thì đặt dưới ô đó) */
+.app-form-error {
+  padding: var(--space-3) var(--space-4); border-radius: var(--radius-md);
+  background: var(--color-danger-subtle); color: var(--color-danger); font-weight: var(--weight-medium);
+}
+
+/* Hai ô cạnh nhau (mối quan hệ · tuổi), xuống hàng khi quá hẹp */
+.app-row2 { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--space-3); }
+
+/* Khối gói dịch vụ trong sheet đặt ca */
+.app-package { display: grid; gap: var(--space-2); justify-items: start; padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-surface-sunken); }
+
+/* Chọn ngày: hàng thẻ ngày cuộn ngang, hiển thị dd/mm bất kể ngôn ngữ của máy */
+.app-days-field { border: 0; padding: 0; margin: 0; min-width: 0; }
+.app-days-field legend { padding: 0; margin-bottom: 6px; }
+.app-days {
+  display: flex; gap: var(--space-2); overflow-x: auto; scroll-snap-type: x proximity;
+  margin-inline: calc(-1 * var(--space-5)); padding: var(--space-1) var(--space-5) var(--space-2);
+  scrollbar-width: thin;
+}
+@media (min-width: 640px) { .app-days { margin-inline: calc(-1 * var(--space-6)); padding-inline: var(--space-6); } }
+.app-day {
+  position: relative; flex: none; scroll-snap-align: start;
+  display: grid; justify-items: center; align-content: center; gap: 2px;
+  width: 72px; min-height: 68px; padding: var(--space-2) var(--space-1);
+  border: 1px solid var(--color-border-input); border-radius: var(--radius-md); background: var(--color-surface);
+  cursor: pointer; text-align: center;
+  transition: border-color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out);
+}
+.app-day input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.app-day__top { font-size: var(--text-xs); color: var(--color-text-muted); font-weight: var(--weight-medium); }
+.app-day__date { font-size: var(--text-md); font-weight: var(--weight-semibold); line-height: 1.2; }
+.app-day__note { font-size: var(--text-xs); color: var(--color-text-muted); }
+.app-day:hover { border-color: var(--color-action); }
+.app-day:has(input:checked) { border-color: var(--color-action); background: var(--color-action); }
+.app-day:has(input:checked) .app-day__top, .app-day:has(input:checked) .app-day__date { color: var(--color-on-action); }
+.app-day:has(input:focus-visible) { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.app-day.is-taken { cursor: not-allowed; background: var(--color-disabled-bg); border-color: var(--color-border); }
+.app-day.is-taken .app-day__date { color: var(--color-disabled-text); }
+.app-day.is-taken input { cursor: not-allowed; }
+
+/* Đánh giá sao trong nhật ký */
+.app-rate { display: grid; gap: var(--space-3); justify-items: start; padding-top: var(--space-3); border-top: 1px solid var(--color-divider); }

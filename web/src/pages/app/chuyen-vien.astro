@@ -7,7 +7,7 @@ const nav = [
   { href: '#tai-khoan', label: 'Tài khoản', icon: 'user' },
 ];
 ---
-<AppLayout role="caregiver" title="Ca chăm sóc của tôi" nav={nav}>
+<AppLayout role="caregiver" title="Ca chăm sóc của tôi" nav={nav} notice="Khung app mới (giai đoạn 2): đang hiển thị dữ liệu thật ở chế độ xem. Các thao tác như bắt đầu ca, ghi nhật ký, phân công sẽ được dựng lại ở giai đoạn 4.">
   <script>
     import { boot, accountSection } from '../../scripts/workspace';
     import { empty, caregiverVisit, visitRow } from '../../scripts/render';

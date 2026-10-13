@@ -48,8 +48,18 @@ export function caregiverVisit(v: Visit, label: string): string {
   </article>`;
 }
 
-/** CareLogCard: luôn đủ 4 hoạt động; đánh giá chỉ hiển thị (đánh giá mới làm ở giai đoạn 3). */
-export function careLog(v: Visit): string {
+/** 5 sao chọn được (radiogroup, hành vi trong components.js) + nút gửi, dùng khi gia đình chưa đánh giá. */
+function rateForm(v: Visit): string {
+  const id = `rate-${esc(v.id)}`;
+  const stars = [1, 2, 3, 4, 5].map(n => `<button class="hc-rating__star" type="button" aria-label="${n} sao">${icon('star')}</button>`).join('');
+  return `<div class="app-rate" data-rate-visit="${esc(v.id)}">
+    <div class="hc-rating"><span class="hc-rating__label" id="${id}">Ca này thế nào?</span><div class="hc-rating__stars" role="radiogroup" aria-labelledby="${id}">${stars}</div><span class="hc-rating__value" aria-live="polite"></span></div>
+    <button class="hc-btn hc-btn--quiet" type="button" data-action="send-rating" disabled>Gửi đánh giá</button>
+  </div>`;
+}
+
+/** CareLogCard: luôn đủ 4 hoạt động. `rateable`: gia đình chấm sao được khi ca chưa có đánh giá. */
+export function careLog(v: Visit, { rateable = false } = {}): string {
   const cg = caregiverOf(v);
   const acts = TASKS.map((t, i) => {
     const done = v.tasks?.[i];
@@ -58,7 +68,7 @@ export function careLog(v: Visit): string {
   const stars = [1, 2, 3, 4, 5].map(n => `<span class="hc-rating__star${n <= (v.rating || 0) ? ' is-on' : ''}">${icon('star')}</span>`).join('');
   const rating = v.rating
     ? `<div class="hc-rating" data-readonly><span class="hc-rating__label">Gia đình đã đánh giá</span><div class="hc-rating__stars" role="img" aria-label="${v.rating} trên 5 sao">${stars}</div></div>`
-    : '<p class="hc-card__meta">Chưa đánh giá</p>';
+    : rateable ? rateForm(v) : '<p class="hc-card__meta">Gia đình chưa đánh giá</p>';
   return `<article class="hc-card hc-log" aria-label="Nhật ký ca ${esc(dayLabel(v.care_date))}">
     <div class="hc-card__head"><span class="hc-card__label">Nhật ký sau ca · ${esc(dayLabel(v.care_date))}</span>${pill('completed')}</div>
     <ul class="hc-log__acts">${acts}</ul>
