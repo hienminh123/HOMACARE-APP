@@ -345,6 +345,12 @@ Mọi lớp có tiền tố `hc-` để sống chung với CSS cũ (`.btn`, `.pi
 - **Mẫu sheet 2 bước** (đặt ca, nhật ký sau ca): một `<form>` chứa hai khối `[data-step="details"]` và `[data-step="review"]`; mô tả sheet ghi "Bước 1 trên 2 · …" / "Bước 2 trên 2 · …". Nút cuối đổi chữ theo bước: "Để sau" / "Xem lại yêu cầu" → "Quay lại sửa" / "Xác nhận và gửi yêu cầu". Chỉ gọi RPC ở bước 2; sang bước 2 thì focus vào khối xem lại (`tabindex="-1"`, có `aria-label`). Lỗi của một ô ở bước 1 (ví dụ trùng ngày) đưa về bước 1 và báo dưới ô đó. Đóng rồi mở lại luôn về bước 1. Khi bước 2 cho người khác đọc (nhật ký gửi gia đình), xem trước bằng đúng thành phần người nhận sẽ thấy (`careLog(v, { preview: true })`).
 - **Bản nháp** cho nội dung dài gõ trên điện thoại (nhật ký sau ca): lưu localStorage theo từng ca mỗi lần gõ, mở lại thì điền sẵn và báo bằng dòng `.app-draft-note`, thẻ ngoài trang ghi "có bản nháp chưa gửi", gửi thành công thì xóa. Biểu mẫu ngắn (thêm người thân, đặt ca) không cần.
 
+### Cập nhật tức thì và chế độ demo (giai đoạn 5)
+
+- Dữ liệu đổi từ nơi khác (realtime, quay lại tab) thì vẽ lại tại chỗ, **giữ focus** ở phần tử tương ứng, không cuộn trang. Đang thao tác dở (sheet mở, đã chọn sao chưa gửi) thì chờ tới khi xong; không bao giờ đóng sheet hay xóa chữ người dùng đang gõ.
+- Thay đổi do người khác tạo thì báo bằng toast `info` tiêu đề "Có cập nhật mới", một câu nói ai làm gì với ca nào ("Ca Thứ Năm, 15/10: Nguyễn Thanh Trúc sẽ đến chăm sóc Trần Văn An."). Nhiều hơn 2 thay đổi thì gộp một toast. Thao tác của chính mình không báo lại.
+- Chế độ demo luôn có thanh `.app-demo` ở đầu không gian (nền Apricot nhạt, khác hẳn thông báo `info`): câu "Dữ liệu minh họa…" luôn hiện, nhóm đổi vai trò dạng phân đoạn (mục đang xem nền Teal, `aria-current="page"`), nút "Đặt lại dữ liệu". Không dùng thanh này ngoài chế độ demo.
+
 ### Toast — `HC.toast(text, { tone, title, duration })`
 
 - Nền Navy, icon theo `tone` (`success`, `info`, `warning`, `danger`). Tự ẩn sau 4,5 giây, dừng khi rê chuột hoặc focus. Tối đa 3 cái cùng lúc. Trang có BottomNav thì toast nằm trên thanh.

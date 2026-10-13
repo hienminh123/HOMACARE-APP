@@ -2,6 +2,7 @@
 // trong backend/schema.sql quyết định, không phụ thuộc việc ẩn nút trên giao diện.
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { config, FIXTURE } from './config';
+import { DEMO_DATA_KEY, DEMO_SESSION_KEY, isDemo } from './demo';
 
 function publicKey(value: string): boolean {
   if (/^sb_publishable_[A-Za-z0-9_-]+$/.test(value || '')) return true;
@@ -17,11 +18,14 @@ export const configured =
 
 let client: SupabaseClient | null | undefined;
 
-/** Trả về client, hoặc null nếu cấu hình chưa hợp lệ. Chế độ fixture trả client giả lập. */
+/** Trả về client, hoặc null nếu cấu hình chưa hợp lệ. Chế độ demo và fixture trả client giả lập. */
 export async function getClient(): Promise<SupabaseClient | null> {
   if (client !== undefined) return client;
-  // So sánh trực tiếp import.meta.env.MODE để Vite thay bằng hằng số và bỏ hẳn fixture khỏi bản build thật
-  if (import.meta.env.MODE === 'fixture') {
+  if (isDemo()) {
+    // Tab đang ở chế độ demo (/demo/): không gọi Supabase. fixture.ts là file tách riêng, chỉ tải lúc này.
+    const { createFixtureClient } = await import('./fixture');
+    client = createFixtureClient({ sessionStore: sessionStorage, sessionKey: DEMO_SESSION_KEY, dataStore: localStorage, dataKey: DEMO_DATA_KEY, daily: true });
+  } else if (import.meta.env.MODE === 'fixture') {
     const { createFixtureClient } = await import('./fixture');
     client = createFixtureClient();
   } else {

@@ -59,6 +59,10 @@ import '../../styles/app.css';
   <script>
     import { getClient } from '../../lib/supabase';
     import { failure, profile, go, emailRedirect, isRole, LABELS, type Role } from '../../lib/auth';
+    import { endDemo } from '../../lib/demo';
+
+    // Vào trang đăng nhập là rời chế độ demo: mật khẩu thật không bao giờ được gõ vào client giả lập
+    endDemo();
 
     type Mode = 'login' | 'signup' | 'forgot' | 'recovery';
     const params = new URLSearchParams(location.search);

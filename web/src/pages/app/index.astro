@@ -38,12 +38,13 @@ const roles = [
   <script>
     import { forwardAuthCallback, go, profile } from '../../lib/auth';
     import { SESSION_STORAGE_KEY } from '../../lib/config';
+    import { isDemo } from '../../lib/demo';
     const main = document.getElementById('role-picker')!;
     (async () => {
       if (forwardAuthCallback()) return;
       try {
         // Chỉ hỏi Supabase khi trình duyệt đang giữ phiên
-        if (localStorage.getItem(SESSION_STORAGE_KEY)) {
+        if (localStorage.getItem(SESSION_STORAGE_KEY) || isDemo()) {
           const current = await profile();
           if (current) { go(current.role); return; }
         }

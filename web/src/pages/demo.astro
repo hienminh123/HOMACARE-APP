@@ -1,0 +1,97 @@
+---
+// /demo/ — chế độ demo cho ban giám khảo (giai đoạn 5). Chọn vai trò → /demo/?vai-tro=… bật demo cho tab này
+// rồi chuyển vào không gian tương ứng. Dữ liệu minh họa (src/lib/fixture.ts), không gọi Supabase.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/hc/Header.astro';
+import Button from '../components/hc/Button.astro';
+import Card from '../components/hc/Card.astro';
+import Avatar from '../components/hc/Avatar.astro';
+import Icon from '../components/hc/Icon.astro';
+import '../styles/app.css';
+const roles = [
+  { slug: 'gia-dinh', role: 'family' as const, initials: 'GĐ', title: 'Gia đình', who: 'Trần Lan Anh, con của bác Trần Văn An', text: 'Có sẵn lịch, nhật ký sau ca. Thử đặt ca mới và đánh giá.' },
+  { slug: 'dieu-phoi', role: 'coordinator' as const, initials: 'ĐP', title: 'Điều phối viên', who: 'Phạm Quốc Bảo', text: 'Có yêu cầu đang chờ. Thử phân công chuyên viên.' },
+  { slug: 'chuyen-vien', role: 'caregiver' as const, initials: 'CV', title: 'Chuyên viên chăm sóc', who: 'Nguyễn Thanh Trúc', text: 'Có ca tối nay. Thử bắt đầu ca và gửi nhật ký.' },
+];
+---
+<BaseLayout title="Dùng thử HomaCare · Chế độ demo" description="Dùng thử HomaCare với dữ liệu minh họa: đi trọn một ca chăm sóc qua vai trò gia đình, điều phối viên và chuyên viên." noindex>
+  <Header>
+    <Button slot="actions" href="/" variant="ghost" size="sm" icon="arrow-left">Về trang chủ</Button>
+  </Header>
+  <main class="app-main app-main--narrow" id="demo">
+    <div class="app-greeting">
+      <h1>Dùng thử HomaCare</h1>
+      <p>Đi trọn một ca chăm sóc qua ba vai trò. Dữ liệu là minh họa, chỉ lưu trên trình duyệt này: không cần tài khoản, không gửi cho HomaCare.</p>
+    </div>
+    <p class="app-form-error" data-demo-error role="alert" hidden>Trình duyệt đang chặn bộ nhớ trang web (chế độ riêng tư hoặc cài đặt chặn cookie), nên chế độ demo chưa chạy được. Hãy mở trang bằng cửa sổ thường.</p>
+
+    <section class="app-section" aria-labelledby="demo-roles-title">
+      <div class="app-section__head"><h2 id="demo-roles-title">Chọn vai trò</h2></div>
+      <ul class="app-list">
+        {roles.map(r => (
+          <li>
+            <Card href={`/demo/?vai-tro=${r.slug}`} class="role-link">
+              <Avatar role={r.role} size="lg">{r.initials}</Avatar>
+              <span class="role-link__text">
+                <span class="hc-card__title">{r.title}</span>
+                <span class="hc-card__meta">{r.who}. {r.text}</span>
+              </span>
+              <Icon name="chevron-right" class="role-link__chevron" />
+            </Card>
+          </li>
+        ))}
+      </ul>
+      <p class="hc-hint app-note">Muốn xem từ bước đầu tiên? <a href="/demo/?vai-tro=gia-dinh-moi">Vào như một gia đình mới</a>, chưa có hồ sơ người thân.</p>
+    </section>
+
+    <section class="app-section" aria-labelledby="demo-flow-title">
+      <div class="app-section__head"><h2 id="demo-flow-title">Gợi ý một vòng chăm sóc</h2></div>
+      <ol class="demo-steps">
+        <li><strong>Gia đình</strong> bấm "Đặt ca mới", chọn ngày, xem lại rồi gửi yêu cầu.</li>
+        <li><strong>Điều phối viên</strong> mở yêu cầu vừa gửi, đọc hồ sơ người thân và phân công Nguyễn Thanh Trúc.</li>
+        <li><strong>Chuyên viên</strong> thấy ca mới ở mục Sắp tới; với ca tối nay, bấm "Bắt đầu ca" rồi ghi nhật ký và gửi.</li>
+        <li><strong>Gia đình</strong> thấy trạng thái đổi theo từng bước, đọc nhật ký và chấm sao.</li>
+      </ol>
+      <div class="app-notice"><Icon name="info" /><span>Mở mỗi vai trò trong một cửa sổ riêng và đặt cạnh nhau: thay đổi ở cửa sổ này hiện ngay ở cửa sổ kia. Thanh "Chế độ demo" trên đầu mỗi màn hình dùng để đổi vai trò hoặc đặt lại dữ liệu.</span></div>
+    </section>
+
+    <section class="app-section" aria-labelledby="demo-note-title">
+      <div class="app-section__head"><h2 id="demo-note-title">Lưu ý</h2></div>
+      <ul class="demo-notes">
+        <li>Tên người, hồ sơ và nhật ký trong demo là dữ liệu minh họa.</li>
+        <li>HomaCare hỗ trợ sinh hoạt tại nhà, không chẩn đoán hay điều trị y tế.</li>
+        <li>Dữ liệu demo tự tạo lại mỗi ngày. Đóng tab là rời chế độ demo; trang đăng nhập thật không dùng dữ liệu này.</li>
+      </ul>
+      <div class="hc-cluster app-note">
+        <button class="hc-btn hc-btn--secondary" type="button" data-demo-reset><Icon name="refresh" />Đặt lại dữ liệu demo</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    import { DESTINATIONS } from '../lib/auth';
+    import { DEMO_ROLES, isDemoSlug, isDemo, startDemo, resetDemoData } from '../lib/demo';
+
+    // /demo/?vai-tro=… : bật demo cho tab này rồi vào thẳng không gian (link này mở được trong tab mới)
+    const slug = new URLSearchParams(location.search).get('vai-tro');
+    if (isDemoSlug(slug)) {
+      startDemo(slug);
+      if (isDemo()) location.replace(DESTINATIONS[DEMO_ROLES[slug].role]);
+      else document.querySelector<HTMLElement>('[data-demo-error]')!.hidden = false;
+    }
+
+    document.querySelector('[data-demo-reset]')?.addEventListener('click', () => {
+      resetDemoData();
+      window.HC?.toast('Lần vào tiếp theo sẽ bắt đầu với dữ liệu minh họa ban đầu.', { tone: 'success', title: 'Đã đặt lại dữ liệu demo' });
+    });
+  </script>
+</BaseLayout>
+
+<style>
+  .role-link { display: flex; align-items: center; gap: var(--space-4); color: inherit; }
+  .role-link__text { display: grid; gap: var(--space-1); flex: 1; min-width: 0; }
+  .role-link :global(.role-link__chevron) { color: var(--color-text-muted); flex: none; }
+  .demo-steps { margin: 0 0 var(--space-4); padding-left: var(--space-6); display: grid; gap: var(--space-3); }
+  .demo-steps li::marker { font-weight: var(--weight-semibold); color: var(--color-action); }
+  .demo-notes { margin: 0; padding-left: var(--space-5); display: grid; gap: var(--space-2); color: var(--color-text-muted); }
+</style>

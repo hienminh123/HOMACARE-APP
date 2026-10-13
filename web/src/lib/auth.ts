@@ -2,6 +2,7 @@
 // và bảng profiles; chỉ đổi đường dẫn sang khu /app/.
 import { config } from './config';
 import { getClient } from './supabase';
+import { endDemo, isDemo } from './demo';
 
 export type Role = 'family' | 'caregiver' | 'coordinator';
 export const ROLES: Role[] = ['family', 'caregiver', 'coordinator'];
@@ -66,6 +67,8 @@ export function go(role: Role, booking = false): void {
 }
 
 export async function logout(): Promise<void> {
+  // Chế độ demo: chỉ thoát demo của tab này, không có phiên Supabase nào để đăng xuất
+  if (isDemo()) { endDemo(); location.assign('/'); return; }
   const client = await getClient();
   if (client) {
     const { error } = await client.auth.signOut();

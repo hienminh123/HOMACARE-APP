@@ -1,5 +1,6 @@
-// Client Supabase GIẢ LẬP, chỉ nạp khi chạy `npm run dev:fixture` (astro dev --mode fixture).
-// Bản build thật không chứa file này. Dữ liệu nằm trong sessionStorage của trình duyệt, không gửi đi đâu.
+// Client Supabase GIẢ LẬP. Nạp khi chạy `npm run dev:fixture` (astro dev --mode fixture), và ở bản build thật
+// chỉ nạp (tách thành file riêng, tải khi cần) trong tab đã vào chế độ demo qua /demo/ (xem src/lib/demo.ts).
+// Dữ liệu nằm trong bộ nhớ của trình duyệt, không gửi đi đâu.
 // Tên người là dữ liệu minh họa (Bác Trần Văn An, Nguyễn Thanh Trúc, Trần Lan Anh, Đỗ Thu Hà, Vũ Minh Châu, Bà Vũ Thị Lan).
 // Đăng nhập: email bắt đầu bằng "caregiver" → chuyên viên, "coordinator" → điều phối, "family-new" → gia đình
 // chưa có người thân (thử luồng bắt đầu), còn lại → gia đình có sẵn lịch; mật khẩu bất kỳ.
@@ -9,7 +10,7 @@ import { SESSION_STORAGE_KEY } from './config';
 type Row = Record<string, any>;
 type Listener = (event: string, session: unknown) => void;
 
-// key: giá trị lưu ở localStorage (SESSION_STORAGE_KEY) cho biết đang đăng nhập tài khoản nào
+// key: giá trị lưu ở nơi giữ phiên (FixtureOptions.sessionKey) cho biết đang đăng nhập tài khoản nào
 const PROFILES: Row[] = [
   { id: 'fx-family', full_name: 'Trần Lan Anh', role: 'family', key: 'family' },
   { id: 'fx-family-new', full_name: 'Đỗ Thu Hà', role: 'family', key: 'family-new' },
@@ -52,17 +53,30 @@ function seed(): Record<string, Row[]> {
   };
 }
 
-const DATA_KEY = 'homa-fixture-data';
-function load(): Record<string, Row[]> {
-  try { const raw = sessionStorage.getItem(DATA_KEY); if (raw) return JSON.parse(raw); } catch { /* bỏ qua */ }
-  return seed();
+export interface FixtureOptions {
+  /** Nơi giữ phiên (khóa hồ sơ đang đăng nhập) và tên khóa. */
+  sessionStore: Storage; sessionKey: string;
+  /** Nơi giữ dữ liệu minh họa và tên khóa. Dùng localStorage thì các tab thấy cùng dữ liệu và báo thay đổi cho nhau. */
+  dataStore: Storage; dataKey: string;
+  /** Tạo lại dữ liệu khi sang ngày mới, để "hôm nay", "ngày mai" trong dữ liệu minh họa luôn đúng. */
+  daily?: boolean;
 }
-function save(db: Record<string, Row[]>) { try { sessionStorage.setItem(DATA_KEY, JSON.stringify(db)); } catch { /* bỏ qua */ } }
+type Db = Record<string, Row[]> & { seededOn?: any };
 
-export function createFixtureClient(): SupabaseClient {
-  const db = load();
+/** `dev:fixture`: phiên ở localStorage, dữ liệu ở sessionStorage của tab. Chế độ demo truyền nơi lưu riêng. */
+const DEFAULTS = (): FixtureOptions => ({ sessionStore: localStorage, sessionKey: SESSION_STORAGE_KEY, dataStore: sessionStorage, dataKey: 'homa-fixture-data' });
+
+export function createFixtureClient(options: FixtureOptions = DEFAULTS()): SupabaseClient {
+  const { sessionStore, sessionKey, dataStore, dataKey, daily } = options;
+  const parse = (raw: string | null): Db | null => {
+    try { const d = raw ? JSON.parse(raw) : null; return d && (!daily || d.seededOn === day(0)) ? d : null; } catch { return null; }
+  };
+  const read = () => { try { return dataStore.getItem(dataKey); } catch { return null; } };
+  let db: Db = parse(read()) || { ...seed(), seededOn: day(0) };
+  const save = () => { try { dataStore.setItem(dataKey, JSON.stringify(db)); } catch { /* bỏ qua */ } };
   const listeners: Listener[] = [];
-  const current = (): Row | null => PROFILES.find(p => p.key && p.key === localStorage.getItem(SESSION_STORAGE_KEY)) || null;
+  const getKey = () => { try { return sessionStore.getItem(sessionKey); } catch { return null; } };
+  const current = (): Row | null => PROFILES.find(p => p.key && p.key === getKey()) || null;
   const session = () => (current() ? { user: { id: current()!.id }, access_token: 'fixture' } : null);
   const emit = (event: string) => listeners.forEach(fn => fn(event, session()));
   const delay = <T>(value: T) => new Promise<T>(resolve => setTimeout(() => resolve(value), 250));
@@ -83,7 +97,7 @@ export function createFixtureClient(): SupabaseClient {
     const sorts: [string, boolean][] = [];
     let inserted: Row | null = null;
     const result = () => {
-      if (inserted) { db[table].push({ ...inserted, id: 'fx-' + Date.now(), created_at: new Date().toISOString() }); save(db); return { data: null, error: null }; }
+      if (inserted) { db[table].push({ ...inserted, id: 'fx-' + Date.now(), created_at: new Date().toISOString() }); save(); return { data: null, error: null }; }
       const rows = visible(table).filter(r => filters.every(([k, v]) => r[k] === v));
       rows.sort((a, b) => { for (const [k, asc] of sorts) { if (a[k] !== b[k]) return (a[k] > b[k] ? 1 : -1) * (asc ? 1 : -1); } return 0; });
       return { data: rows, error: null };
@@ -133,7 +147,7 @@ export function createFixtureClient(): SupabaseClient {
     else if (name === 'start_homa_visit') Object.assign(v, { status: 'in_progress', started_at: now });
     else if (name === 'complete_homa_visit') Object.assign(v, { status: 'completed', tasks: args.p_tasks, mood: args.p_mood, report_text: args.p_report, next_note: args.p_next_note, completed_at: now });
     else if (name === 'rate_homa_visit') v.rating = args.p_rating;
-    save(db);
+    save();
     return delay({ data: null, error: null });
   }
 
@@ -143,14 +157,34 @@ export function createFixtureClient(): SupabaseClient {
     onAuthStateChange: (fn: Listener) => { listeners.push(fn); return { data: { subscription: { unsubscribe() {} } } }; },
     signInWithPassword: async ({ email }: { email: string }) => {
       const key = ['caregiver', 'coordinator', 'family-new'].find(k => email.startsWith(k)) || 'family';
-      localStorage.setItem(SESSION_STORAGE_KEY, key); emit('SIGNED_IN');
+      sessionStore.setItem(sessionKey, key); emit('SIGNED_IN');
       return delay({ data: { session: session(), user: { id: current()!.id } }, error: null });
     },
     signUp: async () => delay({ data: { session: null, user: { identities: [{}] } }, error: null }),
-    signOut: async () => { localStorage.removeItem(SESSION_STORAGE_KEY); emit('SIGNED_OUT'); return { error: null }; },
+    signOut: async () => { sessionStore.removeItem(sessionKey); emit('SIGNED_OUT'); return { error: null }; },
     resetPasswordForEmail: async () => delay({ data: {}, error: null }),
     updateUser: async () => delay({ data: {}, error: null }),
   };
 
-  return { auth, from, rpc } as unknown as SupabaseClient;
+  // Realtime giả lập, cùng dạng client.channel().on('postgres_changes', …, cb).subscribe() của supabase-js:
+  // tab khác ghi dữ liệu (sự kiện storage) → nạp lại và báo cho người nghe. Thay đổi do chính tab này
+  // gây ra không báo, vì thao tác nào cũng tự tải lại sau khi ghi.
+  const changeListeners = new Set<(payload: Row) => void>();
+  window.addEventListener('storage', e => {
+    if (e.key !== dataKey || e.storageArea !== dataStore) return;
+    db = parse(e.newValue) || { ...seed(), seededOn: day(0) };
+    changeListeners.forEach(fn => fn({ eventType: 'UPDATE', table: 'visits' }));
+  });
+  const channel = () => {
+    const own: ((payload: Row) => void)[] = [];
+    const ch: any = {
+      on: (_type: string, _filter: Row, cb: (payload: Row) => void) => { own.push(cb); return ch; },
+      subscribe: (cb?: (status: string) => void) => { own.forEach(fn => changeListeners.add(fn)); cb?.('SUBSCRIBED'); return ch; },
+      unsubscribe: async () => { own.forEach(fn => changeListeners.delete(fn)); return 'ok'; },
+    };
+    return ch;
+  };
+  const removeChannel = async (ch: any) => ch?.unsubscribe();
+
+  return { auth, from, rpc, channel, removeChannel } as unknown as SupabaseClient;
 }

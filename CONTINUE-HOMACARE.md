@@ -6,7 +6,7 @@
 - Repo đã chuyển từ OneDrive sang `C:\dev\homacare`. Làm trên nhánh **`thiet-ke-lai`**. Tag **`ban-cu-v1`** = bản đang chạy trên homacare-demo.pages.dev.
 - **Không sửa, không merge vào `main`. Không push nếu chưa hỏi người dùng.** Commit cục bộ sau mỗi giai đoạn là được phép.
 - Cloudflare Pages chỉ build `main`, nên mọi thay đổi trên nhánh này chưa ảnh hưởng web thật.
-- Lộ trình đầy đủ: (0) dọn repo → (1) design system → (2) chuyển sang Astro, tách trang giới thiệu khỏi app → (3) app gia đình, ưu tiên điện thoại → (4) app chuyên viên và điều phối → (5) realtime + chế độ demo cho giám khảo → (6) kiểm thử toàn bộ. **Đã xong 0 đến 4.**
+- Lộ trình đầy đủ: (0) dọn repo → (1) design system → (2) chuyển sang Astro, tách trang giới thiệu khỏi app → (3) app gia đình, ưu tiên điện thoại → (4) app chuyên viên và điều phối → (5) realtime + chế độ demo cho giám khảo → (6) kiểm thử toàn bộ. **Đã xong 0 đến 5.**
 
 ### Giai đoạn 0 · Dọn repo (commit `468af26`)
 - Xóa: `landing.html`, `landing-v2.html`, `landing-v3.html`, `home-classic.html`, 3 ảnh .jpg cũ trong `preview/`, `netlify.toml`, hai thư mục rỗng `tmp/`, `audit-assets/`. Tất cả vẫn lấy lại được từ tag `ban-cu-v1` (`git checkout ban-cu-v1 -- <file>`).
@@ -54,6 +54,7 @@
 3. Sau khi deploy (nên thử trên URL preview của nhánh trước): một email xác nhận mới, một email quên mật khẩu, đăng nhập 3 vai trò, link cũ `/family.html?booking=1`.
 4. Thử trên iPhone thật: font Lora/Nunito, "Cách sử dụng", sheet, BottomNav.
 5. Giữ `preview/` cho tới khi giai đoạn 3–4 xong rồi mới quyết định bỏ.
+6. **Realtime** (giai đoạn 5): `alter publication supabase_realtime add table public.visits;` trên Supabase, rồi thử hai tài khoản thử ở hai trình duyệt.
 
 ### Giai đoạn 3 · App gia đình, ưu tiên điện thoại (commit `40c3d13` phần 1 + commit "Giai đoạn 3 (phần 2)")
 - Thao tác nằm trong `web/src/scripts/family.ts`; trang `web/src/pages/app/gia-dinh.astro` chỉ vẽ HTML và khai báo hai sheet. Gọi đúng RPC/bảng qua `src/lib/visits.ts`, **không đổi `backend/schema.sql`**.
@@ -84,9 +85,44 @@
 - Fixture: thêm gia đình thứ hai (không đăng nhập được) có yêu cầu chờ tối nay, để thấy chuyên viên đã bận; RPC giả lập kiểm tra đúng điều kiện của `assign/start/complete_homa_visit` (vai trò, trạng thái, 23505 chuyên viên trùng tối, `incomplete_tasks`, `invalid_report`).
 - **Đã kiểm tra** (fixture, Chrome headless với phím thật, 375px và 1280px, cùng một dữ liệu đi qua ba vai trò): điều phối lọc "Chờ phân công" bằng phím mũi tên, mở phân công bằng Enter, lỗi chưa chọn, 23505, chọn bằng Space + Enter → toast, focus về tab đang chọn, bộ lọc giữ nguyên; Esc ở sheet chi tiết trả focus về nút "Nhật ký". Chuyên viên: Esc ở sheet bắt đầu không đổi trạng thái; bắt đầu ca → focus vào "Ghi nhật ký"; lỗi đủ 4 hoạt động + nhật ký ngắn (focus vào hoạt động chưa đánh dấu); đóng rồi mở lại còn bản nháp; xem trước không có dòng đánh giá; gửi → toast, focus "Ca đã hoàn thành", bản nháp bị xóa; sheet nhật ký đã gửi. Gia đình thấy nhật ký mới ở trạng thái chờ đánh giá. Hai kịch bản gia đình của giai đoạn 3 vẫn đạt. Không tràn ngang, không lỗi console; build sạch, bản build không chứa fixture.
 
-### Việc tiếp theo — Giai đoạn 5 · Realtime + chế độ demo cho giám khảo
-- Realtime: lắng nghe thay đổi bảng `visits` (Supabase Realtime, theo RLS) để gia đình thấy trạng thái/nhật ký mới và điều phối thấy yêu cầu mới mà không bấm Cập nhật; giữ `ctx.reload()` + `refocus` để không làm mất focus khi đang mở sheet (không vẽ lại khi sheet đang mở, chỉ báo "Có cập nhật").
-- Chế độ demo: dựa trên `src/lib/fixture.ts` (dữ liệu trong sessionStorage), cho giám khảo đổi vai trò nhanh mà không cần tài khoản; cần quyết định cách bật (đường dẫn riêng hay nút) và ghi rõ "dữ liệu minh họa" trên màn hình (prop `notice` của AppLayout). Hỏi người dùng trước khi chọn cách triển khai.
+### Giai đoạn 5 · Realtime + chế độ demo cho giám khảo (commit "Giai đoạn 5")
+- **Người dùng chọn:** bật demo bằng **đường dẫn riêng**.
+- **Chế độ demo** (`src/lib/demo.ts`, trang `src/pages/demo.astro`):
+  - `/demo/` giới thiệu, 3 thẻ vai trò, gợi ý một vòng chăm sóc 4 bước, lưu ý (dữ liệu minh họa, phi y tế), nút đặt lại dữ liệu.
+  - `/demo/?vai-tro=gia-dinh|dieu-phoi|chuyen-vien|gia-dinh-moi` bật demo **cho riêng tab đó** (cờ ở sessionStorage) rồi vào thẳng không gian. Link mở được trong tab mới, nên mỗi tab một vai trò.
+  - Tab demo dùng client giả lập `fixture.ts` với nơi lưu riêng: vai trò ở sessionStorage (`homa-demo-session`), dữ liệu ở localStorage (`homa-demo-data`) dùng chung giữa các tab demo, tự tạo lại khi sang ngày mới. Không gọi Supabase (đã đo: 0 yêu cầu tới supabase.co).
+  - Ở bản build thật `fixture.ts` là file tách riêng (`_astro/fixture.*.js`), chỉ tải khi tab ở chế độ demo.
+  - Thanh "Chế độ demo" đầu mỗi không gian: câu "Dữ liệu minh họa…", đổi vai trò (Gia đình / Chuyên viên / Điều phối), "Đặt lại dữ liệu". Nút Đăng xuất thành "Thoát chế độ demo" (về trang chủ).
+  - Vào `/app/dang-nhap/` là tự rời demo, để mật khẩu thật không bao giờ gõ vào client giả lập. Tab không ở demo vào `/app/…` vẫn ra trang đăng nhập thật.
+- **Cập nhật tức thì** (`src/scripts/live.ts`, nối trong `workspace.ts`):
+  - Supabase Realtime `postgres_changes` trên bảng `visits` (RLS vẫn lọc), cộng tải lại khi quay về tab sau hơn 30 giây hoặc có mạng lại. Trong demo, kênh giả lập báo khi tab demo khác ghi dữ liệu (sự kiện `storage`).
+  - Dữ liệu không đổi thì không vẽ lại. Đang mở sheet hoặc đã chọn sao chưa gửi thì chờ, xong mới vẽ (không mất chữ đang gõ). Vẽ lại thì giữ focus ở phần tử tương ứng.
+  - Báo toast "Có cập nhật mới" cho thay đổi do người khác tạo: gia đình (được phân công / bắt đầu ca / có nhật ký), chuyên viên (được giao ca), điều phối (yêu cầu mới, nhật ký mới). Thao tác của chính mình không sinh câu nào.
+- **Cần người dùng duyệt để realtime chạy với Supabase thật (chưa làm, không sửa `schema.sql`):** chạy trong Supabase SQL Editor `alter publication supabase_realtime add table public.visits;` (hoặc Database → Publications → bật `visits`). Chưa chạy thì app vẫn đúng, chỉ cập nhật khi quay lại tab hoặc bấm Cập nhật. Sau khi chạy nên thêm dòng này vào `schema.sql` cho đồng bộ (cũng cần duyệt).
+- **Đã kiểm tra** trên **bản build thật** (`astro preview`, cổng 4323), Chrome headless hai tab, 375px và 1280px:
+  - Tab A (gia đình) và tab B (điều phối) vào bằng `/demo/?vai-tro=…`.
+  - B phân công → A cập nhật tại chỗ, toast đúng câu, focus vẫn ở "Đặt ca mới".
+  - A đang mở sheet đặt ca và gõ dở, B (đổi sang chuyên viên) bắt đầu ca → A giữ nguyên sheet và chữ; đóng sheet thì mới vẽ lại và báo.
+  - B gửi nhật ký → A thấy nhật ký chờ đánh giá. "Đặt lại dữ liệu" ở B → A về dữ liệu ban đầu.
+  - Trang đăng nhập xóa cờ demo; "Thoát chế độ demo" về `/`; sau đó `/app/gia-dinh/` ra trang đăng nhập thật.
+  - Không lỗi console, không tràn ngang. Các kịch bản giai đoạn 3–4 trên `dev:fixture` vẫn đạt.
+- Chưa kiểm được realtime với Supabase thật (chưa bật publication, và không được tạo dữ liệu thật).
+
+### Việc tiếp theo — Giai đoạn 6 · Kiểm thử toàn bộ
+- Chạy lại mọi kịch bản (`giai-doan-*` trong thư mục ghi chú chung có script) ở 375/768/1280, bàn phím, trình đọc màn hình (nhãn), giảm chuyển động; trang giới thiệu, đăng nhập, `/demo/`, ba không gian.
+- Kiểm với Supabase thật khi người dùng cho phép: tài khoản thử, realtime sau khi bật publication, link email.
+- Gợi ý (cần người dùng duyệt): thêm link "Dùng thử" tới `/demo/` trên trang giới thiệu; thêm `alter publication` vào `schema.sql`; cấu hình Cloudflare cho bản mới (xem mục "Trước khi merge").
+
+### Xem bản mới trên web thật mà không đụng trang đang chạy (người dùng hỏi 13/10)
+- Trang homacare-demo.pages.dev vẫn là `preview/` từ `main`. Nhánh `thiet-ke-lai` đã có trên GitHub (người dùng push lúc 18:02 ngày 13/10, đến `00a716d`) nhưng chưa được build ở đâu.
+- Không đổi build settings của project `homacare-demo`: cấu hình build dùng chung cho mọi nhánh, đổi sẽ làm hỏng lần deploy tới của `main`.
+- Cách an toàn: tạo **project Cloudflare Pages mới** nối cùng repo:
+  - Production branch: `thiet-ke-lai`
+  - Root directory: `web`
+  - Build command: `npm run build`
+  - Output directory: `dist`
+  - `NODE_VERSION` = 22
+- Thao tác thật trên địa chỉ đó vẫn ghi vào cùng Supabase. Muốn thử không ghi gì thì dùng `/demo/`.
 
 ### Còn để ngỏ
 - Cal Sans (TTF 100 KB) trong bản Astro chỉ còn cho chữ logo và trang `/tinh-nang`; nên chuyển sang woff2 (cần `woff2_compress` hoặc fonttools, máy chưa có).
