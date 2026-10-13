@@ -123,6 +123,14 @@
   - Output directory: `dist`
   - `NODE_VERSION` = 22
 - Thao tác thật trên địa chỉ đó vẫn ghi vào cùng Supabase. Muốn thử không ghi gì thì dùng `/demo/`.
+- **Đã làm (13/10, người dùng tự thao tác):** project Pages **`homacaredemo`** (không gạch ngang, khác `homacare-demo` đang chạy), tạo bằng **Direct Upload** thư mục `web/dist` của commit `aa10fa7` (giai đoạn 5).
+  - Địa chỉ: **https://homacaredemo.pages.dev**
+  - Cập nhật: build lại → project → Create deployment → kéo lại `web/dist`. Project Direct Upload không chuyển sang nối GitHub được; muốn tự deploy khi push thì tạo project khác.
+  - (Trước đó người dùng thử tạo nhầm một Worker `icy-disk-0031` rồi đã xóa.)
+  - **Đã kiểm tra trên địa chỉ thật:**
+    - Mọi trang trả 200; 404 riêng; `/family.html?booking=1` → 308 `/family?booking=1` rồi JS chuyển `/app/gia-dinh/` giữ tham số; `_redirects` chạy.
+    - Font Lora/Nunito/Cal Sans nạp đủ; không tràn ngang ở 375/1280; không lỗi console.
+    - Kịch bản demo hai tab đạt như trên máy, 0 yêu cầu tới Supabase.
 
 ### Còn để ngỏ
 - Cal Sans (TTF 100 KB) trong bản Astro chỉ còn cho chữ logo và trang `/tinh-nang`; nên chuyển sang woff2 (cần `woff2_compress` hoặc fonttools, máy chưa có).
