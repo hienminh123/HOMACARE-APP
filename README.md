@@ -10,6 +10,7 @@ Dự án hiện là MVP phục vụ trình diễn và kiểm chứng luồng ch�
 - **Repository:** [hienminh123/HOMACARE-APP](https://github.com/hienminh123/HOMACARE-APP) — riêng tư, cần quyền truy cập.
 - **Thiết lập Supabase:** [SUPABASE-SETUP.md](SUPABASE-SETUP.md)
 - **Trạng thái công việc và bàn giao:** [CONTINUE-HOMACARE.md](CONTINUE-HOMACARE.md)
+- **Hệ thống thiết kế:** [DESIGN.md](DESIGN.md) · xem trực tiếp tại `/design-system.html` khi chạy máy chủ xem thử
 
 ## Chức năng
 
@@ -69,13 +70,15 @@ HOMACARE APP/
 │   ├── caregiver.html           # Không gian chuyên viên
 │   ├── coordinator.html         # Không gian điều phối
 │   ├── tinh-nang.html           # Trang tổng hợp tính năng (ảnh trong assets/tinh-nang/)
+│   ├── design-system.html       # Trang tài liệu hệ thống thiết kế (nội bộ, noindex)
+│   ├── ds/                      # Design system: tokens, fonts, base, components (CSS/JS thuần), icons.svg
 │   ├── auth.js                  # Xác thực, nhận diện phiên và điều hướng vai trò
 │   ├── workspace.js             # Dữ liệu và thao tác của ba dashboard
 │   ├── preview.js               # Icon, popup, menu và thông báo
 │   ├── config.js                # Website URL và cấu hình Supabase công khai
 │   ├── styles.css               # Giao diện chung
 │   ├── account.css              # Tài khoản, dashboard và responsive
-│   ├── assets/                  # Logo, icon, font
+│   ├── assets/                  # Logo, icon, font (Cal Sans, fonts/Be Vietnam Pro)
 │   ├── vendor/                  # Supabase JavaScript SDK
 │   └── manifest.webmanifest     # Tên, icon và chế độ mở như ứng dụng
 ├── backend/
@@ -88,6 +91,7 @@ HOMACARE APP/
 ├── docs/                        # Tài liệu ý tưởng, logo gốc, nội dung lưu trữ, ảnh chụp kiểm thử
 ├── Phu-luc-anh-chup/            # Ảnh chụp phụ lục (file ảnh, docx, pdf không đưa vào git)
 ├── PRODUCT.md                   # Người dùng, định vị, cam kết thương hiệu
+├── DESIGN.md                    # Quy tắc token, thành phần, giọng văn
 ├── SUPABASE-SETUP.md
 ├── CONTINUE-HOMACARE.md
 └── README.md

@@ -1,16 +1,8 @@
 /* ==========================================================================
-   HomaCare Base · v0.1
+   HomaCare Base · v1.0
    Mặc định cho phần tử HTML: chữ, nền, focus, vùng chọn, thanh cuộn.
-   Cần tokens.css nạp trước. Font nội dung được nạp riêng (xem DESIGN.md).
+   Thứ tự nạp: tokens.css → fonts.css → base.css → components.css.
    ========================================================================== */
-
-@font-face {
-  font-family: 'Cal Sans';
-  src: url('../assets/CalSans-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
 
 *, *::before, *::after { box-sizing: border-box; }
 

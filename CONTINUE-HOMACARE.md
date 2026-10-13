@@ -1,8 +1,55 @@
 # HOMACARE — trạng thái tiếp tục
 
-## TRẠNG THÁI HIỆN TẠI — 08/10/2026 (đọc phần này trước)
+## PHIÊN THIẾT KẾ LẠI — 13/10/2026 (đọc phần này trước)
 
-Phần này thay thế mọi thông tin về hosting/Netlify ở các mục lịch sử bên dưới.
+### Bối cảnh và luật làm việc
+- Repo đã chuyển từ OneDrive sang `C:\dev\homacare`. Làm trên nhánh **`thiet-ke-lai`**. Tag **`ban-cu-v1`** = bản đang chạy trên homacare-demo.pages.dev.
+- **Không sửa, không merge vào `main`. Không push nếu chưa hỏi người dùng.** Commit cục bộ sau mỗi giai đoạn là được phép.
+- Cloudflare Pages chỉ build `main`, nên mọi thay đổi trên nhánh này chưa ảnh hưởng web thật.
+- Lộ trình đầy đủ: (0) dọn repo → (1) design system → (2) chuyển sang Astro, tách trang giới thiệu khỏi app → (3) app gia đình, ưu tiên điện thoại → (4) app chuyên viên và điều phối → (5) realtime + chế độ demo cho giám khảo → (6) kiểm thử toàn bộ. **Đã xong 0 và 1.**
+
+### Giai đoạn 0 · Dọn repo (commit `468af26`)
+- Xóa: `landing.html`, `landing-v2.html`, `landing-v3.html`, `home-classic.html`, 3 ảnh .jpg cũ trong `preview/`, `netlify.toml`, hai thư mục rỗng `tmp/`, `audit-assets/`. Tất cả vẫn lấy lại được từ tag `ban-cu-v1` (`git checkout ban-cu-v1 -- <file>`).
+- Nội dung "Góc sức khỏe" của home-classic lưu ở `docs/noi-dung/goc-suc-khoe.md` (cần mở lại từng link nguồn trước khi dùng).
+- `backend/build-pages.cjs` không còn đọc/ghi home-classic; chạy lại cho kết quả giống hệt.
+- `tinh-nang.html` 3,5 MB → 26 KB: 35 ảnh tách ra `preview/assets/tinh-nang/pl-XX.jpg` (lazy-load), logo và font trỏ về file có sẵn. Đã kiểm tra 40/40 ảnh hiện đúng.
+- Chuyển vào `docs/`: logo gốc (`docs/thuong-hieu/homacare-logo-goc.png`), logo mới có tagline (`docs/thuong-hieu/logo-moi.jpg`), `docs/y-tuong-homacare.pdf`, `docs/IMAGE-ASSETS.md`, ảnh chụp kiểm thử (`docs/anh-chup-kiem-thu/`, bị ignore).
+- `.gitignore`: bỏ skill bên thứ ba `.claude/skills/impeccable/`, `.claude/agents/impeccable-*`, `settings.local.json`; bỏ file xuất phụ lục (`Phu-luc-anh-chup/*.docx|pdf|html|png`). Bản HTML trùng trong Phu-luc đã gỡ khỏi git (file trên máy vẫn còn).
+- `preview/_redirects`: link landing cũ và home-classic chuyển về `/`.
+- `.claude/launch.json`: máy chủ xem thử `npx.cmd http-server preview -p 4173` (trên Windows phải là `npx.cmd`).
+
+### Giai đoạn 1 · Design system v1.0 (commit `24cbba5` bản nháp + commit cuối phiên)
+- **Người dùng đã duyệt:** font nội dung **Be Vietnam Pro**, tông xám **Mực** (ngả Navy), nền trang **Cát nhạt `#FEF9F4`**. Cal Sans giữ cho tiêu đề. Cho phép tự lưu trữ font.
+- File (đều trong `preview/ds/`, CSS/JS thuần, không framework):
+  - `tokens.css`: dải 50–950 theo OKLCH neo 5 màu thương hiệu, token ngữ nghĩa (`--color-action`, `--color-text-muted`, `--color-border-input`…), trạng thái theo giá trị DB (`--status-pending|assigned|in-progress|completed-{bg,fg,dot,border}`), 8 cỡ chữ, khoảng cách 4px, 4 bo góc, 3 bóng, 4 thời lượng.
+  - `fonts.css` (Cal Sans `font-display: block` như đã chốt; Be Vietnam Pro 400/500/600 tách Latin/tiếng Việt, ~101 KB tại `assets/fonts/`, kèm giấy phép OFL), `base.css`, `components.css`, `components.js`, `icons.svg`.
+  - 15 thành phần tiền tố `hc-`: Button, Field (Input/Select/Textarea/Check), Card, StatusPill, StatusTimeline, VisitCard (+ hàng điều phối), CareLogCard (+ đánh giá sao), Avatar/Person, Sheet/Modal (`<dialog>`), Toast, EmptyState, Tabs, BottomNav, Header, Skeleton.
+  - `components.js` cung cấp `window.HC`: `HC.pill(status)`, `HC.timeline(status, {vertical, times})`, `HC.toast()`, `HC.openSheet()/closeSheet()`, `HC.init()`.
+- `preview/design-system.html`: trang tài liệu (noindex, không link từ trang chủ), có demo chạy thật, HTML để chép, bảng đo tương phản trực tiếp, 2 màn hình điện thoại mẫu.
+- `DESIGN.md` ở gốc: frontmatter token + quy tắc dùng token/thành phần, giọng văn, ưu tiên điện thoại, vùng chạm 44px, cách chuyển dần code cũ.
+- Phát hiện quan trọng: Cal Sans chỉ có 1 độ đậm (code cũ đặt 700 → chữ đậm giả); Apricot gốc chỉ 2,4:1 trên trắng nên không làm màu chữ; viền ô nhập cũ không đạt 3:1.
+- Đã kiểm tra: 17/17 cặp tương phản đạt AA; không tràn ngang ở 375px; mọi vùng chạm ≥ 44px trên cảm ứng; sheet mở/đóng/trả focus, toast, tabs bằng phím, đánh giá bằng phím chạy đúng; không lỗi console. Detector impeccable còn các cảnh báo có chủ đích (nền Sand là màu thương hiệu, chữ "Care" trong logo, chấm nhịp "Đang chăm sóc", shimmer khi tải).
+- **Chưa đụng** vào `index.html`, `auth.html`, ba dashboard, `styles.css`, `account.css`: chúng vẫn dùng CSS cũ. Design system mới chỉ được dùng trong `design-system.html`.
+
+### Việc tiếp theo — Giai đoạn 2 · Chuyển sang Astro
+1. Hỏi người dùng trước khi cài: tạo dự án Astro (output tĩnh, không SSR, để Cloudflare Pages miễn phí) trong thư mục riêng, ví dụ `web/`, giữ `preview/` chạy song song cho tới khi bản mới đủ chức năng.
+2. Chép `preview/ds/` vào `src/styles/` (import đúng thứ tự trong DESIGN.md); mỗi thành phần `hc-*` thành một file `.astro`; `HC.pill/timeline` thành component nhận prop `status`.
+3. Tách hai khu: trang giới thiệu (`/`, nội dung từ `index.html` + Góc sức khỏe) và app (`/app/gia-dinh`, `/app/chuyen-vien`, `/app/dieu-phoi`, `/app/dang-nhap`). Giữ redirect cho `auth.html`, `family.html`… vì email xác nhận Supabase đang trỏ `auth.html`.
+4. Chuyển `auth.js`/`workspace.js` sang module dùng chung, giữ nguyên RPC và RLS (không đổi `backend/schema.sql` nếu không cần).
+5. Trước khi merge vào `main` sau này: đổi cấu hình Cloudflare Pages (build command `npm run build`, output `web/dist`), cập nhật Site URL/Redirect URLs của Supabase nếu đường dẫn đổi. Đây là việc người dùng phải duyệt.
+
+### Còn để ngỏ
+- Cal Sans đang là TTF 100 KB; nên chuyển sang woff2 (cần `woff2_compress` hoặc fonttools, máy hiện chưa có).
+- `tinh-nang.html` vẫn dùng CSS nội tuyến riêng, chưa chuyển sang design system.
+- Ô `type="date"` hiển thị theo ngôn ngữ của máy (máy tiếng Anh sẽ ra mm/dd); khi làm app có thể cần ô chọn ngày riêng hiển thị dd/mm.
+- Chưa tạo file phụ `.impeccable/design.json` cho bảng điều khiển của skill impeccable (không bắt buộc).
+- Việc cũ còn treo: bật lại Confirm email hoặc cấu hình Custom SMTP; thử hiệu ứng trên iPhone thật.
+
+---
+
+## TRẠNG THÁI 08/10/2026 (trước phiên thiết kế lại)
+
+Phần này thay thế mọi thông tin về hosting/Netlify ở các mục lịch sử bên dưới. Các mục nói về `landing*.html`, `home-classic.html`, `netlify.toml` đã lỗi thời sau phiên 13/10.
 
 ### Hosting và triển khai
 - Website chính: **https://homacare-demo.pages.dev** (Cloudflare Pages, project `homacare-demo`, nối GitHub `hienminh123/HOMACARE-APP`, nhánh `main`, build command trống, output directory `preview`). Push lên `main` là Cloudflare tự deploy, miễn phí.

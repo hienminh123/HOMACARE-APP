@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HomaCare Design Tokens · v0.1 (bản nháp chờ duyệt)
+   HomaCare Design Tokens · v1.0 (đã duyệt 13/10/2026)
    CSS thuần, không phụ thuộc framework. Dùng được cho trang tĩnh hiện tại
    (<link rel="stylesheet" href="ds/tokens.css">) và cho Astro sau này
    (import "../styles/tokens.css").
@@ -79,8 +79,7 @@
   --navy-900: #1B2A41; /* ★ Navy */
   --navy-950: #141E2E;
 
-  /* Xám — phương án A "Mực": ngả xanh navy, sạch và mát.
-     Phương án B "Đất" (ngả ấm) nằm ở khối [data-neutral="warm"] bên dưới. */
+  /* Xám "Mực": ngả xanh Navy, sạch và tách bạch với nền cát ấm */
   --gray-50:  #F7F9FC;
   --gray-100: #F0F3F7;
   --gray-200: #E3E6EC;
@@ -198,17 +197,13 @@
   --z-toast: 200;
 
 
-}
 
-/* Tầng semantic khai báo lại trong mọi vùng có data-neutral/data-canvas để
-   phép so sánh cạnh nhau trên trang design-system tính lại đúng màu. */
-:root, [data-neutral], [data-canvas] {
   /* ==========================================================================
      2. SEMANTIC — component chỉ dùng tầng này
      ========================================================================== */
 
   /* Nền và bề mặt */
-  --color-canvas:         var(--canvas-choice, var(--sand-50)); /* nền trang (đang so sánh 3 phương án) */
+  --color-canvas:         var(--sand-50);   /* nền trang: Cát nhạt */
   --color-surface:        var(--white);     /* thẻ, sheet, ô nhập */
   --color-surface-sunken: var(--gray-50);   /* vùng lõm trong thẻ, hàng xen kẽ */
   --color-surface-warm:   var(--sand-100);  /* khối nhấn ấm: lời nhắn gia đình */
@@ -288,41 +283,6 @@
   --elevation-card:    var(--shadow-1);
   --elevation-raised:  var(--shadow-2);
   --elevation-overlay: var(--shadow-3);
-}
-
-[data-canvas="sand"]       { --canvas-choice: var(--sand-100); }
-[data-canvas="sand-light"] { --canvas-choice: var(--sand-50); }
-[data-canvas="white"]      { --canvas-choice: var(--white); }
-
-/* Phương án xám A "Mực" khai báo lại để vùng so sánh lồng nhau không thừa hưởng B */
-[data-neutral="ink"] {
-  --gray-50:  #F7F9FC;
-  --gray-100: #F0F3F7;
-  --gray-200: #E3E6EC;
-  --gray-300: #D0D5DD;
-  --gray-400: #AAB2BD;
-  --gray-500: #7D8795;
-  --gray-600: #626D7C;
-  --gray-700: #495566;
-  --gray-800: #344053;
-  --gray-900: #1D2A3E;
-  --gray-950: #0E1928;
-}
-
-/* Phương án xám B "Đất": ngả ấm, hòa với nền Sand. Bật bằng
-   <html data-neutral="warm">. Sau khi duyệt sẽ giữ một phương án. */
-[data-neutral="warm"] {
-  --gray-50:  #FBF9F6;
-  --gray-100: #F5F2EE;
-  --gray-200: #EAE5E1;
-  --gray-300: #DAD4CE;
-  --gray-400: #B7B0A9;
-  --gray-500: #8C857E;
-  --gray-600: #716A64;
-  --gray-700: #59534D;
-  --gray-800: #443F39;
-  --gray-900: #302A25;
-  --gray-950: #1D1915;
 }
 
 @media (prefers-reduced-motion: reduce) {
